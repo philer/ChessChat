@@ -1,0 +1,168 @@
+header#header,
+footer#footer {
+	color: #444;
+	text-shadow: 1px 1px 0 white;
+
+	background: #f5f5f5;
+	background: -moz-linear-gradient(top,  #f5f5f5 0%, #e0e0e0 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f5f5f5), color-stop(100%,#e0e0e0));
+	background: -webkit-linear-gradient(top,  #f5f5f5 0%,#e0e0e0 100%);
+	background: -o-linear-gradient(top,  #f5f5f5 0%,#e0e0e0 100%);
+	background: -ms-linear-gradient(top,  #f5f5f5 0%,#e0e0e0 100%);
+	background: linear-gradient(to bottom,  #f5f5f5 0%,#e0e0e0 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#e0e0e0',GradientType=0 );
+
+	box-shadow: 0 0 4px #777;
+
+}
+#panel ul {
+	border-color:	red
+					rgba(255,255,255,.4)
+					red
+					rgba(0,0,0,.1);
+	border-width: 0 1px;
+}
+#panel ul li a {
+	color: #666;
+	border-color:	red
+					rgba(0,0,0,.1)
+					red
+					rgba(255,255,255,.4);
+	border-width: 0 1px;
+}
+
+#game {
+	background-color: #ececec;
+}
+
+#game header {
+	color: #666;
+	text-shadow: 1px 1px 0 white;
+	background-color: #f5f5f5;
+	box-shadow: 0 0 2px #999;
+
+}
+#clock {
+	border-left: 1px solid #e0e0e0;
+}
+#gameMenu ul {
+	box-shadow: 0 0 2px #bbb;
+}
+#gameMenu ul,
+#gameMenu li:first-child,
+#gameMenu li:first-child a {
+	color: #666;
+	text-shadow: 1px 1px 0 white;
+	border-top-left-radius: 6px;
+}
+#gameMenu li a {
+	background: #f8f8f8;
+	background: -moz-linear-gradient(top,  #f8f8f8 0%, #e9e9e9 50%, #dfdfdf 51%, #f8f8f8 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(50%,#e9e9e9), color-stop(51%,#dfdfdf), color-stop(100%,#f8f8f8));
+	background: -webkit-linear-gradient(top,  #f8f8f8 0%,#e9e9e9 50%,#dfdfdf 51%,#f8f8f8 100%);
+	background: -o-linear-gradient(top,  #f8f8f8 0%,#e9e9e9 50%,#dfdfdf 51%,#f8f8f8 100%);
+	background: -ms-linear-gradient(top,  #f8f8f8 0%,#e9e9e9 50%,#dfdfdf 51%,#f8f8f8 100%);
+	background: linear-gradient(to bottom,  #f8f8f8 0%,#e9e9e9 50%,#dfdfdf 51%,#f8f8f8 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#f8f8f8',GradientType=0 );
+	
+	border-color: white #ddd transparent white;
+	border-width: 1px 1px 0 1px;
+}
+
+
+
+table#chessboardTable {
+	color: #444;
+
+	background-color: #ddd;
+	box-shadow: 0 20px 7px -10px #ccc;
+	box-shadow: 0 1em .5em -.5em #ccc;
+}
+td.square {
+/*	box-shadow:	inset 0 0 5px rgba(255,255,255,.3),
+				inset 0 0 20px 3px rgba(0,0,0,.1);/**/
+	box-shadow: inset 0 0 10px rgba(100,100,100,.2);
+}
+td.square.light {
+	background-color: #eee;
+}
+td.square.dark {
+	background-color: #bbb;
+}
+td.square.light:hover {
+	background-color: #fff;
+	color: #333;
+}
+td.square.dark:hover {
+	background-color: #aaa;
+	color: #222;
+}
+
+tfoot td,
+thead td,
+th {
+	font-family: 'Georgia';
+	background-color: #d9d9d9;
+	background-color: transparent;
+	box-shadow: inset 0 0 10px rgba(100,100,100,.1);
+}
+
+ol.graveyard {
+	color: #555;
+}
+
+#chat {
+	background-color: #ebebeb;
+	box-shadow: 0 0 4px #aaa;
+}
+
+#chat section,
+#chatText {
+	color: #444;
+	background-color: #f3f3f3;
+	border-radius: 4px;
+	box-shadow: inset 0 0 3px #aaa;
+}
+input#chatText {
+	resize: none;
+	width: 94%;
+	padding: 0 3%;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+input#chatSubmit {
+	font-weight: bold;
+	color: #777;
+	text-shadow: 1px 1px 0 #e5e5e5;
+
+	background: #d8d8d8;
+	background: -moz-linear-gradient(top,  #d8d8d8 0%, #b8b8b8 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d8d8d8), color-stop(100%,#b8b8b8));
+	background: -webkit-linear-gradient(top,  #d8d8d8 0%,#b8b8b8 100%);
+	background: -o-linear-gradient(top,  #d8d8d8 0%,#b8b8b8 100%);
+	background: -ms-linear-gradient(top,  #d8d8d8 0%,#b8b8b8 100%);
+	background: linear-gradient(to bottom,  #d8d8d8 0%,#b8b8b8 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d8d8d8', endColorstr='#b8b8b8',GradientType=0 );
+
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	box-shadow: inset -1px -1px 3px #aaa;
+}
+
+footer#footer {
+	color: #888;
+}
+footer#footer a:hover {
+	color: #555;
+}
+/*
+#footerMenu a {
+	border-left: 1px solid #f9f9f9;
+	border-right: 1px solid #d0d0d0;
+}
+#footerMenu li:first-child a {
+	border-left-width: 0;
+}
+#footerMenu li:last-child a {
+	border-right-width: 0;
+}*/

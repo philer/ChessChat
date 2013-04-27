@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="de">
+	<head>
+		<title>&#x265A; ChessChat</title>
+		<base href="_blank" />
+		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" media="screen" href="style/global.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="style/colors.css" />
+		<script src="js/chessboardLayout.js"></script>
+		<style id="jscss"></style>
+	</head>
+	<body>
+		<header id="header">
+			<h1><span class="icon">&#x265A;</span>ChessChat</h1>
+			<nav id="panel">
+				<ul>
+					<li><a href="#">New Game</a></li><li><a href="#">Settings</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main>
+			<section id="game">
+				<header>
+					<h2>Phil <span class="vs">vs</span> Larissa</h2>
+					<div id="clock">
+						<span id="timer">3:00</span>
+						<span id="playtime">0:27:49</span>
+					</div><!--#clock-->
+				</header>
+				<div id="chessboard">
+					<ol id="own-graveyard" class="graveyard">
+						<li>&#x265B;</li>
+						<li>&#x265D;</li>
+						<li>&#x265F;</li>
+					</ol>
+					<ol id="opp-graveyard" class="graveyard">
+						<li>&#x2656;</li>
+						<li>&#x2658;</li>
+						<li>&#x2659;</li>
+						<li>&#x2659;</li>
+					</ol>
+					<table id="chessboardTable">
+						<colgroup>
+							<col id="numbersColumnLeft" class="numbersColumn"/>
+							<col id="fileA" class="file" />
+							<col id="fileB" class="file" />
+							<col id="fileC" class="file" />
+							<col id="fileD" class="file" />
+							<col id="fileE" class="file" />
+							<col id="fileF" class="file" />
+							<col id="fileG" class="file" />
+							<col id="fileH" class="file" />
+							<col id="numbersColumnRight" class="numbersColumn"/>
+						</colgroup>
+						<thead>
+							<tr>
+								<td></td>
+								<th>A</th>
+								<th>B</th>
+								<th>C</th>
+								<th>D</th>
+								<th>E</th>
+								<th>F</th>
+								<th>G</th>
+								<th>H</th>
+								<td></td>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<td></td>
+								<th>A</th>
+								<th>B</th>
+								<th>C</th>
+								<th>D</th>
+								<th>E</th>
+								<th>F</th>
+								<th>G</th>
+								<th>H</th>
+								<td></td>
+							</tr>
+						</tfoot>
+						<tbody>
+							<tr id="rank8">
+								<th>8</th>
+								<td class="square light">&#x265C;</td>
+								<td class="square dark">&#x265E;</td>
+								<td class="square light">&#x265D;</td>
+								<td class="square dark">&#x265B;</td>
+								<td class="square light">&#x265A;</td>
+								<td class="square dark">&#x265D;</td>
+								<td class="square light">&#x265E;</td>
+								<td class="square dark">&#x265C;</td>
+								<th>8</th>
+							</tr>
+							<tr id="rank7">
+								<th>7</th>
+								<td class="square dark">&#x265F;</td>
+								<td class="square light">&#x265F;</td>
+								<td class="square dark">&#x265F;</td>
+								<td class="square light">&#x265F;</td>
+								<td class="square dark">&#x265F;</td>
+								<td class="square light">&#x265F;</td>
+								<td class="square dark">&#x265F;</td>
+								<td class="square light">&#x265F;</td>
+								<th>7</th>
+							</tr>
+							<tr id="rank6">
+								<th>6</th>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<th>6</th>
+							</tr>
+							<tr id="rank5">
+								<th>5</th>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<th>5</th>
+							</tr>
+							<tr id="rank4">
+								<th>4</th>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<th>4</th>
+							</tr>
+							<tr id="rank3">
+								<th>3</th>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<td class="square dark"></td>
+								<td class="square light"></td>
+								<th>3</th>
+							</tr>
+							<tr id="rank2">
+								<th>2</th>
+								<td class="square light">&#x2659;</td>
+								<td class="square dark">&#x2659;</td>
+								<td class="square light">&#x2659;</td>
+								<td class="square dark">&#x2659;</td>
+								<td class="square light">&#x2659;</td>
+								<td class="square dark">&#x2659;</td>
+								<td class="square light">&#x2659;</td>
+								<td class="square dark">&#x2659;</td>
+								<th>2</th>
+							</tr>
+							<tr id="rank1">
+								<th>1</th>
+								<td class="square dark">&#x2656;</td>
+								<td class="square light">&#x2658;</td>
+								<td class="square dark">&#x2657;</td>
+								<td class="square light">&#x2655;</td>
+								<td class="square dark">&#x2654;</td>
+								<td class="square light">&#x2657;</td>
+								<td class="square dark">&#x2658;</td>
+								<td class="square light">&#x2656;</td>
+								<th>1</th>
+							</tr>
+						</tbody>
+					</table>
+				</div><!-- #chessboard -->
+				<footer>
+					<nav id="gameMenu">
+						<ul>
+							<li><a href="#">Resign</a></li><li><a href="#">Offer draw</a></li><li><a href="#">Snapshot</a></li>
+						</ul>
+					</nav>
+				</footer>
+			</section><!-- #game -->
+			<aside id="chat">
+				<section>
+					<div id="chatLog">
+						<p class="msgOwn">
+							<span class="msgTime">17:13</span>
+							<span class="msgAuthor">Phil</span>
+							<span class="msgText">Checkmate :D</span>
+						</p>
+						<p class="msgOther">
+							<span class="msgTime">21:13</span>
+							<span class="msgAuthor">Larissa</span>
+							<span class="msgText">oh noes!</span>
+						</p>
+						<p class="msgBot">
+							<span class="msgTime">21:14</span>
+							<span class="msgAuthor">Phil </span>
+							<span class="msgText">moved bishop &#x2657; from C2 to E3</span>
+						</p>
+						<p class="msgOwn">
+							<span class="msgTime">21:15</span>
+							<span class="msgAuthor">Phil</span>
+							<span class="msgText">More text and more text and even more text and this is so much text it just HAS to break the line</span>
+						</p>
+						<p class="msgOther">
+							<span class="msgTime">02:00</span>
+							<span class="msgAuthor">Larissa</span>
+							<span class="msgText">That's a lot of text</span>
+						</p>
+						<p class="msgOther">
+							<span class="msgTime">02:56</span>
+							<span class="msgAuthor">Larissa</span>
+							<span class="msgText">I'll make some more text, too.</span>
+						</p>
+						<p class="msgBot">
+							<span class="msgTime">21:14</span>
+							<span class="msgAuthor">Larissa </span>
+							<span class="msgText">moved Queen &#x265B; from D8 to D5</span>
+						</p>
+						<p class="msgOwn">
+							<span class="msgTime">21:15</span>
+							<span class="msgAuthor">Phil</span>
+							<span class="msgText">
+obligatory features<br />
+- ajax chat<br />
+- move via chat msg ("QB4")<br />
+- server-side move validation<br />
+- user system / url identification
+							</span>
+						</p>
+						<p class="msgOwn">
+							<span class="msgTime">21:15</span>
+							<span class="msgAuthor">Phil</span>
+							<span class="msgText">
+optional features<br />
+- move via drag & drop (JS)<br />
+- client-side validation (JS)<br />
+- saving games (MySQL)<br />
+- possible moves highlight (JS)<br />
+- clock
+							</span>
+						</p>
+					</div><!-- #chatLog -->
+				</section>
+				<form id="chatForm" >
+					<fieldset>
+						<!--<div><textarea id="chatText"></textarea></div>-->
+						<div>
+							<input 	type="text"
+									id="chatText"
+									autofocus="autofocus"
+								/>
+						</div>
+						<input 	type="submit" 
+								id="chatSubmit"
+								value="Send"
+							/>
+					</fieldset>
+				</form>
+			</aside>
+		</main>
+		<footer id="footer">
+			<nav id="footerMenu">
+				<ul>
+					<li><a href="#">Impress</a></li><li><a href="#">Contact</a></li>
+				</ul>
+			</nav>
+			<div id="copyright">© by Phil & Larissa</div>
+		</footer>
+	</body>
+</html>

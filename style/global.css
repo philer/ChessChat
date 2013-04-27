@@ -1,0 +1,305 @@
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:400,700,300,700italic,500italic,500,400italic,300italic);
+html, body {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	position: relative;
+	text-align: center;
+	font-family: 'Ubuntu';
+}
+*, input {
+	padding: 0;
+	margin: 0;
+	border-width: 0;
+	border-style: solid;
+
+	-moz-transition-duration: 300ms;
+	-webkit-transition-duration: 300ms;
+	transition-duration: 300ms;
+	-moz-transition-property: color, background, background-color, border-color, opacity;
+	-webkit-transition-property: color, background, background-color, border-color, opacity;
+	transition-property: color, background, background-color, border-color, opacity;
+}
+a {
+	text-decoration: none;
+	color: inherit;
+}
+ul, ol, li {
+	list-style-type: none;
+}
+span.icon {
+	display: inline-block;
+	padding: 0 .2em;
+	font-weight: normal;
+	font-size: 1.333em;
+	line-height: .75em;
+}
+span.vs {
+	opacity: .5;
+	font-weight: normal;
+	padding: 0 .2em;
+}
+
+
+header#header,
+main,
+footer#footer {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+header#header {
+	top: 0;
+	height: 3em;
+	z-index: 200;
+}
+main {
+    top: 3em;
+    bottom: 2em;
+    z-index: 100;
+}
+footer#footer {
+	bottom: 0;
+	height: 1em;
+	padding: .5em 0;
+	z-index: 200;
+}
+header#header h1 {
+	float: left;
+	padding: 0 .1em;
+	font-size: 1.5em;
+	line-height: 2em;
+}
+#panel {
+	margin: 0 25%;
+	height: 100%;
+}
+#panel ul,
+#panel ul li,
+#panel ul li a {
+	display: inline-block;
+	height: 100%;
+}
+#panel ul li a {
+	line-height: 3em;
+	font-size: 1em;
+	padding: 0 1.5em;
+}
+#game {
+	position: absolute;
+	width: 75%;
+	top: 0;
+	left: 0;
+	bottom: 0;
+}
+#chat {
+	position: absolute;
+	width: 25%;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	text-align: left;
+}
+@media all and (max-width: 1200px) {
+	#game {
+		width: 66.66%;
+	}
+	#chat {
+		width: 33.33%;
+	}
+}
+@media all and (max-width: 800px) {
+	#game {
+		bottom: auto;
+		height: 66.66%;
+		width: 100%;
+	}
+	#chat {
+		width: 100%;
+		height: 33.33%;
+		left: 0;
+		top: auto;
+	}
+}
+#game header {
+	text-align: left;
+	overflow: hidden;
+	font-size: .9em;
+}
+#game header h2,
+#clock {
+	padding: .5em 1em;
+	display: inline-block;
+	height: 2em;
+	font-size: 1em;
+}
+#game header h2 {
+	line-height: 2em;
+	padding-left: 3em;
+	font-weight: bold;
+}
+#clock {
+	float: right;
+	text-align: center;
+}
+#clock span {
+	display: block;
+}
+#timer {
+	font-weight: bold;
+}
+#playtime {
+	font-size: .75em;
+}
+
+
+#game footer {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	font-size: .85em;
+}
+#gameMenu ul,
+#gameMenu ul li {
+	list-style-type: none;
+	display: inline-block;
+}
+#gameMenu li a {
+	display: inline-block;
+	padding: .5em 1em;
+}
+
+#chessboard {
+	margin: 50px auto;
+	display: inline-block;
+	position: relative;
+}
+
+ol.graveyard {
+	font-size: 30px;
+	position: absolute;
+}
+ol#opp-graveyard {
+	top: 5.55%;
+	right: 0;
+}
+ol#own-graveyard {
+	bottom: 5.55%;
+	left: 0;
+}
+
+
+table#chessboardTable {
+	table-layout: fixed;
+	margin: 0 5.55%;
+	width: 700px;
+	height: 700px;
+	border-collapse: collapse;
+}
+thead, tfoot {
+	height: 5.55%;
+}
+col.numbersColumn {
+	width: 5.55%;
+}
+td.square {
+	height: 11.11%;
+	width: 11.11%;
+	overflow: hidden;
+	font-size: 60px;
+	cursor: pointer;
+}
+
+
+#chat > section {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	left: 10px;
+	bottom: 50px;
+	padding: 5px;
+	font-size: .75em;
+	overflow: auto;
+}
+
+#chatLog {
+	display: table;
+}
+#chatLog p {
+	display: table-row;
+}
+#chatLog p span {
+	display: table-cell;
+	padding: .15em .3em;
+}
+#chatLog p.msgBot span {
+	padding: .5em .3em;
+}
+#chatLog span.msgTime {
+	opacity: .5;
+}
+#chatLog span.msgAuthor {
+	text-align: right;
+	border-right: 1px dotted #ccc;
+}
+#chatLog p.msgOwn span.msgAuthor {
+	color: green;
+}
+#chatLog p.msgOther span.msgAuthor {
+	color: red;
+}
+#chatLog p.msgBot {
+	color: blue;
+}
+
+
+
+#chatForm {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	right: 10px;
+}
+
+#chatForm fieldset,
+#chatForm fieldset > div,
+#chatText,
+#chatSubmit {
+	display: block;
+	height: 30px;
+}
+#chatForm fieldset > div {
+	margin-right: 60px;
+}
+input#chatText {
+	resize: none;
+	width: 94%;
+	padding: 0 3%;
+}
+input#chatSubmit {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 60px;
+}
+
+
+#footerMenu,
+#footerMenu ul,
+#footerMenu li,
+#footerMenu a {
+	display: inline-block;
+}
+#copyright,
+#footerMenu {
+	font-size: .75em;
+}
+#footerMenu {
+	position: absolute;
+	left: 0;
+	margin: 0 2em;
+
+}
+#footerMenu li a {
+	padding: 0 .5em;
+}
