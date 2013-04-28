@@ -176,15 +176,15 @@ header#header h1 {
 	font-size: 60px; /* default */
 }
 
-ol.graveyard {
+ol.prison {
 	font-size: .55em;
 	position: absolute;
 }
-ol#opp-graveyard {
+ol#opp-prison {
 	top: 5.55%;
 	right: 0;
 }
-ol#own-graveyard {
+ol#own-prison {
 	bottom: 5.55%;
 	left: 0;
 }
@@ -192,12 +192,14 @@ ol#own-graveyard {
 
 table#chessboardTable {
 	table-layout: fixed;
-	margin: 0 .6em; /* graveyard distance */
+	margin: 0 .6em; /* prison distance */
 	width: 700px;
 	height: 700px;
 	border-collapse: collapse;
 }
-thead, tfoot, tbody th {
+thead td,
+tfoot td,
+th {
 	font-size: .33em;
 	font-weight: normal;
 }

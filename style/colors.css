@@ -102,11 +102,9 @@ box-shadow: inset 0 0 10px rgba(0,0,0,.1);
 
 table#chessboardTable {
 	color: #444;
-
 	background-color: #d3d3d3;
-	box-shadow: 0 20px 7px -10px #ccc;
-	box-shadow: 0 1em .5em -.5em #ccc,
-				0 0 2em #ddd;
+	box-shadow: 0 .5em .3em -.3em #ccc,
+				0 0 1em #ddd;
 }
 td.square {
 	box-shadow: inset 0 0 10px rgba(100,100,100,.2);
@@ -144,7 +142,7 @@ th {
 	box-shadow: inset 0 0 1em rgba(0,0,0,.1);
 }
 
-ol.graveyard {
+ol.prison {
 	color: #555;
 }
 

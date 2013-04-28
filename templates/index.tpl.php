@@ -8,6 +8,7 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="style/colors.css" />
 		<script src="js/jquery-2.0.0.min.js"></script>
 		<script src="js/chessboardLayout.js"></script>
+		<script src="js/chat.js"></script>
 		<style id="jscss"></style>
 	</head>
 	<body>
@@ -53,7 +54,7 @@
 						<p class="msgBot">
 							<span class="msgTime">21:14</span>
 							<span class="msgAuthor">Phil </span>
-							<span class="msgText">moved bishop &#x2657; from C2 to E3</span>
+							<span class="msgText">(&#x2657;E3) Bishop from C2 to E3</span>
 						</p>
 						<p class="msgOwn">
 							<span class="msgTime">21:15</span>
@@ -102,9 +103,9 @@ optional features<br />
 				</section>
 				<form id="chatForm" action="">
 					<fieldset>
-						<!--<div><textarea id="chatText"></textarea></div>-->
 						<div>
 							<input 	type="text"
+									name="chatText"
 									id="chatText"
 									autofocus="autofocus"
 									autocomplete="off"
@@ -112,6 +113,7 @@ optional features<br />
 								/>
 						</div>
 						<input 	type="submit" 
+								name="submit"
 								id="chatSubmit"
 								value="Send"
 							/>
