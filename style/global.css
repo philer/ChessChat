@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Ubuntu:400,700,300,700italic,500italic,500,400italic,300italic);
+@import url("fonts.css");
 html, body {
 	padding: 0;
 	margin: 0;
@@ -13,12 +13,12 @@ html, body {
 	border-width: 0;
 	border-style: solid;
 
-	-moz-transition-duration: 300ms;
-	-webkit-transition-duration: 300ms;
-	transition-duration: 300ms;
-	-moz-transition-property: color, background, background-color, border-color, opacity;
-	-webkit-transition-property: color, background, background-color, border-color, opacity;
-	transition-property: color, background, background-color, border-color, opacity;
+	-moz-transition-duration: 200ms;
+	-webkit-transition-duration: 200ms;
+	transition-duration: 200ms;
+	-moz-transition-property: -moz-linear-gradient, color, background, background-color, background-image, border-color, opacity, text-shadow, box-shadow;
+	-webkit-transition-property: -webkit-linear-gradient, color, background, background-color, border-color, opacity, text-shadow, box-shadow;
+	transition-property: linear-gradient, color, background, background-color, border-color, opacity, text-shadow, box-shadow;
 }
 a {
 	text-decoration: none;
@@ -170,13 +170,14 @@ header#header h1 {
 }
 
 #chessboard {
-	margin: 50px auto;
 	display: inline-block;
 	position: relative;
+	margin: 50px auto; /* default */
+	font-size: 60px; /* default */
 }
 
 ol.graveyard {
-	font-size: 30px;
+	font-size: .55em;
 	position: absolute;
 }
 ol#opp-graveyard {
@@ -191,10 +192,14 @@ ol#own-graveyard {
 
 table#chessboardTable {
 	table-layout: fixed;
-	margin: 0 5.55%;
+	margin: 0 .6em; /* graveyard distance */
 	width: 700px;
 	height: 700px;
 	border-collapse: collapse;
+}
+thead, tfoot, tbody th {
+	font-size: .33em;
+	font-weight: normal;
 }
 thead, tfoot {
 	height: 5.55%;
@@ -206,10 +211,17 @@ td.square {
 	height: 11.11%;
 	width: 11.11%;
 	overflow: hidden;
-	font-size: 60px;
 	cursor: pointer;
 }
-
+.chesspiece {
+	font-weight: normal;
+	width: 85%;
+	height: 85%;
+	display: block;
+	margin: auto;
+	overflow: hidden;
+	border-radius: 3px;
+}
 
 #chat > section {
 	position: absolute;
@@ -232,26 +244,22 @@ td.square {
 	display: table-cell;
 	padding: .15em .3em;
 }
-#chatLog p.msgBot span {
-	padding: .5em .3em;
-}
 #chatLog span.msgTime {
 	opacity: .5;
+	font-weight: 300;
+	padding-left: 0;
+	padding-right: .1em;
 }
 #chatLog span.msgAuthor {
 	text-align: right;
-	border-right: 1px dotted #ccc;
 }
-#chatLog p.msgOwn span.msgAuthor {
-	color: green;
+#chatLog span.msgText {
+    padding-right: 0;
 }
-#chatLog p.msgOther span.msgAuthor {
-	color: red;
+#chatLog p.msgBot span {
+	padding-top: .5em;
+	padding-bottom: .5em;
 }
-#chatLog p.msgBot {
-	color: blue;
-}
-
 
 
 #chatForm {
