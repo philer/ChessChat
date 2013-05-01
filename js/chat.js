@@ -2,21 +2,21 @@ var playerName = "Phil";
 //var playerID = 1;
 
 $(function() {
-
+	
 	var today = new Date();
-
+	
 	$("#chatSubmit").click(function() {
-
-		var msg = $("#chatText").val();
-
-		if (msg) {
 		
+		var msg = $("#chatText").val();
+		
+		if (msg) {
+			
 			var msgTime = today.getHours()+":"+today.getMinutes();
-
+			
 			msgData = "msgTime="+msgTime
 					+ "&playerName="+playerName
 					+ "&msg="+msg;
-		
+			
 			$.ajax({  
 				type: "POST",  
 				url: "lib/ajaxAnswer.php",  

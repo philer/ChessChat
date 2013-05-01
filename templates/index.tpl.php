@@ -9,7 +9,6 @@
 		<script src="js/jquery-2.0.0.min.js"></script>
 		<script src="js/chessboardLayout.js"></script>
 		<script src="js/chat.js"></script>
-		<style id="jscss"></style>
 	</head>
 	<body>
 		<header id="header">

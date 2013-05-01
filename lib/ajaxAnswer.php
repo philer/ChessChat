@@ -16,5 +16,3 @@ $playerName = $_POST["playerName"];
 $msg = $_POST["msg"];
 
 require_once("../templates/chatMessage.tpl.php");
-
-?>
