@@ -15,7 +15,7 @@
 			<h1><span class="icon">&#x265A;</span>ChessChat</h1>
 			<nav id="panel">
 				<ul>
-					<li><a href="#">New Game</a></li><li><a href="#">Settings</a></li>
+					<li><a href="#"><?php lang('global.menu.newgame') ?></a></li><li><a href="#"><?php lang('global.menu.settings') ?></a></li>
 				</ul>
 			</nav>
 		</header>
@@ -32,7 +32,7 @@
 				<footer>
 					<nav id="gameMenu">
 						<ul>
-							<li><a href="#">Resign</a></li><li><a href="#">Offer draw</a></li><li><a href="#">Snapshot</a></li>
+							<li><a href="#"><?php lang('game.menu.resign') ?></a></li><li><a href="#"><?php lang('game.menu.offerdraw') ?></a></li>
 						</ul>
 					</nav>
 				</footer>
@@ -110,10 +110,10 @@ optional features<br />
 									autocomplete="off"
 								/>
 						</div>
-						<input 	type="submit" 
+						<input 	type="submit"
 								name="submit"
 								id="chatSubmit"
-								value="Send"
+								value="<?php lang('chat.send') ?>"
 							/>
 					</fieldset>
 				</form>
@@ -122,7 +122,7 @@ optional features<br />
 		<footer id="footer">
 			<nav id="footerMenu">
 				<ul>
-					<li><a href="#">Impress</a></li><li><a href="#">Contact</a></li>
+					<li><a href="#"><?php lang('global.menu.legalnotice') ?></a></li><li><a href="#"><?php lang('global.menu.contact') ?></a></li>
 				</ul>
 			</nav>
 			<div id="copyright">© by Phil & Larissa</div>

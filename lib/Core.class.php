@@ -16,8 +16,13 @@ class Core {
 	}
 	
 	protected function setLanguage() {
-		// $_SERVER['HTTP_ACCEPT_LANGUAGE']
-		// TODO (use just english for now)
-		$this->language = new Language('en');
+		// TODO $_SERVER['HTTP_ACCEPT_LANGUAGE']
+		
+		// use just english for now)
+		self::$language = new Language("en");
+	}
+	
+	public static function getLanguage() {
+		return self::$language;
 	}
 }

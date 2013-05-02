@@ -1,4 +1,5 @@
 <?php
+
 class Language {
 	
 	/**
@@ -43,17 +44,17 @@ class Language {
 		require_once(ROOT_DIR.'lang/languages.inc.php');
 		
 		// does the requested language exist?
-		if (array_key_exists($abbr, self::languages)) {
+		if (array_key_exists($abbr, self::$languages)) {
 			$this->abbr = $abbr;
 		} else {
 			// default to english if language unknown
 			$this->abbr = 'en';
 		}
 		
-		$this->name = self::languages[$abbr]['name'];
+		$this->name = self::$languages[$abbr]['name'];
 		
 		require_once(ROOT_DIR.'lang/global.lang.php');
-		require_once(ROOT_DIR.'lang/'.self::languages[$this->abbr]['file'].'.lang.php');
+		require_once(ROOT_DIR.'lang/'.self::$languages[$this->abbr]['file'].'.lang.php');
 	}
 	
 	/**
@@ -63,11 +64,11 @@ class Language {
 	 */
 	public function getLanguageItem($langVar) {
 		// search in global vars first
-		if (array_key_exists($langVar),self::globalLangVars) {
-			return self::globalLangVars[$langVar];
+		if (array_key_exists($langVar,self::$globalLangVars)) {
+			return self::$globalLangVars[$langVar];
 		}
 		// then search in language specific vars
-		if (array_key_exists($langVar),$this->langVars) {
+		if (array_key_exists($langVar,$this->langVars)) {
 			return $this->langVars[$langVar];
 		}
 		// nothing found -> let's print the langVar instead
@@ -80,7 +81,7 @@ class Language {
 	 */
 	public function getLanguageNames() {
 		$languageNames = array();
-		foreach(self::languages as $lang) {
+		foreach(self::$languages as $lang) {
 			$languageNames[] = $lang['name'];
 		}
 		return $languageNames;

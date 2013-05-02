@@ -3,7 +3,6 @@
  * Define utility, alias and magical functions here
  */
 
-
 /**
  * Magic function autoload is called whenever a
  * unknown Class is instanciated ("new").
@@ -29,6 +28,7 @@ function __autoload($className) {
 			return;
 		}
 	}
+	
 	throw new ClassNotFoundException($className);
 }
 
@@ -37,5 +37,5 @@ function __autoload($className) {
  * @var string
  */
 function lang($langVar) {
-	return Core::getLanguage()->getLanguageItem($langVar);
+	echo Core::getLanguage()->getLanguageItem($langVar);
 }
