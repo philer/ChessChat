@@ -14,7 +14,7 @@ abstract class Player {
 	protected $name;
 	
 	/**
-	 * unique PlayerHash for cookie identification
+	 * unique PlayerHash for cookie identification of guests
 	 * @var string
 	 */
 	protected $hash;
@@ -26,6 +26,9 @@ abstract class Player {
 	protected $white;
 	
 	
+	/**
+	 * TODO
+	 */
 	public function __construct($id, $name = '', $hash = '') {
 		
 	}

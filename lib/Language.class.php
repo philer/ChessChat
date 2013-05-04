@@ -35,32 +35,23 @@ class Language {
 	protected static $globalLangVars;
 	
 	/**
-	 * require the needed language files
+	 * Loads the appropriate language files.
 	 * @param 	string 	$abbr
 	 */
-	public function __construct($abbr) {
-		
-		// set $this->languages
+	public function __construct($abbr = '') {
+		// set self::$languages
 		require_once(ROOT_DIR.'lang/languages.inc.php');
-		
-		// does the requested language exist?
-		if (array_key_exists($abbr, self::$languages)) {
-			$this->abbr = $abbr;
-		} else {
-			// default to english if language unknown
-			$this->abbr = 'en';
-		}
-		
-		$this->name = self::$languages[$abbr]['name'];
-		
+		$this->abbr = $this->determineLanguage($abbr);
+		$this->name = self::$languages[$this->abbr]['name'];
 		require_once(ROOT_DIR.'lang/global.lang.php');
 		require_once(ROOT_DIR.'lang/'.self::$languages[$this->abbr]['file'].'.lang.php');
 	}
 	
 	/**
-	 * return the language variable in this language
-	 * see alias lang($langVar) for use in templates
+	 * Returns the language variable in this language
+	 * see alias lang($langVar) for use in templates.
 	 * @param 	string 	$langVar
+	 * @return 	string
 	 */
 	public function getLanguageItem($langVar) {
 		// search in global vars first
@@ -77,7 +68,8 @@ class Language {
 	
 	/**
 	 * Returns an array containing the names of all known
-	 * languages in their respective languages
+	 * languages in their respective languages.
+	 * @return 	string
 	 */
 	public function getLanguageNames() {
 		$languageNames = array();
@@ -85,5 +77,33 @@ class Language {
 			$languageNames[] = $lang['name'];
 		}
 		return $languageNames;
+	}
+	
+	/**
+	 * Determines the language to be used and returns its
+	 * abbreviation. Checks the supplied abbreviation first,
+	 * next the http request and if that still doesn't check out,
+	 * defaults to english.
+	 * @param 	string 	$abbr
+	 * @return 	string
+	 */
+	protected function determineLanguage($abbr) {
+		// does the requested language exist?
+		if ($abbr && array_key_exists($abbr, self::$languages)) {
+			return $abbr;
+		} else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))  {
+			// try browser language settings
+			$httpAcceptLanguages = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			foreach ($httpAcceptLanguages as $httpAcceptLanguage) {
+				// strip stuff like 'de-at;q=0.5' to 'de'
+				$cleanAbbr = preg_replace('@^([a-z]{2}).*@','$1',$httpAcceptLanguage);
+				if (array_key_exists($cleanAbbr, self::$languages)) {
+					return $cleanAbbr;
+				}
+			}
+		} else {
+			// default to english
+			return 'en';
+		}
 	}
 }

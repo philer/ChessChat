@@ -4,11 +4,11 @@
 		<title>&#x265A; ChessChat</title>
 		<base href="_blank" />
 		<meta charset="utf-8" />
-		<link rel="stylesheet" type="text/css" media="screen" href="style/global.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="style/colors.css" />
-		<script src="js/jquery-2.0.0.min.js"></script>
-		<script src="js/chessboardLayout.js"></script>
-		<script src="js/chat.js"></script>
+		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo HOST ?>style/global.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo HOST ?>style/colors.css" />
+		<script src="<?php echo HOST ?>js/jquery-2.0.0.min.js"></script>
+		<script src="<?php echo HOST ?>js/chessboardLayout.js"></script>
+		<script src="<?php echo HOST ?>js/chat.js"></script>
 	</head>
 	<body>
 		<header id="header">
@@ -98,6 +98,24 @@ optional features<br />
 - clock
 							</span>
 						</p>
+						<p class="msgOwn">
+							<span class="msgTime">21:15</span>
+							<span class="msgAuthor">Phil</span>
+							<span class="msgText"><?php echo $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?></span>
+						</p>
+						<p class="msgOwn">
+							<span class="msgTime">21:15</span>
+							<span class="msgAuthor">Phil</span>
+							<span class="msgText">
+								path_info: <?php echo $_SERVER['PATH_INFO'] ?><br />
+								script_name: <?php echo $_SERVER['SCRIPT_NAME'] ?><br />
+								request_uri: <?php echo $_SERVER['REQUEST_URI'] ?><br /></span>
+						</p>
+						<p class="msgOwn">
+							<span class="msgTime">21:15</span>
+							<span class="msgAuthor">Phil</span>
+							<span class="msgText" style="white-space:pre;"><?php var_dump(Core::getRequest()) ?></span>
+						</p>
 					</div><!-- #chatLog -->
 				</section>
 				<form id="chatForm" action="">
@@ -125,7 +143,7 @@ optional features<br />
 					<li><a href="#"><?php lang('global.menu.legalnotice') ?></a></li><li><a href="#"><?php lang('global.menu.contact') ?></a></li>
 				</ul>
 			</nav>
-			<div id="copyright">© by Phil & Larissa</div>
+			<div id="copyright"><?php lang('site.copyrightby') ?>Phil &amp; Larissa</div>
 		</footer>
 		<div class="overlay">
 			<div class="overlayContainer">

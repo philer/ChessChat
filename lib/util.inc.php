@@ -33,7 +33,8 @@ function __autoload($className) {
 }
 
 /**
- * alias function for easy use in templates
+ * Alias function for easy use in templates
+ * outputs the appropriate value for a language variable.
  * @var string
  */
 function lang($langVar) {

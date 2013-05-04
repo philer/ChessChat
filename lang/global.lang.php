@@ -6,5 +6,5 @@
  */
 self::$globalLangVars = array(
 "site.name"			=> "ChessChat",
-"site.copyright"	=> "Copyright © by ",
+"site.copyrightby"	=> "Copyright &copy; by ",
 );

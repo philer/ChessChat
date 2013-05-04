@@ -263,7 +263,7 @@ td.square {
 #chatLog span.msgText {
     padding-right: 0;
 	word-wrap: break-word;
-	word-break: break-all;
+	/*word-break: break-all;*/
 }
 #chatLog p.msgBot span {
 	padding-top: .5em;
@@ -286,7 +286,7 @@ td.square {
 	height: 30px;
 }
 #chatForm fieldset > div {
-	margin-right: 60px;
+	margin-right: 80px;
 }
 input#chatText {
 	resize: none;
@@ -297,7 +297,7 @@ input#chatSubmit {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 60px;
+	width: 80px;
 }
 
 

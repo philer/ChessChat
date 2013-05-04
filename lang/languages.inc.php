@@ -9,7 +9,7 @@ self::$languages = array(
 		'name' => 'English',
 		'file' => 'english',
 	),
-	'ge' => array(
+	'de' => array(
 		'name' => 'Deutsch',
 		'file' => 'german',
 	),
