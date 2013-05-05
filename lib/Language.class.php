@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Represents a selectable Language.
+ * The Language has to defined in lang/languages.inc.php.
+ * @author Philipp Miller
+ */
 class Language {
 	
 	/**

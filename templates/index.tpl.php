@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="de">
+<html>
 	<head>
 		<title>&#x265A; ChessChat</title>
 		<base href="_blank" />

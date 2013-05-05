@@ -2,6 +2,10 @@
 
 require_once(ROOT_DIR.'lib/util.inc.php');
 
+/**
+ * The System Core initializes and coordinates all system components.
+ * @author Philipp Miller
+ */
 class Core {
 	
 	/**
