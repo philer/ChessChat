@@ -14,6 +14,7 @@ function __autoload($className) {
 	// add new directories here
 	$dirs = array(
 		'lib/',
+		'lib/exception/',
 	);
 	
 	foreach ($dirs as $dir) { // try all directories for class.php

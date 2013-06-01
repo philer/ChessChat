@@ -1,5 +1,7 @@
 <?php
 
+set_exception_handler(array('Core','exceptionHandler'));
+
 require_once(ROOT_DIR.'lib/util.inc.php');
 
 /**
@@ -9,23 +11,35 @@ require_once(ROOT_DIR.'lib/util.inc.php');
 class Core {
 	
 	/**
+	 * The database object
+	 * @var Database
+	 */
+	protected static $db = null;
+	
+	/**
 	 * Array contains requested Path
 	 * @var array
 	 */
-	protected static $request;
+	protected static $request = array();
 	
 	/**
 	 * Language object
 	 * @var Language
 	 */
-	protected static $language;
+	protected static $language = null;
 	
 	/**
 	 * Calls all core init methods
 	 */
 	public function __construct() {
-		$this->wrapRequest();
+		
+		$this->setDB();
+		
+		//TODO session
+		
 		$this->setLanguage();
+		
+		$this->wrapRequest();
 		// TODO
 		// ... new AjaxRequestHandler(); // distribute tasks
 		// or
@@ -33,6 +47,24 @@ class Core {
 	}
 	
 	/**
+	 * Reads database config and creates the database object
+	 */
+	protected function setDB() {
+		$dbHost = $dbUser = $dbPass = $dbName = '';
+		include(ROOT_DIR."dbconfig.inc.php");
+		self::$db = new Database($dbHost, $dbUser, $dbPass, $dbName);
+	}
+	
+	/**
+	 * Returns the database object
+	 * @return Database
+	 */
+	public function getDB() {
+		return self::$db;
+	}
+	
+	/**
+	 * TODO remove this -> session
 	 * Reads all request parameters from
 	 * $_GET, $_POST and $_SERVER['PATH_INFO']
 	 * and puts them in self::$request
@@ -72,5 +104,15 @@ class Core {
 	 */
 	public static function getLanguage() {
 		return self::$language;
+	}
+	
+	/**
+	 * called automatically when an exception is thrown.
+	 * @see set_exception_handler()
+	 */
+	public static function exceptionHandler(Exception $e) {
+		if (method_exists($e,'show')) $e->show();
+		else print $e;
+		exit;
 	}
 }
