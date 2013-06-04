@@ -1,27 +1,28 @@
 <?php
-$whitePlayer = true; // replace this with something like $thisPlayer->white
+$whitePlayer = true; //TODO replace this with something like $thisPlayer->white
 // Default Chessboard
 $chesspieceBefore = "<span class=\"chesspiece\">";
-$chessPieceAfter = "</span>";
+$chesspieceAfter = "</span>";
 $chesspieces = array();
-$chesspieces[0] = $chesspieceBefore."&#x2656;".$chessPieceAfter;
-$chesspieces[1] = $chesspieceBefore."&#x2658;".$chessPieceAfter;
-$chesspieces[2] = $chesspieceBefore."&#x2657;".$chessPieceAfter;
-$chesspieces[3] = $chesspieceBefore."&#x2655;".$chessPieceAfter;
-$chesspieces[4] = $chesspieceBefore."&#x2654;".$chessPieceAfter;
-$chesspieces[5] = $chesspieceBefore."&#x2657;".$chessPieceAfter;
-$chesspieces[6] = $chesspieceBefore."&#x2658;".$chessPieceAfter;
-$chesspieces[7] = $chesspieceBefore."&#x2656;".$chessPieceAfter;
-for ($i=8;$i<=15;$i++) $chesspieces[$i] = $chesspieceBefore."&#x2659;".$chessPieceAfter;
-for ($i=48;$i<=55;$i++) $chesspieces[$i] = $chesspieceBefore."&#x265F;".$chessPieceAfter;
-$chesspieces[56] = $chesspieceBefore."&#x265C;".$chessPieceAfter;
-$chesspieces[57] = $chesspieceBefore."&#x265E;".$chessPieceAfter;
-$chesspieces[58] = $chesspieceBefore."&#x265D;".$chessPieceAfter;
-$chesspieces[59] = $chesspieceBefore."&#x265B;".$chessPieceAfter;
-$chesspieces[60] = $chesspieceBefore."&#x265A;".$chessPieceAfter;
-$chesspieces[61] = $chesspieceBefore."&#x265D;".$chessPieceAfter;
-$chesspieces[62] = $chesspieceBefore."&#x265E;".$chessPieceAfter;
-$chesspieces[63] = $chesspieceBefore."&#x265C;".$chessPieceAfter;
+$chesspieces[0] = $chesspieceBefore."&#x2656;".$chesspieceAfter;
+$chesspieces[1] = $chesspieceBefore."&#x2658;".$chesspieceAfter;
+$chesspieces[2] = $chesspieceBefore."&#x2657;".$chesspieceAfter;
+$chesspieces[3] = $chesspieceBefore."&#x2655;".$chesspieceAfter;
+$chesspieces[4] = $chesspieceBefore."&#x2654;".$chesspieceAfter;
+$chesspieces[5] = $chesspieceBefore."&#x2657;".$chesspieceAfter;
+$chesspieces[6] = $chesspieceBefore."&#x2658;".$chesspieceAfter;
+$chesspieces[7] = $chesspieceBefore."&#x2656;".$chesspieceAfter;
+for ($i=8;$i<=15;$i++) $chesspieces[$i] = $chesspieceBefore."&#x2659;".$chesspieceAfter;
+for ($i=16;$i<=47;$i++) $chesspieces[$i] = "";//$chesspieceBefore.$chesspieceAfter;
+for ($i=48;$i<=55;$i++) $chesspieces[$i] = $chesspieceBefore."&#x265F;".$chesspieceAfter;
+$chesspieces[56] = $chesspieceBefore."&#x265C;".$chesspieceAfter;
+$chesspieces[57] = $chesspieceBefore."&#x265E;".$chesspieceAfter;
+$chesspieces[58] = $chesspieceBefore."&#x265D;".$chesspieceAfter;
+$chesspieces[59] = $chesspieceBefore."&#x265B;".$chesspieceAfter;
+$chesspieces[60] = $chesspieceBefore."&#x265A;".$chesspieceAfter;
+$chesspieces[61] = $chesspieceBefore."&#x265D;".$chesspieceAfter;
+$chesspieces[62] = $chesspieceBefore."&#x265E;".$chesspieceAfter;
+$chesspieces[63] = $chesspieceBefore."&#x265C;".$chesspieceAfter;
 ?>
 <div id="chessboard">
 	<ol id="own-prison" class="prison">
@@ -56,16 +57,16 @@ $chesspieces[63] = $chesspieceBefore."&#x265C;".$chessPieceAfter;
 			</tr>
 		</tfoot>
 		<tbody>
-<?php
+<?php // actual board starts here
 $light = true;  // altering squares color
 for ($i=1; $i<=8; $i++,$light=!$light) {
-	$r = $whitePlayer ? 9-$i : $i;  // turn board upside down for black
+	$r = $whitePlayer ? 9-$i : $i;  // turn board upside down for black //TODO $whitePlayer
 	echo "<tr id=\"rank$r\">\n"
 		."\t<th>$r</th>";
 	for ($c='A'; $c<'I'; $c++,$light=!$light) {
 		echo "<td class=\"square ";
 		echo $light ? "light" : "dark";  // altering squares color
-		echo "\" id=\"square$r$c\">{$chesspieces[ord($c)-65 + ($r-1)*8]}</td>"; // TODO
+		echo "\" id=\"square$r$c\">{$chesspieces[ord($c)-65 + ($r-1)*8]}</td>"; //TODO
 	}
 	echo "<th>$r</th>\n"
 		."\t</tr>";

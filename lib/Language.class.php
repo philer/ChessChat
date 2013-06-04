@@ -58,13 +58,13 @@ class Language {
 	 * @return 	string
 	 */
 	public function getLanguageItem($langVar) {
-		// search in global vars first
-		if (array_key_exists($langVar,self::$globalLangVars)) {
-			return self::$globalLangVars[$langVar];
-		}
-		// then search in language specific vars
+		// search in language specific vars first
 		if (array_key_exists($langVar,$this->langVars)) {
 			return $this->langVars[$langVar];
+		}
+		// then search in global vars
+		if (array_key_exists($langVar,self::$globalLangVars)) {
+			return self::$globalLangVars[$langVar];
 		}
 		// nothing found -> let's print the langVar instead
 		return $langVar;
@@ -109,5 +109,13 @@ class Language {
 			// default to english
 			return 'en';
 		}
+	}
+	
+	/**
+	 * get his language's name
+	 * @return 	string
+	 */
+	public function __toString() {
+		return $this->name;
 	}
 }

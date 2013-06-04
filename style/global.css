@@ -280,8 +280,8 @@ td.square {
 
 #chatForm fieldset,
 #chatForm fieldset > div,
-#chatText,
-#chatSubmit {
+input#chatText,
+button#chatSubmit {
 	display: block;
 	height: 30px;
 }
@@ -293,7 +293,7 @@ input#chatText {
 	width: 94%;
 	padding: 0 3%;
 }
-input#chatSubmit {
+button#chatSubmit {
 	position: absolute;
 	top: 0;
 	right: 0;

@@ -2,7 +2,9 @@
 
 /**
  * Represents a Database connection.
- * Currently only supports MySQL Databases using the MySQLi extension
+ * Currently only supports MySQL Databases using the MySQLi extension.
+ * If different database types are to be supported, make this abstract
+ * and extend appropriately!
  * @author Philipp Miller
  */
 class Database {
@@ -66,8 +68,8 @@ class Database {
 	 * @return 	array
 	 */
 	public function sendQuery($query) {
-		$this->queryCount++;
 		$result = $this->db->query($query);
+		$this->queryCount++;
 		$this->sentQueries[] = $query;
 		if(!$result) {
 			$errmsg = "<p>Sending Query "

@@ -15,12 +15,12 @@ class Core {
 	 * @var Database
 	 */
 	protected static $db = null;
-	
+
 	/**
-	 * Array contains requested Path
+	 * Array contains route
 	 * @var array
 	 */
-	protected static $request = array();
+	protected static $route = array();
 	
 	/**
 	 * Language object
@@ -32,18 +32,26 @@ class Core {
 	 * Calls all core init methods
 	 */
 	public function __construct() {
-		
+
 		$this->setDB();
 		
-		//TODO session
+		//TODO user/session
 		
 		$this->setLanguage();
 		
-		$this->wrapRequest();
+		$this->setRoute();
+		
 		// TODO
 		// ... new AjaxRequestHandler(); // distribute tasks
 		// or
 		// ... new RequestHandler(); // distribute tasks
+		// Request types: plain page (impressum), game, ajax, (userprofile)
+		/*if (self::$route[0] == "ajax") {
+			new AjaxRequestHandler();
+		}
+		if (self::$route[0] == "game") {
+			new GameRequestHandler(); // TODO change
+		}*/
 	}
 	
 	/**
@@ -64,34 +72,29 @@ class Core {
 	}
 	
 	/**
-	 * TODO remove this -> session
-	 * Reads all request parameters from
-	 * $_GET, $_POST and $_SERVER['PATH_INFO']
-	 * and puts them in self::$request
+	 * Creates route array from PATH_INFO.
 	 */
-	protected function wrapRequest() {
-		$request = array();
+	protected function setRoute() {
 		if (isset($_SERVER['PATH_INFO'])) {
-			$request = explode('/',ltrim($_SERVER['PATH_INFO'],'/ '));
+			self::$route = explode('/',trim($_SERVER['PATH_INFO'],'/ '));
 		}
-		self::$request = array_merge($request,$_GET,$_POST);
 	}
 	
 	/**
-	 * Returns array containing request parameters
+	 * Returns array containing route.
 	 * @return array
 	 */
-	public static function getRequest() {
-		return self::$request;
+	public static function getRoute() {
+		return self::$route;
 	}
 	
 	/**
-	 * Initiates Language Object
+	 * Initiates language object.
 	 */
 	protected function setLanguage() {
-		if (isset(self::$request['lang'])) {
+		if (isset($_GET['lang'])) {
 			// use specifically requested language
-			self::$language = new Language(self::$request['lang']);
+			self::$language = new Language($_GET['lang']);
 		} else {
 			// let the Language class determine the appropriate language
 			self::$language = new Language();

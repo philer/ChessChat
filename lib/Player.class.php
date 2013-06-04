@@ -1,24 +1,11 @@
 <?php
-abstract class Player {
-	
-	/**
-	 * unique PlayerId
-	 * @var integer
-	 */
-	protected $id;
-	
-	/**
-	 * A Player has a name.
-	 * @var string
-	 */
-	protected $name;
-	
-	/**
-	 * unique PlayerHash for cookie identification of guests
-	 * @var string
-	 */
-	protected $hash;
-	
+
+/**
+ * Represents a player in a Game. There are exactly two players per game.
+ * @author Philipp Miller
+ */
+class Player extends User {
+
 	/**
 	 * Player white?
 	 * @var boolean
@@ -29,7 +16,7 @@ abstract class Player {
 	/**
 	 * TODO
 	 */
-	public function __construct($id, $name = '', $hash = '') {
+	public function __construct() {
 		
 	}
 }

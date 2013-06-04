@@ -130,6 +130,7 @@ td.square.dark:hover {
 	/*border: 1px dashed #cfcfcf;*/
 	/*box-shadow: inset 0 0 4px #cfcfcf;*/
 	box-shadow: inset 0 0 4px rgba(0,0,0,.15);
+	text-shadow: 1px 1px 2px rgba(0,0,0,.2);
 }
 
 
@@ -178,7 +179,7 @@ input#chatText {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
-input#chatSubmit {
+button#chatSubmit {
 	font-weight: bold;
 	color: #777;
 	text-shadow: 1px 1px 0 #e5e5e5;
@@ -196,10 +197,10 @@ input#chatSubmit {
 	border-bottom-right-radius: 4px;
 	box-shadow: inset -1px -1px 3px #aaa;
 }
-input#chatSubmit:hover {
+button#chatSubmit:hover {
 	color: #555;
 }
-input#chatSubmit:active {
+button#chatSubmit:active {
 	background: #b8b8b8;
 	background: -moz-linear-gradient(top,  #b8b8b8 0%, #d8d8d8 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b8b8b8), color-stop(100%,#d8d8d8));

@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Represents a Game
+ * @author Philipp Miller
+ */
 class Game {
 	
 	/**
@@ -21,11 +26,17 @@ class Game {
 	protected $timestamp;
 	
 	/**
-	 * Opponent
+	 * Player one
 	 * @var Player
 	 */
-	protected $otherPlayer;
+	protected $whitePlayer;
 	
+	/**
+	 * Player two
+	 * @var Player
+	 */
+	protected $blackPlayer;
+		
 	/**
 	 * TODO
 	 */
@@ -42,7 +53,7 @@ class Game {
 	protected function generateHash() {
 		$hashString = $this->id
 					+ $this->timestamp
-					+ Core::user->getName()
+					+ Core::$user->getName()
 					+ $this->otherPlayer->getName()
 					+ GAME_SALT
 					;

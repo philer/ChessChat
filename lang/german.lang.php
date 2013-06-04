@@ -5,10 +5,10 @@
  */
 
 $this->langVars = array(
-"global.menu.newgame"			=> "Neues Spiel",
-"global.menu.settings"			=> "Einstellungen",
-"global.menu.legalnotice"		=> "Impressum",
-"global.menu.contact"			=> "Kontakt",
+"site.menu.newgame"			=> "Neues Spiel",
+"site.menu.settings"			=> "Einstellungen",
+"site.menu.legalnotice"		=> "Impressum",
+"site.menu.contact"			=> "Kontakt",
 
 "game.vs"				=> "vs",
 "game.menu.resign"		=> "Aufgeben",
