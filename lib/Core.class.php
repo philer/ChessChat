@@ -1,7 +1,10 @@
 <?php
 
+// use custom exception and error handling
 set_exception_handler(array('Core','exceptionHandler'));
+set_error_handler(array('Core','errorHandler'));
 
+// utility functions
 require_once(ROOT_DIR.'lib/util.inc.php');
 
 /**
@@ -23,6 +26,12 @@ class Core {
 	protected static $route = array();
 	
 	/**
+	 * @var Controller
+	 */
+	protected static $controller = null;
+	public static function getController() { return self::$controller; } // debugging
+	
+	/**
 	 * Language object
 	 * @var Language
 	 */
@@ -32,7 +41,7 @@ class Core {
 	 * Calls all core init methods
 	 */
 	public function __construct() {
-
+		
 		$this->setDB();
 		
 		//TODO user/session
@@ -41,17 +50,50 @@ class Core {
 		
 		$this->setRoute();
 		
-		// TODO
-		// ... new AjaxRequestHandler(); // distribute tasks
-		// or
-		// ... new RequestHandler(); // distribute tasks
-		// Request types: plain page (impressum), game, ajax, (userprofile)
-		/*if (self::$route[0] == "ajax") {
-			new AjaxRequestHandler();
+		// let's identify that request.
+		if (empty(self::$route)) {
+			
+			// no route at all, use default page
+			self::$controller  = new IndexController();
+			self::$controller->handleStandaloneRequest();
+			
+		} else if (self::$route[0] === "ajax") {
+				
+			// ajax request route
+			self::$route = array($_POST);
+			$controllerClass = array_shift(self::$route); //."Controller";
+			
+			if (class_exists($controllerClass)
+					&& is_subclass_of($controllerClass,'AjaxController')) {
+				
+				self::$controller = new $controllerClass();
+				
+			} else throw new InvalidAjaxException();
+			
+			self::$controller->handleAjaxRequest();
+				
+		} else {
+			
+			// regular request route
+			$controllerClass = self::$route[0]."Controller";
+			if(class_exists("ddd"))echo "test";
+			if (class_exists($controllerClass)
+					&& is_subclass_of($controllerClass,'StandaloneController')) {
+				
+				array_shift(self::$route);
+				self::$controller = new $controllerClass();
+				
+			} else if (Game::hashPregMatch(self::$route[0])) {
+				
+				// special feature: shorter urls for Game
+				self::$controller = new GameController();
+				
+			} else throw new PageNotFoundException();
+			
+			self::$controller->handleStandaloneRequest();
+			
 		}
-		if (self::$route[0] == "game") {
-			new GameRequestHandler(); // TODO change
-		}*/
+		
 	}
 	
 	/**
@@ -59,7 +101,7 @@ class Core {
 	 */
 	protected function setDB() {
 		$dbHost = $dbUser = $dbPass = $dbName = '';
-		include(ROOT_DIR."dbconfig.inc.php");
+		require_once(ROOT_DIR."dbconfig.inc.php");
 		self::$db = new Database($dbHost, $dbUser, $dbPass, $dbName);
 	}
 	
@@ -114,8 +156,27 @@ class Core {
 	 * @see set_exception_handler()
 	 */
 	public static function exceptionHandler(Exception $e) {
-		if (method_exists($e,'show')) $e->show();
-		else print $e;
+		if (method_exists($e,'toTpl')) $e->toTpl();
+		else echo $e;
 		exit;
+	}
+	
+	/**
+	 * Better error handling: Throws an exception.
+	 * @see http://www.php.net/manual/en/errorfunc.examples.php
+	 */
+	public static function errorHandler($errno, $errmsg, $file, $line) {
+		$errortypes = array (
+			E_ERROR		=> 'Error',
+			E_WARNING	=> 'Warning',
+			E_PARSE		=> 'Parse error',
+			E_NOTICE	=> 'Notice',
+			);
+		if (array_key_exists($errno,$errortypes))
+			$type = $errortypes[$errno];
+		else $type = "errorcode ".$errno;
+		
+		$errmsg = $type." in file ".$file.":$line\n".$errmsg;
+		throw new FatalException($errmsg);
 	}
 }

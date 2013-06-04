@@ -61,20 +61,13 @@ optional features<br />
 						<p class="msgOwn">
 							<span class="msgTime">21:15</span>
 							<span class="msgAuthor">Phil</span>
-							<span class="msgText"><?php echo $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?></span>
+							<span class="msgText" style="white-space:pre;">remaining $route from PATH_INFO
+<?php var_dump(Core::getRoute()) ?></span>
 						</p>
 						<p class="msgOwn">
 							<span class="msgTime">21:15</span>
 							<span class="msgAuthor">Phil</span>
-							<span class="msgText">
-								path_info: <?php echo $_SERVER['PATH_INFO'] ?><br />
-								script_name: <?php echo $_SERVER['SCRIPT_NAME'] ?><br />
-								request_uri: <?php echo $_SERVER['REQUEST_URI'] ?><br /></span>
-						</p>
-						<p class="msgOwn">
-							<span class="msgTime">21:15</span>
-							<span class="msgAuthor">Phil</span>
-							<span class="msgText" style="white-space:pre;"><?php var_dump(Core::getRoute()) ?></span>
+							<span class="msgText">using Controller <?php echo get_class(Core::getController()); ?></span>
 						</p>
 					</div><!-- #chatLog -->
 				</section>

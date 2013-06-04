@@ -14,6 +14,9 @@ function __autoload($className) {
 	// add new directories here
 	$dirs = array(
 		'lib/',
+		'lib/controller/',
+		'lib/model/',
+		'lib/chess/',
 		'lib/exception/',
 	);
 	
@@ -23,14 +26,14 @@ function __autoload($className) {
 			return;
 		}
 	}
-	foreach ($dirs as $dir) { // try all directories for interface.php
-		if (file_exists(ROOT_DIR.$dir.$className.'.interface.php')) {
-			require_once(ROOT_DIR.$dir.$className.'.interface.php');
+	foreach ($dirs as $dir) { // try all directories for if.php
+		if (file_exists(ROOT_DIR.$dir.$className.'.if.php')) {
+			require_once(ROOT_DIR.$dir.$className.'.if.php');
 			return;
 		}
 	}
 	
-	throw new ClassNotFoundException($className);
+	//throw new ClassNotFoundException($className);
 }
 
 /**

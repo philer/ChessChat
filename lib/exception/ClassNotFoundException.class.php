@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * OBSOLETE
  * throw this exception when an expected class could not be found in the filesystem.
  * @see __autoload (lib/util.inc.php)
  * @author Philipp Miller

@@ -10,7 +10,7 @@ class Chat {
 	 * Chat gets logged.
 	 * @var 	string
 	 */
-	$logfile = "";
+	$logFileName = "";
 	
 	/**
 	 * All messages that have been written so far.
@@ -35,6 +35,10 @@ class Chat {
 		/*
 		require_once("../templates/chatMessage.tpl.php");
 		*/
+	}
+	
+	public function toTpl() {
+		require_once(ROOT_DIR.'template/chat.tpl.php');
 	}
 	
 	public function getNewMessages() {}

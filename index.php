@@ -9,6 +9,3 @@ require_once(ROOT_DIR.'config.inc.php');
 
 require_once(ROOT_DIR.'lib/Core.class.php');
 new Core(); // start init process but never use Core as an object
-
-//TODO: Template engine
-require_once(ROOT_DIR.'templates/index.tpl.php');
