@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Chat mostly responds to ajax requests

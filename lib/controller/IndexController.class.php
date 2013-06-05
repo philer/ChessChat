@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Index page, often also called 'Home'

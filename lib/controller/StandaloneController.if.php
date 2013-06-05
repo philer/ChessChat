@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * A standalone controller can represent an individual

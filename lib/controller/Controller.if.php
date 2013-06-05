@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * A controller executes the user's request.

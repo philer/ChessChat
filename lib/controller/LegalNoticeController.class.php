@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Represents the legal notice page.
