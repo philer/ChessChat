@@ -8,6 +8,6 @@ class ChatController implements AjaxController {
 	
 	public function handleAjaxRequest() {}
 	
-	protected function getAjaxUpdate() {}
+	protected function getUpdate() {}
 	
 }

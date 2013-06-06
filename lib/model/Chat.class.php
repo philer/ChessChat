@@ -37,10 +37,6 @@ class Chat {
 		*/
 	}
 	
-	public function toTpl() {
-		require_once(ROOT_DIR.'template/chat.tpl.php');
-	}
-	
 	public function getNewMessages() {}
 	public function getAllMessages() {}
 	public function broadcastMessage() {} // broadcast == write to file

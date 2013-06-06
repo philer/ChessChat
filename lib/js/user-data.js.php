@@ -1,0 +1,1 @@
+var userName = <?php echo $this->user->name; //TODO?>

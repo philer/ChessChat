@@ -1,0 +1,193 @@
+#game {
+	width: 75%;
+	right: 25%;
+}
+#chat {
+	position: absolute;
+	width: 25%;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	text-align: left;
+}
+@media all and (max-width: 1200px) {
+	#game {
+		width: 66.66%;
+	}
+	#chat {
+		width: 33.33%;
+	}
+}
+@media all and (max-width: 800px) {
+	#game {
+		bottom: auto;
+		height: 66.66%;
+		width: 100%;
+	}
+	#chat {
+		width: 100%;
+		height: 33.33%;
+		left: 0;
+		top: auto;
+	}
+}
+
+#clock {
+	float: right;
+	text-align: center;
+}
+#clock span {
+	display: block;
+}
+#timer {
+	font-weight: bold;
+}
+#playtime {
+	font-size: .75em;
+}
+
+
+#game footer {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	font-size: .85em;
+}
+#gameMenu ul,
+#gameMenu ul li {
+	list-style-type: none;
+	display: inline-block;
+}
+#gameMenu li a {
+	display: inline-block;
+	padding: .5em 1em;
+}
+
+#chessboard {
+	display: inline-block;
+	position: relative;
+	margin: 50px auto; /* default */
+	font-size: 60px; /* default */
+}
+
+ol.prison {
+	font-size: .55em;
+	position: absolute;
+}
+ol#opp-prison {
+	top: 5.55%;
+	right: 0;
+}
+ol#own-prison {
+	bottom: 5.55%;
+	left: 0;
+}
+
+
+table#chessboardTable {
+	table-layout: fixed;
+	margin: 0 .6em; /* prison distance */
+	width: 700px;
+	height: 700px;
+	border-collapse: collapse;
+}
+thead td,
+tfoot td,
+th {
+	font-size: .33em;
+	font-weight: normal;
+}
+thead, tfoot {
+	height: 5.55%;
+}
+col.numbersColumn {
+	width: 5.55%;
+}
+td.square {
+	height: 11.11%;
+	width: 11.11%;
+	overflow: hidden;
+	cursor: pointer;
+}
+.chesspiece {
+	font-weight: normal;
+	width: 85%;
+	height: 85%;
+	display: block;
+	margin: auto;
+	overflow: hidden;
+	border-radius: 3px;
+}
+
+#chat > section {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	left: 10px;
+	bottom: 50px;
+	padding: 5px;
+	font-size: .75em;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#chatLog {
+	display: table;
+	width: 100%;
+	max-width: 100%;
+}
+#chatLog p {
+	display: table-row;
+}
+#chatLog p span {
+	display: table-cell;
+	padding: .15em .3em;
+}
+#chatLog span.msgTime {
+	opacity: .5;
+	font-weight: 300;
+	padding-left: 0;
+	padding-right: .1em;
+}
+#chatLog span.msgAuthor {
+	text-align: right;
+}
+#chatLog span.msgText {
+    padding-right: 0;
+	word-wrap: break-word;
+	/*word-break: break-all;*/
+}
+#chatLog p.msgBot span {
+	padding-top: .5em;
+	padding-bottom: .5em;
+}
+
+
+#chatForm {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	right: 10px;
+}
+
+#chatForm fieldset,
+#chatForm fieldset > div,
+input#chatText,
+button#chatSubmit {
+	display: block;
+	height: 30px;
+}
+#chatForm fieldset > div {
+	margin-right: 80px;
+}
+input#chatText {
+	resize: none;
+	width: 94%;
+	padding: 0 3%;
+}
+button#chatSubmit {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 80px;
+}

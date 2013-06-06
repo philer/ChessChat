@@ -7,16 +7,17 @@
 class GameController implements StandaloneController, AjaxController {
 	
 	public function handleStandaloneRequest() {
-		// TODO
-		$this->toTpl();
-	}
-	
-	public function toTpl() {
-		require_once(ROOT_DIR.'template/game.tpl.php');
+
+		// new Game(); // TODO
+
+		Core::getTemplateEngine()->registerScript("chessboardLayout");
+		Core::getTemplateEngine()->registerScript("chat");
+		Core::getTemplateEngine()->registerStylesheet("game");
+		Core::getTemplateEngine()->show("game");
 	}
 	
 	public function handleAjaxRequest() {}
 	
-	protected function getAjaxUpdate() {}
+	protected function getUpdate() {}
 	
 }

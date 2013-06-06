@@ -18,7 +18,20 @@ class Core {
 	 * @var Database
 	 */
 	protected static $db = null;
-
+	
+	/**
+	 * Language object
+	 * @var Language
+	 */
+	protected static $language = null;
+	
+	/**
+	 * TemplateEngine takes care of equipping templates
+	 * and sending them.
+	 * @var TemplateEngine
+	 */
+	protected static $templateEngine = null;
+	
 	/**
 	 * Array contains route
 	 * @var array
@@ -32,12 +45,6 @@ class Core {
 	public static function getController() { return self::$controller; } // debugging
 	
 	/**
-	 * Language object
-	 * @var Language
-	 */
-	protected static $language = null;
-	
-	/**
 	 * Calls all core init methods
 	 */
 	public function __construct() {
@@ -46,11 +53,89 @@ class Core {
 		
 		//TODO user/session
 		
+		$this->setTemplateEngine();
 		$this->setLanguage();
 		
 		$this->setRoute();
+		$this->setController();
+	}
+	
+	/**
+	 * Reads database config and creates the database object
+	 */
+	protected function setDB() {
+		$dbHost = $dbUser = $dbPass = $dbName = '';
+		require_once(ROOT_DIR."config/db.conf.php");
+		self::$db = new Database($dbHost, $dbUser, $dbPass, $dbName);
+	}
+	
+	/**
+	 * Returns the database object
+	 * @return Database
+	 */
+	public function getDB() {
+		return self::$db;
+	}
+	
+	/**
+	 * Initiates language object.
+	 */
+	protected function setLanguage() {
+		if (isset($_GET['lang'])) {
+			// use specifically requested language
+			self::$language = new Language($_GET['lang']);
+		} else {
+			// let the Language class determine the appropriate language
+			self::$language = new Language();
+		}
+	}
+	
+	/**
+	 * Returns Language Object for the selected Language
+	 * @return Language
+	 */
+	public static function getLanguage() {
+		return self::$language;
+	}
+	
+	/**
+	 * Initiates TemplateEngine.
+	 */
+	protected function setTemplateEngine() {
+		self::$templateEngine = new TemplateEngine();
+	}
+	
+	/**
+	 * Returns the TemplateEngine Object.
+	 * @return 	TemplateEngine
+	 */
+	public static function getTemplateEngine() {
+		return self::$templateEngine;
+	}
+	
+	/**
+	 * Creates route array from PATH_INFO.
+	 */
+	protected function setRoute() {
+		if (isset($_SERVER['PATH_INFO'])) {
+			self::$route = explode('/',trim($_SERVER['PATH_INFO'],'/ '));
+		}
+	}
+	
+	/**
+	 * Returns array containing route.
+	 * @return array
+	 */
+	public static function getRoute() {
+		return self::$route;
+	}
+	
+	/**
+	 * Identifies the request and calls the
+	 * according controller.
+	 */
+	protected function setController() {
 		
-		// let's identify that request.
 		if (empty(self::$route)) {
 			
 			// no route at all, use default page
@@ -93,62 +178,6 @@ class Core {
 			self::$controller->handleStandaloneRequest();
 			
 		}
-		
-	}
-	
-	/**
-	 * Reads database config and creates the database object
-	 */
-	protected function setDB() {
-		$dbHost = $dbUser = $dbPass = $dbName = '';
-		require_once(ROOT_DIR."config/db.conf.php");
-		self::$db = new Database($dbHost, $dbUser, $dbPass, $dbName);
-	}
-	
-	/**
-	 * Returns the database object
-	 * @return Database
-	 */
-	public function getDB() {
-		return self::$db;
-	}
-	
-	/**
-	 * Creates route array from PATH_INFO.
-	 */
-	protected function setRoute() {
-		if (isset($_SERVER['PATH_INFO'])) {
-			self::$route = explode('/',trim($_SERVER['PATH_INFO'],'/ '));
-		}
-	}
-	
-	/**
-	 * Returns array containing route.
-	 * @return array
-	 */
-	public static function getRoute() {
-		return self::$route;
-	}
-	
-	/**
-	 * Initiates language object.
-	 */
-	protected function setLanguage() {
-		if (isset($_GET['lang'])) {
-			// use specifically requested language
-			self::$language = new Language($_GET['lang']);
-		} else {
-			// let the Language class determine the appropriate language
-			self::$language = new Language();
-		}
-	}
-	
-	/**
-	 * Returns Language Object for the selected Language
-	 * @return Language
-	 */
-	public static function getLanguage() {
-		return self::$language;
 	}
 	
 	/**

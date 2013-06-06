@@ -7,11 +7,11 @@
 class Language {
 	
 	/**
-	 * abbreviation for this language
+	 * Language code for this language
 	 * as used by request headers etc.
 	 * @var 	string
 	 */
-	protected $abbr;
+	protected $langCode;
 	
 	/**
 	 * name of language in this language
@@ -40,15 +40,15 @@ class Language {
 	
 	/**
 	 * Loads the appropriate language files.
-	 * @param 	string 	$abbr
+	 * @param 	string 	$langCode
 	 */
-	public function __construct($abbr = '') {
+	public function __construct($langCode = '') {
 		// set self::$languages
 		require_once(ROOT_DIR.'lang/languages.inc.php');
-		$this->abbr = $this->determineLanguage($abbr);
-		$this->name = self::$languages[$this->abbr]['name'];
+		$this->langCode = $this->determineLanguage($langCode);
+		$this->name = self::$languages[$this->langCode]['name'];
 		require_once(ROOT_DIR.'lang/global.lang.php');
-		require_once(ROOT_DIR.'lang/'.self::$languages[$this->abbr]['file'].'.lang.php');
+		require_once(ROOT_DIR.'lang/'.self::$languages[$this->langCode]['file'].'.lang.php');
 	}
 	
 	/**
@@ -85,24 +85,24 @@ class Language {
 	
 	/**
 	 * Determines the language to be used and returns its
-	 * abbreviation. Checks the supplied abbreviation first,
+	 * language code. Checks the supplied language code first,
 	 * next the http request and if that still doesn't check out,
 	 * defaults to english.
-	 * @param 	string 	$abbr
+	 * @param 	string 	$langCode
 	 * @return 	string
 	 */
-	protected function determineLanguage($abbr) {
+	protected function determineLanguage($langCode) {
 		// does the requested language exist?
-		if ($abbr && array_key_exists($abbr, self::$languages)) {
-			return $abbr;
+		if ($langCode && array_key_exists($langCode, self::$languages)) {
+			return $langCode;
 		} else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))  {
 			// try browser language settings
 			$httpAcceptLanguages = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
 			foreach ($httpAcceptLanguages as $httpAcceptLanguage) {
 				// strip stuff like 'de-at;q=0.5' to 'de'
-				$cleanAbbr = preg_replace('@^([a-z]{2}).*@','$1',$httpAcceptLanguage);
-				if (array_key_exists($cleanAbbr, self::$languages)) {
-					return $cleanAbbr;
+				$cleanLangCode = preg_replace('@^([a-z]{2}).*@','$1',$httpAcceptLanguage);
+				if (array_key_exists($cleanLangCode, self::$languages)) {
+					return $cleanLangCode;
 				}
 			}
 		} else {
@@ -112,7 +112,15 @@ class Language {
 	}
 	
 	/**
-	 * get his language's name
+	 * Returns this language's code.
+	 * @return 	string
+	 */
+	public function getLanguageCode() {
+		return $this->langCode;
+	}
+	
+	/**
+	 * Returns this language's name.
 	 * @return 	string
 	 */
 	public function __toString() {

@@ -8,7 +8,5 @@
 interface StandaloneController extends Controller {
 	
 	public function handleStandaloneRequest();
-	
-	public function toTpl();
-	
+		
 }
