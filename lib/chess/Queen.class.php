@@ -1,10 +1,10 @@
 <?php
 
-class Pawn extends ChessPiece {
+class Queen extends ChessPiece {
 	
 	/**
 	 * Check if $move is a valid move 
-	 * for a Pawn on this chessboard
+	 * for a Queen on this chessboard
 	 * @param 	string 	$move
 	 * @return 	boolean	$valid
 	 */

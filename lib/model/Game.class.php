@@ -68,13 +68,16 @@ class Game {
 	protected $boardString = "";
 	
 	/**
+	 * String representation of the board at the start of a game
+	 * @var string
+	 */
+	const DEFAULT_BOARD_STRING =
+	"Ra1Nb1Bc1Qd1Kd1Bc1Nb1Ra1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7ra8nb8bc8qd8kd8bc8nb8ra8";
+	
+	/**
 	 * TODO
 	 */
-	public function __construct() {
-		$this->id = 1;
-		$this->otherPlayer = new Player("Larissa");
-		$this->timestamp = time(); // maybe get timestamp from client's $_POST
-	}
+	public function __construct() {}
 
 	/**
 	 * Creates a hopefully unique hash for game identification.
