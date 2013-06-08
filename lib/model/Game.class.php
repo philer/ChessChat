@@ -50,25 +50,29 @@ class Game {
 	protected $blackPlayer = null;
 	
 	/**
-	 * Every Game has a Chat.
-	 * @var Chat
-	 */
-	protected $chat = null;
-	
-	/**
 	 * Chessboard
-	 * @var TODO
+	 * @see chessboard.tpl.php for an example
+	 * @var array<array>
 	 */
 	protected $board;
 	
 	/**
-	 * Chessboard represented as a string
+	 * Chessboard represented as a string for easy transmission and storage
+	 * Conventions:
+	 * - 3 characters per piece. (3*32 = 96 total)
+	 * - first character: piece type, capital for white
+	 * - second character: file (column)
+	 *		+ capital for king means no castling yet
+	 * 		+ capital for pawn means he just did a double step, which is
+	 * 		  relevant for en passant (update it after next move!)
+	 * - third character: rank (row)
+	 * - file 'x' for dead white pieces, file 'y' for dead black pieces
 	 * @var string
 	 */
 	protected $boardString = "";
 	
 	/**
-	 * String representation of the board at the start of a game
+	 * String representation of the board at the start of a game.
 	 * @var string
 	 */
 	const DEFAULT_BOARD_STRING =
@@ -132,7 +136,29 @@ class Game {
 	}
 	
 	// TODO
-	protected function move($move) {}
-	protected function validateMove($board, $move) {}
+	public function move($move) {
+		Core::getController()->getChat()->post(
+			Core::getLanguage()->getLanguageItem("chat.chess.moved")." ".$move,
+			Core::getUser()
+			);
+		//TODO
+	}
 	
+	//TODO
+	public function validateMove($board, $move) {}
+	public static function boardFromString($boardStr) {}
+	public static function boardToString($board) {}
+	
+	/**
+	 * Checks if given string may be a move
+	 * pattern supported by this system.
+	 * DOES NOT validate or execute the move.
+	 * @param 	string 	$str
+	 * @return 	boolean
+	 */
+	public static function matchMovePattern($str) {
+		// TODO (maybe also add language support)
+		return preg_match('@^[a-h][1-8][_ -]?[a-h][1-8]$@i', $str); // "e2-e4"
+		//return preg_match('@^[pkqnbr][a-h][1-8]$@i', $str); // "Pe4"
+	}
 }

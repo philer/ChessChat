@@ -6,8 +6,9 @@
 		<base href="<?php echo HOST ?>" />
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo HOST ?>style/fonts.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo HOST ?>style/global.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo HOST ?>style/colors.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo HOST ?>style/color.css" />
 		<script src="<?php echo HOST ?>js/jquery-2.0.0.min.js"></script>
+		<script src="<?php echo HOST ?>js/jquery-ui-1.10.3.custom.min.js"></script>
 <?php
 	foreach ($this->getAsyncScripts() as $script) {
 		echo "<script type=\"text/javascript\" src=\"".$script."\" async ></script>\n";

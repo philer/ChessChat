@@ -6,7 +6,7 @@
 			<section>
 
 				<header>
-					<h2><?php lang("site.legalnotice"); ?></h2>
+					<h1><?php lang("site.legalnotice"); ?></h1>
 				</header>
 				<dl>
 					<dt><?php lang("legal.nameAndAddress") ?></dt>

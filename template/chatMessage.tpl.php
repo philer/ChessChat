@@ -1,5 +1,9 @@
-<p class="msgOwn">
-	<span class="msgTime"><?php echo $msgTime ?></span>
-	<span class="msgAuthor"><?php echo $playerName ?></span>
-	<span class="msgText"><?php echo $msg ?></span>
-</p>
+<p class="<?php
+echo (isset($this->vars['bot'])) ? "msgBot" : "msgOwn";
+?>"><?php
+	?><span class="msgTime"><?php echo date('G:i',NOW) ?></span><?php
+	?><span class="msgAuthor"><?php
+echo (isset($this->vars['bot'])) ? $this->vars['bot'] : Core::getUser();
+	?></span><?php
+	?><span class="msgText"><?php echo $this->vars['msg'] ?></span><?php
+?></p>

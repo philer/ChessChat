@@ -103,14 +103,14 @@ div#main > section > header {
 	overflow: hidden;
 	font-size: .9em;
 }
-div#main > section > header > h2,
+div#main > section > header > h1,
 div#main > section > header > div {
 	padding: .5em 1em;
 	display: inline-block;
 	height: 2em;
 	font-size: 1em;
 }
-div#main > section > header > h2 {
+div#main > section > header > h1 {
 	line-height: 2em;
 	padding-left: 3em;
 	font-weight: bold;

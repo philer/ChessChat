@@ -4,6 +4,9 @@
 set_exception_handler(array('Core','exceptionHandler'));
 set_error_handler(array('Core','errorHandler'));
 
+// current time
+define('NOW', time());
+
 // utility functions
 require_once(ROOT_DIR.'lib/util.inc.php');
 
@@ -14,13 +17,19 @@ require_once(ROOT_DIR.'lib/util.inc.php');
 class Core {
 	
 	/**
-	 * The database object
+	 * The Database object
 	 * @var Database
 	 */
 	protected static $db = null;
 	
 	/**
-	 * Language object
+	 * The User object
+	 * @var User
+	 */
+	protected static $user = null;
+	
+	/**
+	 * The Language object
 	 * @var Language
 	 */
 	protected static $language = null;
@@ -33,6 +42,7 @@ class Core {
 	protected static $templateEngine = null;
 	
 	/**
+	 * The Controller takes care of executing this request.
 	 * Array contains route
 	 * @var array
 	 */
@@ -52,6 +62,7 @@ class Core {
 		$this->setDB();
 		
 		//TODO user/session
+		self::$user = new User(1,"DU"); // Dummy User
 		
 		$this->setTemplateEngine();
 		$this->setLanguage();
@@ -70,11 +81,19 @@ class Core {
 	}
 	
 	/**
-	 * Returns the database object
+	 * Returns the Database object
 	 * @return Database
 	 */
-	public function getDB() {
+	public static function getDB() {
 		return self::$db;
+	}
+	
+	/**
+	 * Returns the User object
+	 * @return User
+	 */
+	public static function getUser() {
+		return self::$user;
 	}
 	
 	/**
@@ -145,8 +164,7 @@ class Core {
 		} else if (self::$route[0] === "ajax") {
 				
 			// ajax request route
-			self::$route = array($_POST);
-			$controllerClass = array_shift(self::$route); //."Controller";
+			$controllerClass = $_POST['controller']."Controller";
 			
 			if (class_exists($controllerClass)
 					&& is_subclass_of($controllerClass,'AjaxController')) {

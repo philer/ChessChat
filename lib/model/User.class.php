@@ -40,7 +40,12 @@ class User {
 	/**
 	 * TODO
 	 */
-	public function __construct($id, $name = '', $password = '', $hash = '') {
-		
+	public function __construct($id, $name = "", $password = "", $hash = "") {
+		$this->id = $id;
+		if (!empty($name)) $this->name = $name;
+	}
+	
+	public function __toString() {
+		return $this->name;
 	}
 }

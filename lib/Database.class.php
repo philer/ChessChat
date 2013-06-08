@@ -54,7 +54,7 @@ class Database {
 	 * Connects to database using given authentication information.
 	 * Override this for different database types!
 	 */
-	public function connect() {
+	protected function connect() {
 		$this->db = new MySQLi($this->host, $this->user, $this->pass, $this->name);
 		if ($this->db->connect_error) {
 			throw new DatabaseException("Database Connection Failed: ".mysqli_connect_error());

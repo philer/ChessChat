@@ -61,6 +61,7 @@ abstract class ChessPiece {
 	 */
 	public function __construct($white, $square = '') {
 		$this->white = $white;
+		// TODO
 	}
 	
 	/**

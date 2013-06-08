@@ -13,13 +13,18 @@ $(function() {
 			
 			var msgTime = today.getHours()+":"+today.getMinutes();
 			
-			msgData = "msgTime="+msgTime
+			/*msgData = "msgTime="+msgTime
 					+ "&playerName="+playerName
-					+ "&msg="+msg;
+					+ "&msg="+msg;*/
+			msgData = "controller=Chat"
+					+ "&gameId=" + "1" // TODO
+					+ "&method=post"
+					+ "&msg=" + msg;
 			
 			$.ajax({  
 				type: "POST",  
-				url: "lib/ajaxAnswer.php",  
+				//url: "lib/ajaxAnswer.php",  
+				url: "index.php/ajax",
 				data: msgData,  
 				success: function(msgTpl) {  
 					$("#chatLog").append(msgTpl);
@@ -31,9 +36,45 @@ $(function() {
 								+ "</p>";
 					$("#chatLog").append(msgHTML);*/
 					$("#chatText").val("");
+					scrollChatToBottom();
 		    	}
 		    });
 		}
 		return false;
 	});
 });
+
+$(function() {
+	$( ".chesspiece" ).draggable({
+		containment: "table#chessboardTable"
+		, cursor: 'move'
+		//, snap: "table#chessboardTable td.square"
+		, stack: '.chesspiece'
+		//, revert: true
+	});
+	$( "table#chessboardTable td.square" ).droppable({
+		accept: ".chesspiece",
+		drop: function( event, ui ) {
+			//$("#chatText").val("asdf");
+			var chesspiece = ui.draggable;
+			
+			//chesspiece.draggable( 'disable' );
+			//$(this).droppable( 'disable' );
+			//chesspiece.position(" { of: $(this), my: 'left top', at: 'left top' } ");
+			chesspiece.draggable( 'option', 'revert', false );
+
+			alert( 'The chesspiece #'
+				+ chesspiece.attr('id')
+				+ ' was dropped onto the square #'
+				+ $(this).attr('id') );
+		}
+	});
+});
+
+//TODO
+function scrollChatToBottom() {
+	$('#chatLog').animate({ 
+		scrollTop: $('#chatLog > div').height()-$('#chatLog').height()}, 
+		200, "swing"
+	);
+}

@@ -82,7 +82,9 @@ ol#own-prison {
 	bottom: 5.55%;
 	left: 0;
 }
-
+ol.prison li {
+	cursor: default;
+}
 
 table#chessboardTable {
 	table-layout: fixed;
@@ -119,7 +121,7 @@ td.square {
 	border-radius: 3px;
 }
 
-#chat > section {
+#chatLogFrame {
 	position: absolute;
 	top: 10px;
 	right: 10px;

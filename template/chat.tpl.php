@@ -1,4 +1,4 @@
-				<section>
+				<section id="chatLogFrame">
 					<div id="chatLog">
 						<p class="msgOwn">
 							<span class="msgTime">17:13</span>
@@ -25,43 +25,19 @@
 							<span class="msgAuthor">Larissa</span>
 							<span class="msgText">That's a lot of text</span>
 						</p>
-						<p class="msgBot">
-							<span class="msgTime">21:15</span>
-							<span class="msgAuthor">Features</span>
-							<span class="msgText">
-								- move via chat msg ("QB4")<br />
-								- ajax chat<br />
-								- server-side move validation<br />
-								- move via drag & drop (JS)
-							</span>
-						</p>
-						<p class="msgOwn">
-							<span class="msgTime">17:13</span>
-							<span class="msgAuthor">TODO</span>
-							<span class="msgText">
-								- GameController<br />
-								- ajax requests
-							</span>
-						</p>
-						<p class="msgOther">
-							<span class="msgTime">17:13</span>
-							<span class="msgAuthor">TODO</span>
-							<span class="msgText">
-								- move validation
-							</span>
 						</p>
 						<p class="msgBot">
 							<span class="msgTime">21:15</span>
 							<span class="msgAuthor">Debug</span>
 							<span class="msgText" style="white-space:pre;font-family:mono;color:grey"
-								>remaining $route from PATH_INFO:
-<?php								var_dump(Core::getRoute())
-								?>using Controller: <?php
-									echo get_class(Core::getController());
-							?></span>
+								>using Controller: <?php
+echo get_class(Core::getController());?>
+
+remaining $route from PATH_INFO:
+<?php var_dump(Core::getRoute())?></span>
 						</p>
 					</div><!-- #chatLog -->
-				</section>
+				</section><!-- #chatLogFrame -->
 				<form id="chatForm" action="">
 					<fieldset>
 						<div>

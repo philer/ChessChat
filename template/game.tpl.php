@@ -5,7 +5,7 @@
 		<div id="main">
 			<section id="game">
 				<header>
-					<h2>Phil <span class="vs">vs</span> Larissa</h2>
+					<h1>Phil <span class="vs">vs</span> Larissa</h1>
 					<div id="clock">
 						<span id="timer">3:00</span>
 						<span id="playtime">0:27:49</span>

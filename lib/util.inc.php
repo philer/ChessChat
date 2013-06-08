@@ -44,3 +44,12 @@ function __autoload($className) {
 function lang($langVar) {
 	echo Core::getLanguage()->getLanguageItem($langVar);
 }
+
+/**
+ * Alias function for safely handing string parameters
+ * @var 	string 	$str
+ * @return 	string
+ */
+function escapeString($str) {
+	return Core::getDB()->escapeString($str);
+}
