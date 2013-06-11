@@ -4,6 +4,9 @@
 					<li><a href="index.php/LegalNotice"><?php lang('site.legalnotice') ?></a></li>
 				</ul>
 			</nav>
+			<div style="float:right;">
+				<?php echo round(microtime(true) - START_TIME, 4); ?>
+			</div>
 			<div id="copyright"><?php lang('site.copyrightby') ?>Phil &amp; Larissa</div>
 		</footer>
 <?php //include("overlay.tpl.php"); ?>

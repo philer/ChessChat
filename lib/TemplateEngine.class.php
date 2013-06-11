@@ -70,13 +70,21 @@ class TemplateEngine {
 		$this->show($template);
 	}
 	
+			
+	/**
+	 * Adds a stylesheet that will be linked in the document head
+	 * @param 	string 	$stylesheet.
+	 */
+	public function registerStylesheet($stylesheet) {
+		$this->stylesheets[] = self::getStylesheetPath($stylesheet);
+	}
 	
 	/**
 	 * Adds a script that will be linked in the document head
 	 * @param 	string 	$script.
 	 */
 	public function registerScript($script) {
-		$this->scripts[] = HOST."js/".$script.".js";
+		$this->scripts[] = self::getScriptPath($script);
 	}
 	
 	/**
@@ -84,8 +92,8 @@ class TemplateEngine {
 	 * with an 'async' attribute.
 	 * @param 	string 	$script
 	 */
-	public function registerAsyncScript($script) {
-		$this->asyncScripts[] = HOST."js/".$script.".js";
+	public function registerAsyncScript($ascript) {
+		$this->asyncScripts[] = self::getScriptPath($ascript);
 	}
 	
 	/**
@@ -96,13 +104,46 @@ class TemplateEngine {
 	public function registerDynamicScript($script) {
 		$this->dynamicScripts[] = ROOT_DIR."lib/js/".$script.".js.php";
 	}
-		
+	
+	
 	/**
-	 * Adds a stylesheet that will be linked in the document head
-	 * @param 	string 	$stylesheet.
+	 * Checks which file is available and returns the full path
+	 * prefering compressed scripts
+	 * @param 	string 	$script
+	 * @return 	string
 	 */
-	public function registerStylesheet($stylesheet) {
-		$this->stylesheets[] = HOST."style/".$stylesheet.".css";
+	protected static function getScriptPath($script) {
+		//if (file_exists(ROOT_DIR."js/".$script.".min.js")) {return HOST."js/".$script.".min.js";} else
+		if (file_exists(ROOT_DIR."js/".$script.".js")) {
+			return HOST."js/".$script.".js";
+		} else if (file_exists(ROOT_DIR."js/".$script)) {
+			return HOST."js/".$script.".js";
+		}
+	}
+	
+	/**
+	 * Checks which file is available and returns the full path
+	 * prefering compressed scripts
+	 * @param 	string 	$stylesheet
+	 * @return 	string
+	 */
+	protected static function getStylesheetPath($stylesheet) {
+		//if (file_exists(ROOT_DIR."style/".$stylesheet.".min.css")) {return HOST."style/".$stylesheet.".min.css";} else
+		if (file_exists(ROOT_DIR."style/".$stylesheet.".css")) {
+			return HOST."style/".$stylesheet.".css";
+		} else if (file_exists(ROOT_DIR."style/".$stylesheet)) {
+			return HOST."style/".$stylesheet.".css";
+		}
+	}
+	
+	
+	/**
+	 * Returns a clean array of all stylesheets to be linked
+	 * in the document head.
+	 * @return 	array<string>
+	 */
+	public function getStylesheets() {
+		return array_unique($this->stylesheets);
 	}
 	
 	/**
@@ -132,12 +173,4 @@ class TemplateEngine {
 		return array_unique($this->dynamicScripts);
 	}
 	
-	/**
-	 * Returns a clean array of all stylesheets to be linked
-	 * in the document head.
-	 * @return 	array<string>
-	 */
-	public function getStylesheets() {
-		return array_unique($this->stylesheets);
-	}
 }

@@ -1,4 +1,5 @@
-@import url("fonts.css");
+@import "font.less";
+
 html, body {
 	padding: 0;
 	margin: 0;
@@ -57,11 +58,12 @@ div#main {
     top: 3em;
     bottom: 2em;
     z-index: 100;
+    overflow: auto;
 }
 footer#footer {
 	bottom: 0;
 	height: 1em;
-	padding: .5em 0;
+	padding: .5em 1em;
 	z-index: 200;
 }
 header#header h1 {
@@ -116,21 +118,18 @@ div#main > section > header > h1 {
 	font-weight: bold;
 }
 
+footer#footer > * {
+	font-size: .75em;
+}
+
 #footerMenu,
 #footerMenu ul,
 #footerMenu li,
 #footerMenu a {
 	display: inline-block;
 }
-#copyright,
 #footerMenu {
-	font-size: .75em;
-}
-#footerMenu {
-	position: absolute;
-	left: 0;
-	margin: 0 2em;
-
+	float: left;
 }
 #footerMenu li a {
 	padding: 0 .5em;
@@ -173,7 +172,7 @@ div#main > section > header > h1 {
 	overflow-y: auto;
 	overflow-x: hidden;
 	padding: 2em;
-	padding-right: -10px;
+	/*padding-right: -10px; invalid*/
 	background-color: #eee;
 	border: 15px solid rgba(0,0,0,.4);
 	background-clip: padding-box;
@@ -195,3 +194,6 @@ div#main > section > header > h1 {
 	background-color: #eee;
 	border: 15px solid rgba(0,0,0,.4);
 }*/
+
+@import "globalColor.less";
+@import "page.less";

@@ -1,3 +1,9 @@
+# editors and stuff
 *sublime*
 *gource*
+
+# temp and backup files
 *.backup
+
+# styles are compiled from less
+style/*.css
