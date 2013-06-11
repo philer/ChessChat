@@ -10,9 +10,9 @@
 				<p><em style="color: #883333">This project is still under construction and will remain so for a while.</em></p>
 				<style>
 					#chessboard {margin: 20px;}
-					ol.prison {display: none;}
-					table#chessboardTable {width: 240px; height: 240px;font-size: 19px;}
-					table#chessboardTable span.chesspiece {box-shadow: none;}
+					#chessboard ol.prison {display: none;}
+					#chessboard table#chessboardTable {width: 240px; height: 240px;font-size: 19px;}
+					#chessboard table#chessboardTable span.chesspiece {box-shadow: none;}
 				</style>
 				<?php $this->includeTemplate("chessboard"); ?>
 			</section>

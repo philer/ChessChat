@@ -1,29 +1,29 @@
 /* general for normal pages */
 div#main > section {
 	font-size: .85em;
-}
-
-div#main > section > h1 {
-	font-size: 2em;
-	margin: .25em;
-}
-div#main > section > p {
-	margin: 1em;
-}
-
-/* legal notice */
-div#main > section > dl {
-	width: 80%;
-	margin: 3em auto;
-}
-div#main > section > dl > dt {
-	float: left;
-	width: 14em;
-	text-align: right;
 	
-	color: #999;
-}
-div#main > section > dl > dd {
-	margin-left: 15em;
-	text-align: left;
+	> h1 {
+		font-size: 2em;
+		margin: .25em;
+	}
+	> p {
+		margin: 1em;
+	}
+
+	/* legal notice */
+	> dl {
+		width: 80%;
+		margin: 3em auto;
+		> dt {
+			float: left;
+			width: 14em;
+			text-align: right;
+			
+			color: #999;
+		}
+		> dd {
+			margin-left: 15em;
+			text-align: left;
+		}
+	}
 }

@@ -1,5 +1,6 @@
 @import "font.less";
 
+/*** GENERAL SETTINGS ***/
 html, body {
 	padding: 0;
 	margin: 0;
@@ -42,6 +43,8 @@ span.vs {
 }
 
 
+/*** PAGE LAYOUT ***/
+
 header#header,
 div#main,
 footer#footer {
@@ -49,151 +52,90 @@ footer#footer {
 	left: 0;
 	right: 0;
 }
+
 header#header {
 	top: 0;
 	height: 3em;
 	z-index: 200;
+	h1 {
+		float: left;
+		padding: 0 .1em;
+		font-size: 1.5em;
+		line-height: 2em;
+	}
+	#panel {
+		margin: 0 25%;
+		height: 100%;
+		overflow: hidden;
+
+		ul,
+		ul li,
+		ul li a {
+			display: inline-block;
+			height: 100%;
+			margin: 0;
+		}
+		ul li a {
+			line-height: 3em;
+			font-size: 1em;
+			padding: 0 1.5em;
+		}
+	}
 }
 div#main {
     top: 3em;
     bottom: 2em;
     z-index: 100;
     overflow: auto;
+	> section {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		> header {
+			text-align: left;
+			overflow: hidden;
+			font-size: .9em;
+			> h1,
+			> div {
+				padding: .5em 1em;
+				display: inline-block;
+				height: 2em;
+				font-size: 1em;
+			}
+			> h1 {
+				line-height: 2em;
+				padding-left: 3em;
+				font-weight: bold;
+			}
+		}
+	}
 }
+
 footer#footer {
 	bottom: 0;
 	height: 1em;
 	padding: .5em 1em;
 	z-index: 200;
+	
+	> * {
+		font-size: .75em;
+	}
+	
+	#footerMenu {
+		float: left;
+		&,
+		ul,
+		ul li,
+		ul li a {
+			display: inline-block;
+		}
+		ul li a {
+			padding: 0 .5em;
+		}
+	}
 }
-header#header h1 {
-	float: left;
-	padding: 0 .1em;
-	font-size: 1.5em;
-	line-height: 2em;
-}
-#panel {
-	margin: 0 25%;
-	height: 100%;
-	overflow: hidden;
-}
-#panel ul,
-#panel ul li,
-#panel ul li a {
-	display: inline-block;
-	height: 100%;
-	margin: 0;
-}
-#panel ul li a {
-	line-height: 3em;
-	font-size: 1em;
-	padding: 0 1.5em;
-}
-div#main {
-	color: #444;
-}
-div#main > section {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-}
-
-div#main > section > header {
-	text-align: left;
-	overflow: hidden;
-	font-size: .9em;
-}
-div#main > section > header > h1,
-div#main > section > header > div {
-	padding: .5em 1em;
-	display: inline-block;
-	height: 2em;
-	font-size: 1em;
-}
-div#main > section > header > h1 {
-	line-height: 2em;
-	padding-left: 3em;
-	font-weight: bold;
-}
-
-footer#footer > * {
-	font-size: .75em;
-}
-
-#footerMenu,
-#footerMenu ul,
-#footerMenu li,
-#footerMenu a {
-	display: inline-block;
-}
-#footerMenu {
-	float: left;
-}
-#footerMenu li a {
-	padding: 0 .5em;
-}
-/*
-.overlay {
-	position: fixed;
-	z-index: 1000;
-	top: 20%;
-	left: 50%;
-	max-height: 60;
-	margin-left: -25%;
-	width: 50%;
-	background-color: rgba(0,0,0,.4);
-}
-.overlayContainer {
-	display: inline-block;
-	margin: 12px;
-	padding: 2em;
-	background-color: #eee;
-}
-/**/
-.overlay {
-	display: none;
-	position: fixed;
-	z-index: 1000;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	background-color: rgba(30,30,30,.2);
-	text-align: center;
-	padding: 0 25%;
-}
-.overlayContainer {
-	display: inline-block;
-	position: relative;
-	top: 20%;
-	max-height: 50%;
-	overflow-y: auto;
-	overflow-x: hidden;
-	padding: 2em;
-	/*padding-right: -10px; invalid*/
-	background-color: #eee;
-	border: 15px solid rgba(0,0,0,.4);
-	background-clip: padding-box;
-	box-shadow: 0 0 3em rgba(0,0,0,.3);
-}
-/*
-.overlayContainer {
-	position: absolute;
-	top: 20%;
-	left: 50%;
-	right: 50%;
-	width: 30%;
-	max-height: 50%;
-	overflow: auto;
-	margin-left: -15%;
-	padding: 2em;
-	text-align: left;
-	background-clip: padding-box;
-	background-color: #eee;
-	border: 15px solid rgba(0,0,0,.4);
-}*/
-
 @import "globalColor.less";
 @import "page.less";
+//@import "overlay.less";

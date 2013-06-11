@@ -1,0 +1,61 @@
+/*
+.overlay {
+	position: fixed;
+	z-index: 1000;
+	top: 20%;
+	left: 50%;
+	max-height: 60;
+	margin-left: -25%;
+	width: 50%;
+	background-color: rgba(0,0,0,.4);
+}
+.overlayContainer {
+	display: inline-block;
+	margin: 12px;
+	padding: 2em;
+	background-color: #eee;
+}
+/**/
+.overlay {
+	display: none;
+	position: fixed;
+	z-index: 1000;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(30,30,30,.2);
+	text-align: center;
+	padding: 0 25%;
+}
+.overlayContainer {
+	display: inline-block;
+	position: relative;
+	top: 20%;
+	max-height: 50%;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 2em;
+	/*padding-right: -10px; invalid*/
+	background-color: #eee;
+	border: 15px solid rgba(0,0,0,.4);
+	background-clip: padding-box;
+	box-shadow: 0 0 3em rgba(0,0,0,.3);
+}
+/*
+.overlayContainer {
+	position: absolute;
+	top: 20%;
+	left: 50%;
+	right: 50%;
+	width: 30%;
+	max-height: 50%;
+	overflow: auto;
+	margin-left: -15%;
+	padding: 2em;
+	text-align: left;
+	background-clip: padding-box;
+	background-color: #eee;
+	border: 15px solid rgba(0,0,0,.4);
+}*/
+
