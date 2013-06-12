@@ -42,7 +42,7 @@ function __autoload($className) {
  * @var string
  */
 function lang($langVar) {
-	echo Core::getLanguage()->getLanguageItem($langVar);
+	return Core::getLanguage()->getLanguageItem($langVar);
 }
 
 /**

@@ -51,11 +51,23 @@ footer#footer {
 div#main {
 	color: #444;
 	background-color: #ececec;
-	> section > header {
-		color: #666;
-		text-shadow: 1px 1px 0 white;
-		background-color: #f5f5f5;
-		box-shadow: 0 0 2px #999;
+	
+	> section {
+	font-size: .85em;
+		
+		a {
+			color: #777;
+			&:hover {
+				color: #999;
+			}
+		}
+		
+		> header {
+			color: #666;
+			text-shadow: 1px 1px 0 white;
+			background-color: #f5f5f5;
+			box-shadow: 0 0 2px #999;
+		}
 	}
 }
 

@@ -6,8 +6,8 @@
 			</h1>
 			<nav id="panel">
 				<ul>
-					<li><a href="index.php/Game"><?php lang('site.menu.newgame') ?></a></li
-					><li><a href="#"><?php lang('site.menu.settings') ?></a></li>
+					<li><a href="index.php/Game"><?php echo lang('site.menu.newgame') ?></a></li
+					><li><a href="#"><?php echo lang('site.menu.settings') ?></a></li>
 				</ul>
 			</nav>
 		</header>
