@@ -7,7 +7,7 @@
  * on demand.
  * @author Philipp Miller
  */
-class TemplateEngine {
+final class TemplateEngine {
 	
 	/**
 	 * Array contains all JavaScript files to be linked
@@ -42,7 +42,6 @@ class TemplateEngine {
 	 */
 	protected $vars = array();
 	
-	
 	/**
 	 * Add a variable to be used in template.
 	 * @param 	string 	$key
@@ -53,11 +52,35 @@ class TemplateEngine {
 	}
 	
 	/**
-	 * Executes and sends a template.
+	 * Executes and sends a template. If $full is true
+	 * includes header and footer templates.
 	 * @param 	string 	$template 	name of the template
+	 * @param 	boolean	$full 		include header and footer templates?
 	 */
-	public function show($template) {
-		include(ROOT_DIR."template/".$template.".tpl.php");
+	public function show($template, $full = false) {
+		if ($full) {
+			include(ROOT_DIR."template/head.tpl.php");
+			flush(); // we can send the header right away
+			include(ROOT_DIR."template/header.tpl.php");
+			include(ROOT_DIR."template/".$template.".tpl.php");
+			include(ROOT_DIR."template/footer.tpl.php");
+			flush(); // make sure everything gets there
+		} else {
+			include(ROOT_DIR."template/".$template.".tpl.php");
+		}
+	}
+	
+	/**
+	 * Executes a template and returns the result without sending it.
+	 * @param 	string 	$template 	name of the template
+	 * @return 	string
+	 */
+	public function fetch($template) {
+		ob_start();
+		$this->show($template, false);
+		$result = ob_get_contents();
+		ob_end_clean();
+		return $result;
 	}
 	
 	/**
@@ -67,7 +90,7 @@ class TemplateEngine {
 	 */
 	protected function includeTemplate($template, $vars = array()) {
 		$this->vars = array_merge($this->vars, $vars);
-		$this->show($template);
+		$this->show($template, false);
 	}
 	
 			

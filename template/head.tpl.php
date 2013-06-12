@@ -26,4 +26,3 @@
 	}
 ?>
 	</head>
-	<body lang="<?php echo Core::getLanguage()->getLanguageCode(); ?>">

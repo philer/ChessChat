@@ -4,7 +4,7 @@
  * The Language has to defined in lang/languages.inc.php.
  * @author Philipp Miller
  */
-class Language {
+final class Language {
 	
 	/**
 	 * Language code for this language

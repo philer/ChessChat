@@ -1,3 +1,4 @@
+	<body lang="<?php echo Core::getLanguage()->getLanguageCode(); ?>">
 		<header id="header">
 			<h1>
 				<a href="index.php">
@@ -11,3 +12,4 @@
 				</ul>
 			</nav>
 		</header>
+		<div id="main">

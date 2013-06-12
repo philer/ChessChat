@@ -28,7 +28,7 @@ class GameController implements StandaloneController, AjaxController {
 		Core::getTemplateEngine()->registerAsyncScript("chessboardLayout");
 		Core::getTemplateEngine()->registerAsyncScript("chat");
 		Core::getTemplateEngine()->registerStylesheet("game");
-		Core::getTemplateEngine()->show("game");
+		Core::getTemplateEngine()->show("game",true);
 	}
 	
 	/**

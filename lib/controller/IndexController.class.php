@@ -8,7 +8,7 @@ class IndexController implements StandaloneController {
 	
 	public function handleStandaloneRequest() {
 		Core::getTemplateEngine()->registerStylesheet("game");
-		Core::getTemplateEngine()->show("index");
+		Core::getTemplateEngine()->show("index",true);
 	}
 	
 }

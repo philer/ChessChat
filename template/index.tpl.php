@@ -1,8 +1,3 @@
-<?php $this->includeTemplate("head"); ?>
-
-<?php $this->includeTemplate("header"); ?>
-
-		<div id="main">
 			<section style="padding-top: 10%;">
 				<span id="logo" class="icon" style="font-size:55px;">&#x265A;</span>
 				<h1 style="margin-top:0;">Hi!</h1>
@@ -16,6 +11,3 @@
 				</style>
 				<?php $this->includeTemplate("chessboard"); ?>
 			</section>
-		</div><!-- #main -->
-		
-<?php $this->includeTemplate("footer"); ?>

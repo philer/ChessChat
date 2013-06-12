@@ -1,8 +1,3 @@
-<?php $this->includeTemplate("head"); ?>
-
-<?php $this->includeTemplate("header"); ?>
-
-		<div id="main">
 			<section>
 				<header>
 					<h1><?php echo lang('site.legalnotice'); ?></h1>
@@ -40,6 +35,3 @@
 ?>
 				</dl>
 			</section>
-		</div><!-- #main -->
-		
-<?php $this->includeTemplate("footer"); ?>

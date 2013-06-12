@@ -7,7 +7,7 @@
  * and extend appropriately!
  * @author Philipp Miller
  */
-class Database {
+final class Database {
 	
 	/**
 	 * database authentification information

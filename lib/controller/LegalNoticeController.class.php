@@ -10,7 +10,7 @@ class LegalNoticeController implements StandaloneController {
 	public function handleStandaloneRequest() {
 		include(ROOT_DIR."config/legal.conf.php");
 		Core::getTemplateEngine()->addVar('legal',$legalInfo);
-		Core::getTemplateEngine()->show("legalNotice");
+		Core::getTemplateEngine()->show("legalNotice",true);
 	}
 	
 }

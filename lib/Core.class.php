@@ -1,15 +1,5 @@
 <?php
 
-// use custom exception and error handling
-set_exception_handler(array('Core','exceptionHandler'));
-set_error_handler(array('Core','errorHandler'));
-
-// current time
-define('NOW', time());
-
-// utility functions
-require_once(ROOT_DIR.'lib/util.inc.php');
-
 /**
  * The System Core initializes and coordinates all system components.
  * @author Philipp Miller
