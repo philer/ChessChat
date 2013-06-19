@@ -5,5 +5,9 @@
 # temp and backup files
 *.backup
 
+# ignore local configs,
+# track config/default/ instead
+config/*.conf.php
+
 # styles are compiled from less
 style/*.css
