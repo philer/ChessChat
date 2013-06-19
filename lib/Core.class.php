@@ -151,7 +151,7 @@ class Core {
 			self::$controller  = new IndexController();
 			self::$controller->handleStandaloneRequest();
 			
-		} else if (self::$route[0] === "ajax") {
+		} elseif (self::$route[0] === "ajax") {
 				
 			// ajax request route
 			$controllerClass = $_POST['controller']."Controller";
@@ -176,7 +176,7 @@ class Core {
 				array_shift(self::$route);
 				self::$controller = new $controllerClass();
 				
-			} else if (Game::hashPregMatch(self::$route[0])) {
+			} elseif (Game::hashPregMatch(self::$route[0])) {
 				
 				// special feature: shorter urls for Game
 				self::$controller = new GameController();

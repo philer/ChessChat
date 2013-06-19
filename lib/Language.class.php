@@ -95,7 +95,7 @@ final class Language {
 		// does the requested language exist?
 		if ($langCode && array_key_exists($langCode, self::$languages)) {
 			return $langCode;
-		} else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))  {
+		} elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))  {
 			// try browser language settings
 			$httpAcceptLanguages = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
 			foreach ($httpAcceptLanguages as $httpAcceptLanguage) {

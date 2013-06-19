@@ -139,7 +139,7 @@ final class TemplateEngine {
 		//if (file_exists(ROOT_DIR."js/".$script.".min.js")) {return HOST."js/".$script.".min.js";} else
 		if (file_exists(ROOT_DIR."js/".$script.".js")) {
 			return HOST."js/".$script.".js";
-		} else if (file_exists(ROOT_DIR."js/".$script)) {
+		} elseif (file_exists(ROOT_DIR."js/".$script)) {
 			return HOST."js/".$script.".js";
 		}
 	}
@@ -154,7 +154,7 @@ final class TemplateEngine {
 		//if (file_exists(ROOT_DIR."style/".$stylesheet.".min.css")) {return HOST."style/".$stylesheet.".min.css";} else
 		if (file_exists(ROOT_DIR."style/".$stylesheet.".css")) {
 			return HOST."style/".$stylesheet.".css";
-		} else if (file_exists(ROOT_DIR."style/".$stylesheet)) {
+		} elseif (file_exists(ROOT_DIR."style/".$stylesheet)) {
 			return HOST."style/".$stylesheet.".css";
 		}
 	}
