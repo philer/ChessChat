@@ -4,7 +4,6 @@
  * Fatal Exceptions pervent a regular page building
  * and send a predefined error template with detailed information instead.
  * Extend this class for more specific exception handling!
- * TODO use log-files instead/additionally
  * @author Philipp Miller
  */
 class FatalException extends Exception {
@@ -16,8 +15,8 @@ class FatalException extends Exception {
 	protected $title = "Fatal Exception";
 	
 	/**
-	 * create a new FatalException
-	 * use this when overriding for setting the $message
+	 * Creates a new FatalException.
+	 * Use this when overriding for setting the $message
 	 * @param 	string 	message to be displayed in the error message
 	 */
 	public function __construct($message = '') {
@@ -26,14 +25,15 @@ class FatalException extends Exception {
 	}
 	
 	/**
-	 * display the error.
-	 * template is included here for maximum reliability
+	 * Display the error.
+	 * Template is included here for maximum reliability
 	 * (e.g. file system problems preventing opening other files)
 	 */
 	public function toTpl() {
-		?>
+		?><!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8" />
 		<style media="screen" type="text/css">/*<![CDATA[*/
 			body {
 				text-align: center;
@@ -68,6 +68,7 @@ class FatalException extends Exception {
 			}
 			#stacktrace {
 				font-size: 0.85em;
+				/*white-space: pre-wrap;*/
 			}
 			/* stacktrace syntax */
 			#stacktrace .line { color: #f88; }
@@ -89,16 +90,26 @@ class FatalException extends Exception {
 					/**/
 					echo "<ol>";
 					$stacktrace = $this->getTrace();//debug_backtrace();
-					foreach($stacktrace as $i) {
-						echo "<li><span class=\"file\">".$i['file']."</span>"
-							.":<span class=\"line\">".$i['line']."</span> ";
-						if (isset($i['class'])) echo "<span class=\"class\">".$i['class'].$i['type']."</span>";
-						echo "<span class=\"function\">".$i['function']."( <span class=\"params\">";
-						foreach($i['args'] as $k) echo $k." ";
-						echo "</span>)</span></li>\n";
+					foreach ($stacktrace as $i) {
+						if (!isset($i['function']) || $i['function'] != "errorHandler") {
+							// ignore 	Core::errorHandler()
+							echo "<li><span class=\"file\">".$i['file']."</span>"
+								.":<span class=\"line\">".$i['line']."</span> ";
+							
+							if (isset($i['class']))
+								echo "<span class=\"class\">".$i['class'].$i['type']."</span>";
+							
+							if (isset($i['function'])) {
+								echo "<span class=\"function\">".$i['function']."(<span class=\"params\">"
+									.self::censoredFunctionParams($i)
+									."</span>)</span>";
+							}
+							echo "</li>";
+						}
 					}
 					echo "</ol>";
 					/**/
+					//var_dump($stacktrace);
 					?>
 				</div>
 			</div><!-- #exceptionContent -->
@@ -106,5 +117,24 @@ class FatalException extends Exception {
 	</body>
 </html>
 		<?php
+	}
+	
+	
+	/**
+	 * Don't show passwords in stacktrace!
+	 * @param 	array<string> 	a line from stacktrace
+	 * @return 	string 			processed function parameters
+	 */
+	public static function censoredFunctionParams($i) {
+		if (isset($i['class']) && (
+				   ($i['class'] == "Database" && $i['function'] == "__construct")
+				|| ($i['class'] == "mysqli"   && $i['function'] == "mysqli")
+				)) {
+			return " … "; // censor database password
+		} else {
+			$params = " ";
+			foreach($i['args'] as $k) $params .= $k." ";
+			return $params;
+		}
 	}
 }
