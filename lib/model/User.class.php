@@ -11,31 +11,31 @@ class User {
 	 * Unique UserID
 	 * @var integer
 	 */
-	protected $id;
+	protected $id = 0;
 	
 	/**
 	 * Users have names.
 	 * @var string
 	 */
-	protected $name;
+	protected $name = "";
 	
 	/**
 	 * Registered users need an email adress
 	 * @var string
 	 */
-	protected $email;
+	protected $email = "";
 	
 	/**
 	 * Password for registered users
 	 * @var string
 	 */
-	protected $password;
+	protected $password = "";
 	
 	/**
 	 * unique PlayerHash for cookie identification
 	 * @var string
 	 */
-	protected $hash;
+	protected $cookieHash = "";
 	
 	/**
 	 * TODO
@@ -45,7 +45,29 @@ class User {
 		if (!empty($name)) $this->name = $name;
 	}
 	
+	/**
+	 * When treated as string, an instance of
+	 * the User class will return the User's name.
+	 * This method acts like an alias for getName().
+	 * @return 	string
+	 */
 	public function __toString() {
+		return $this->name;
+	}
+	
+	/**
+	 * Getter for this User's id
+	 * @return 	integer
+	 */
+	public function getId() {
+		return $this->id;
+	}	
+	
+	/**
+	 * Getter for this User's name
+	 * @return 	string
+	 */
+	public function getName() {
 		return $this->name;
 	}
 }

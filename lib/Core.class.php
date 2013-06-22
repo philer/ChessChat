@@ -58,7 +58,13 @@ class Core {
 		$this->setLanguage();
 		
 		$this->setRoute();
-		$this->setController();
+		
+		try {
+			$this->handleRequest();
+		} catch (InvalidAjaxRequestException $bre) {
+			// TODO exit; // exit silently
+			throw $bre;
+		}
 	}
 	
 	/**
@@ -140,16 +146,17 @@ class Core {
 	}
 	
 	/**
-	 * Identifies the request and calls the
-	 * according controller.
+	 * Identifies the request and sets and calls
+	 * the according controller.
 	 */
-	protected function setController() {
+	protected function handleRequest() {
 		
 		if (empty(self::$route)) {
 			
 			// no route at all, use default page
 			self::$controller  = new IndexController();
-			self::$controller->handleStandaloneRequest();
+			self::$controller->handleRequest();
+			// (new IndexController())->handleRequest(); // not supported in PHP 5.3
 			
 		} elseif (self::$route[0] === "ajax") {
 				
@@ -161,17 +168,17 @@ class Core {
 				
 				self::$controller = new $controllerClass();
 				
-			} else throw new InvalidAjaxException();
+			} else throw new InvalidAjaxException($controllerClass." is not an AjaxController");
 			
 			self::$controller->handleAjaxRequest();
-				
+			
 		} else {
 			
 			// regular request route
 			$controllerClass = self::$route[0]."Controller";
-			if(class_exists("ddd"))echo "test";
+			
 			if (class_exists($controllerClass)
-					&& is_subclass_of($controllerClass,'StandaloneController')) {
+					&& is_subclass_of($controllerClass,'RequestController')) {
 				
 				array_shift(self::$route);
 				self::$controller = new $controllerClass();
@@ -183,7 +190,7 @@ class Core {
 				
 			} else throw new PageNotFoundException();
 			
-			self::$controller->handleStandaloneRequest();
+			self::$controller->handleRequest();
 			
 		}
 	}

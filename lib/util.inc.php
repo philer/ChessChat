@@ -50,6 +50,6 @@ function lang($langVar) {
  * @var 	string 	$str
  * @return 	string
  */
-function escapeString($str) {
+function esc($str) {
 	return Core::getDB()->escapeString($str);
 }

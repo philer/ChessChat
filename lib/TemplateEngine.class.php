@@ -52,22 +52,28 @@ final class TemplateEngine {
 	}
 	
 	/**
-	 * Executes and sends a template. If $full is true
-	 * includes header and footer templates.
+	 * Executes and sends a template.
 	 * @param 	string 	$template 	name of the template
-	 * @param 	boolean	$full 		include header and footer templates?
 	 */
-	public function show($template, $full = false) {
-		if ($full) {
-			include(ROOT_DIR."template/head.tpl.php");
-			flush(); // we can send the header right away
-			include(ROOT_DIR."template/header.tpl.php");
-			include(ROOT_DIR."template/".$template.".tpl.php");
-			include(ROOT_DIR."template/footer.tpl.php");
-			flush(); // make sure everything gets there
-		} else {
-			include(ROOT_DIR."template/".$template.".tpl.php");
-		}
+	public function show($template) {
+		include(ROOT_DIR."template/".$template.".tpl.php");
+	}
+	
+	/**
+	 * Executes and sends a template as
+	 * a full page with header and footer.
+	 * @param 	string 	$template 	name of the template
+	 */
+	public function showPage($template) {
+		$this->show("head");
+		// we can send the header right away, so browsers may
+		// start requesting other scripts right away
+		flush();
+		$this->show("header");
+		$this->show($template);
+		$this->show("footer");
+		// make sure everything gets there as quickly as possible
+		flush();
 	}
 	
 	/**

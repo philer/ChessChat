@@ -1,7 +1,9 @@
-<p class="<?php echo (isset($this->vars['bot'])) ? "msgBot" : "msgOwn"; ?>">
-	<span class="msgTime"><?php echo date('G:i',NOW) ?></span>
-	<span class="msgAuthor">
-		<?php echo (isset($this->vars['bot'])) ? $this->vars['bot'] : Core::getUser(); ?>
-	</span>
-	<span class="msgText"><?php echo $this->vars['msg'] ?></span>
+<p class="<?php
+	if ($this->vars['msg']->isBotMsg) echo "msgBot";
+	elseif ($this->vars['msg']->isown()) echo "msgOwn";
+	else echo "msgOther";
+?>">
+	<span class="msgTime"><?php echo $this->vars['msg']->getFormattedTime() ?></span>
+	<span class="msgAuthor"><?php echo $this->vars['msg']->authorName ?></span>
+	<span class="msgText"><?php echo $this->vars['msg']->messageText ?></span>
 </p>

@@ -4,31 +4,31 @@
  * The Game is important.
  * @author Philipp Miller
  */
-class GameController implements StandaloneController, AjaxController {
+class GameController implements RequestController, AjaxController {
 	
 	/**
-	 * We probably need a Game object.
+	 * We may need a Game object.
 	 * @var Game
 	 */
 	protected $game = null;
 	
 	/**
-	 * We probably need a Chat object.
+	 * We may need a ChatController.
 	 * @var Chat
 	 */
-	protected $chat = null;
+	protected $chatController = null;
 	
 	/**
 	 * Does what needs to be done for this request.
 	 */
-	public function handleStandaloneRequest() {
+	public function handleRequest() {
 
-		// new Game(); // TODO
+		// new Game(); // TODO phil
 
 		Core::getTemplateEngine()->registerAsyncScript("chessboardLayout");
 		Core::getTemplateEngine()->registerAsyncScript("chat");
 		Core::getTemplateEngine()->registerStylesheet("game");
-		Core::getTemplateEngine()->show("game",true);
+		Core::getTemplateEngine()->showPage("game");
 	}
 	
 	/**
@@ -39,46 +39,63 @@ class GameController implements StandaloneController, AjaxController {
 		
 		if (isset($_POST['gameId']) && isset($_POST['method'])) {
 			switch ($_POST['method']) {
+				
 				case "getUpdate":
 					$this->getUpdate();
 					break;
+				
 				case "move":
 					if (isset($_POST['move'])) {
-						$move = escapeString($_POST['move']);
+						$move = esc($_POST['move']);
 						if (Game::matchMovePattern($move)) {
-							$game = new Game();
-							$game->move($move);
+							$this-move($move);
+						} else throw new InvalidAjaxException("'".$move."' is not a valid move");
+					} else throw new InvalidAjaxException("No move specified");
+					break;
+
+				case "post":
+					if (isset($_POST['msg'])) {
+						$msg = esc($_POST['msg']);
+						if (Game::matchMovePattern($msg)) {
+							$this->move($msg);
+						} else {
+							$this->chatController = new ChatController($this);
+							$this->chatController->post($msg); // TODO
 						}
-						break;
-					}
+					} else throw new InvalidAjaxException("No message specified");
+					break;
+				
+				case "offerDraw":
+					// TODO
+					break;
+				
+				case "resign":
+					// TODO
+					break;
+				
 				default:
-					throw new InvalidAjaxException($_POST['method']." is not a method");
+					throw new InvalidAjaxException("Method '".$_POST['method']."' does not exist");
 			}
 		} else throw new InvalidAjaxException("No method specified");
 		
 	}
 	
-	/**
-	 * Returns this GameController's Game object
-	 * or create a new one if it doesn't exist.
-	 * @return 	Game
-	 */
-	public function getGame() {
-		if (isset($this->game)) return $this->game;
-		else return new Game();
-	}
-	
-	/**
-	 * Returns this GameController's Chat object
-	 * or create a new one if it doesn't exist.
-	 * @return 	Chat
-	 */
-	public function getChat() {
-		if (isset($this->chat)) return $this->chat;
-		else return new Chat();
+	protected function move($move) {
+		$this->game = new Game($this);
+		$this->chatController = new ChatController($this);
+		
+		$success = $this->game->move($move);
+		
+		if ($success === true) {
+			$this->chatController->post(" TODO dynamic langvars; success: ".$move,Core::getUser()->getName());
+		} else {
+			$this->chatController->post(" TODO dynamic langvars; ".$success." ".$move,Core::getUser()->getName());
+		}
 	}
 	
 	//TODO
-	protected function getUpdate() {}
+	protected function getUpdate() {
+		// $this->chatController->getUpdate();
+	}
 	
 }

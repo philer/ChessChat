@@ -79,10 +79,29 @@ class Game {
 	"Ra1Nb1Bc1Qd1Kd1Bc1Nb1Ra1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7ra8nb8bc8qd8kd8bc8nb8ra8";
 	
 	/**
+	 * Every Game needs a GameController as a parent
+	 * @var GameController
+	 */
+	protected $gameController = null;
+	
+	/**
+	 * Initializes a Game with a
+	 * GameController as a parent.
+	 * @param 	GameController 	$gameController
+	 */
+	public function __construct($gameController) {
+		$this->gameController = $gameController;
+		// TODO
+	}
+	
+	/**
 	 * TODO
 	 */
-	public function __construct() {}
-
+	public static function create() {
+		// TODO
+		// return new self(self::DEFAULT_BOARD_STRING);
+	}
+	
 	/**
 	 * Creates a hopefully unique hash for game identification.
 	 * It containes digits and case sensitive letters
@@ -137,15 +156,14 @@ class Game {
 	
 	// TODO
 	public function move($move) {
-		Core::getController()->getChat()->post(
-			Core::getLanguage()->getLanguageItem("chat.chess.moved")." ".$move,
-			Core::getUser()
-			);
-		//TODO
+		if ($this->validateMove($move)) {
+			// TODO
+			return true;
+		} else return "invalidMessage";
 	}
 	
 	//TODO
-	public function validateMove($board, $move) {}
+	public function validateMove($move) {}
 	public static function boardFromString($boardStr) {}
 	public static function boardToString($board) {}
 	
@@ -157,8 +175,10 @@ class Game {
 	 * @return 	boolean
 	 */
 	public static function matchMovePattern($str) {
-		// TODO (maybe also add language support)
-		return preg_match('@^[a-h][1-8][_ -]?[a-h][1-8]$@i', $str); // "e2-e4"
-		//return preg_match('@^[pkqnbr][a-h][1-8]$@i', $str); // "Pe4"
+		$square = '([a-hA-H][1-8]|[1-8][a-hA-H])';
+		$separator = '[_ -]?';
+		return preg_match('@^'.$square.$separator.$square.'$@', $str);	
+		// $piece = '[pkqnbrPKQNBR]'; // TODO language support maybe?
+		// return preg_match('@^'.$square.$separator.$square.'|'.$piece.$square.'$@', $str);
 	}
 }

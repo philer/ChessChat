@@ -1,11 +1,10 @@
 <?php
 
 /**
- * A standalone controller can represent an individual
- * browser page.
+ * A ajax controller can respond to an ajax request
  * @author Philipp Miller
  */
-interface AjaxController extends Controller {
+interface AjaxController {
 	
 	public function handleAjaxRequest();
 	

@@ -4,71 +4,44 @@
  * Chat mostly responds to ajax requests
  * @author Philipp Miller
  */
-class ChatController implements AjaxController {
+class ChatController {
 	
 	/**
-	 * We probably need a Chat object.
-	 * @var Chat
+	 * Every ChatController belongs to a GameController
+	 * @var GameController
 	 */
-	protected $chat = null;
+	protected $gameController = null;
 	
 	/**
-	 * We may need a Game object.
-	 * @var Game
+	 * Initializes a ChatController with a
+	 * GameController as a parent.
+	 * @param 	GameController 	$gameController
 	 */
-	protected $game = null;
-	
-	/**
-	 * Determines the requested for this ajax request
-	 * and executes it with appropriate parameters.
-	 */
-	public function handleAjaxRequest() {
-		
-		if (isset($_POST['gameId']) && isset($_POST['method'])) {
-			switch ($_POST['method']) {
-				case "getUpdate":
-					$this->getUpdate();
-					break;
-				case "post":
-					if (isset($_POST['msg'])) {
-						$msg = $_POST['msg'];
-						if (Game::matchMovePattern($msg)) {
-							$this->game = new Game();
-							$this->game->move($msg);
-						} else {
-							$this->chat = new Chat();
-							$this->chat->post($msg);
-						}
-						break;
-					}
-				default:
-					throw new InvalidAjaxException($_POST['method']." is not a method");
-			}
-		} else throw new InvalidAjaxException("No method specified");
-		
+	public function __construct($gameController) {
+		$this->gameController = $gameController;
 	}
 	
 	/**
-	 * Returns this ChatController's Chat object
-	 * or create a new one if it doesn't exist.
-	 * @return 	Chat
+	 * A user has sent a new chat message which will be stored
+	 * and set up for broadcast.
+	 * @param 	string 	$msg
+	 * @param 	string 	$botName
 	 */
-	public function getChat() {
-		if (isset($this->chat)) return $this->chat;
-		else return new Chat();
-	}
-		
-	/**
-	 * Returns this ChatController's Game object
-	 * or create a new one if it doesn't exist.
-	 * @return 	Game
-	 */
-	public function getGame() {
-		if (isset($this->game)) return $this->game;
-		else return new Game();
+	public function post($msg, $botName = "") {
+		if (empty($botName)) {
+			$msgObj = new ChatMessage(Core::getUser()->getId(), Core::getUser()->getName(), $msg);
+		} else {
+			$msgObj = new ChatMessage(0, $botName, $msg, NOW, true);
+		}
+		// TODO save
+		Core::getTemplateEngine()->addVar('msg',$msgObj);
+		// TODO json_encode
+		Core::getTemplateEngine()->show("chatMessage");
 	}
 	
 	//TODO
-	protected function getUpdate() {}
+	public function getNewMessages() {}
+	public function getAllMessages() {}
+	public function getUpdate() {}
 	
 }

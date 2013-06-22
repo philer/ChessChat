@@ -17,7 +17,7 @@ class FatalException extends Exception {
 	/**
 	 * Creates a new FatalException.
 	 * Use this when overriding for setting the $message
-	 * @param 	string 	message to be displayed in the error message
+	 * @param 	string 	$message
 	 */
 	public function __construct($message = '') {
 		if(!empty($message)) $this->message = $message;

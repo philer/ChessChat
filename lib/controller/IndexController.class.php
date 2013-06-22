@@ -4,11 +4,11 @@
  * Index page, often also called 'Home'
  * @author Philipp Miller
  */
-class IndexController implements StandaloneController {
+class IndexController implements RequestController {
 	
-	public function handleStandaloneRequest() {
+	public function handleRequest() {
 		Core::getTemplateEngine()->registerStylesheet("game");
-		Core::getTemplateEngine()->show("index",true);
+		Core::getTemplateEngine()->showPage("index");
 	}
 	
 }

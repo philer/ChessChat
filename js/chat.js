@@ -16,7 +16,7 @@ $(function() {
 			/*msgData = "msgTime="+msgTime
 					+ "&playerName="+playerName
 					+ "&msg="+msg;*/
-			msgData = "controller=Chat"
+			msgData = "controller=Game"
 					+ "&gameId=" + "1" // TODO
 					+ "&method=post"
 					+ "&msg=" + msg;

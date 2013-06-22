@@ -5,12 +5,12 @@
  * This class is a simple example for a Controller.
  * @author Philipp Miller
  */
-class LegalNoticeController implements StandaloneController {
+class LegalNoticeController implements RequestController {
 	
-	public function handleStandaloneRequest() {
+	public function handleRequest() {
 		include(ROOT_DIR."config/legal.conf.php");
 		Core::getTemplateEngine()->addVar('legal',$legalInfo);
-		Core::getTemplateEngine()->show("legalNotice",true);
+		Core::getTemplateEngine()->showPage("legalNotice");
 	}
 	
 }
