@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>&#x265A; <?php echo SITENAME ?></title>
+		<title>&#x265A; <?php echo SITENAME // TODO pageTitle ?></title>
 		<base href="<?php echo HOST ?>" />
 		<?php //TODO<link rel="canonical" href="" />?>
 		
@@ -11,18 +11,18 @@
 		<script src="<?php echo HOST ?>js/jquery-ui-1.10.3.custom.min.js"></script>
 <?php
 	foreach ($this->getStylesheets() as $stylesheet) {
-		echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"".$stylesheet."\" />\n";
+		echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$stylesheet}\" />\n";
 	}
 	foreach ($this->getScripts() as $script) {
-		echo "<script type=\"text/javascript\" src=\"".$script."\"></script>\n";
+		echo "<script type=\"text/javascript\" src=\"{$script}\"></script>\n";
 	}
 	foreach ($this->getAsyncScripts() as $script) {
-		echo "<script type=\"text/javascript\" src=\"".$script."\" async ></script>\n";
+		echo "<script type=\"text/javascript\" src=\"{$script}\" async ></script>\n";
 	}
 	foreach ($this->getDynamicScripts() as $script) {
-		echo "<script type=\"text/javascript\" >\n//<![CDATA[\n";
+		echo "<script type=\"text/javascript\" >//<![CDATA[\n";
 		include($script);
-		echo "\n//]]>\n</script>\n";
+		echo "\n//]]></script>\n";
 	}
 ?>
 	</head>

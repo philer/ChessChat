@@ -10,6 +10,12 @@
 final class TemplateEngine {
 	
 	/**
+	 * The selected Language
+	 * @var Language
+	 */
+	protected $language = null;
+	
+	/**
 	 * Array contains all JavaScript files to be linked
 	 * @var array<string>
 	 */
@@ -43,12 +49,30 @@ final class TemplateEngine {
 	protected $vars = array();
 	
 	/**
+	 * Initializes this TemplateEngine
+	 * @param 	Language 	$language 	The language to be used
+	 */
+	public function __construct(Language $language) {
+		$this->language = $language;
+	}
+	
+	/**
 	 * Add a variable to be used in template.
 	 * @param 	string 	$key
 	 * @param 	mixed 	$value
 	 */
 	public function addVar($key, $value) {
 		$this->vars[$key] = $value;
+	}
+	
+	/**
+	 * Alias function for easy use in templates,
+	 * returns the appropriate value for a language variable.
+	 * @param 	string 	$langVar
+	 * @return 	string
+	 */
+	function lang($langVar) {
+		return $this->language->getLanguageItem($langVar);
 	}
 	
 	/**
@@ -83,7 +107,7 @@ final class TemplateEngine {
 	 */
 	public function fetch($template) {
 		ob_start();
-		$this->show($template, false);
+		$this->show($template);
 		$result = ob_get_contents();
 		ob_end_clean();
 		return $result;
@@ -94,7 +118,7 @@ final class TemplateEngine {
 	 * @param 	string 	$template 	name of the template
 	 * @param 	array 	$vars 		variables to be added
 	 */
-	protected function includeTemplate($template, $vars = array()) {
+	protected function includeTemplate($template, array $vars = array()) {
 		$this->vars = array_merge($this->vars, $vars);
 		$this->show($template, false);
 	}

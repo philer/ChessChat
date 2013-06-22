@@ -73,9 +73,9 @@ final class Database {
 		$this->sentQueries[] = $query;
 		if(!$result) {
 			$errmsg = "<p>Sending Query "
-					 ."'<span style='font-size:0.8em;'>".$query."</span>' "
+					 ."'<span style='font-size:0.8em;'>{$query}</span>' "
 					 ."failed.</p>"
-					 ."<p>".$this->db->error."</p>";
+					 ."<p>{$this->db->error}</p>";
 			throw new DatabaseException($errmsg);
 			//echo $this->db->error;
 		}

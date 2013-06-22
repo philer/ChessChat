@@ -54,9 +54,9 @@ class Core {
 		//TODO user/session
 		self::$user = new User(1,"DU"); // Dummy User
 		
-		$this->setTemplateEngine();
 		$this->setLanguage();
-		
+		$this->setTemplateEngine();
+				
 		$this->setRoute();
 		
 		try {
@@ -117,7 +117,7 @@ class Core {
 	 * Initiates TemplateEngine.
 	 */
 	protected function setTemplateEngine() {
-		self::$templateEngine = new TemplateEngine();
+		self::$templateEngine = new TemplateEngine(self::$language);
 	}
 	
 	/**

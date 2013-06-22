@@ -37,15 +37,6 @@ function __autoload($className) {
 }
 
 /**
- * Alias function for easy use in templates
- * outputs the appropriate value for a language variable.
- * @var string
- */
-function lang($langVar) {
-	return Core::getLanguage()->getLanguageItem($langVar);
-}
-
-/**
  * Alias function for safely handing string parameters
  * @var 	string 	$str
  * @return 	string

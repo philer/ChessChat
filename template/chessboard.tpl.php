@@ -28,34 +28,34 @@ $whitePlayer = true; //TODO replace this with something like $thisPlayer->white
 	<ol id="own-prison" class="prison">
 <?php
 foreach($board[(integer)!$whitePlayer] as $chesspiece) {
-	echo "<li>".$chesspiece."</li>";
+	echo "<li>{$chesspiece}</li>";
 }
 ?>
 	</ol>
 	<ol id="opp-prison" class="prison">
 <?php
 foreach($board[(integer)$whitePlayer] as $chesspiece) {
-	echo "<li>".$chesspiece."</li>";
+	echo "<li>{$chesspiece}</li>";
 }
 ?>
 	</ol>
 	<table id="chessboardTable">
 		<colgroup>
 			<col id="numbersColumnLeft" class="numbersColumn"/>
-<?php for ($c='A'; $c<='H'; $c++) echo "<col class=\"file$c\" />"; ?>
+<?php for ($c='A'; $c<='H'; $c++) echo "<col class=\"file{$c}\" />"; ?>
 			<col id="numbersColumnRight" class="numbersColumn"/>
 		</colgroup>
 		<thead>
 			<tr>
 				<td></td>
-<?php for ($c='A'; $c<='H'; $c++) echo "<th>$c</th>"; ?>
+<?php for ($c='A'; $c<='H'; $c++) echo "<th>{$c}</th>"; ?>
 				<td></td>
 			</tr>
 		</thead>
 		<tfoot>
 			<tr>
 				<td></td>
-<?php for ($c='A'; $c<='H'; $c++) echo "<th>$c</th>"; ?>
+<?php for ($c='A'; $c<='H'; $c++) echo "<th>{$c}</th>"; ?>
 				<td></td>
 			</tr>
 		</tfoot>
@@ -64,16 +64,16 @@ foreach($board[(integer)$whitePlayer] as $chesspiece) {
 $light = true;  // altering squares color
 for ($i=1; $i<=8; $i++,$light=!$light) {
 	$r = $whitePlayer ? 9-$i : $i;  // turn board upside down for black //TODO $whitePlayer
-	echo "<tr id=\"rank$r\">\n"
-		."\t<th>$r</th>";
+	echo "<tr id=\"rank{$r}\">\n"
+		."\t<th>{$r}</th>";
 	for ($c='A'; $c<='H'; $c++,$light=!$light) {
-		echo "<td class=\"square ";
-		echo $light ? "light" : "dark";  // altering squares color
-		echo "\" id=\"square$r$c\"><span class=\"chesspiece\" id=\"chesspiece$r$c\">"
+		echo "<td class=\"square "
+			.($light ? "light" : "dark")  // altering squares color
+			."\" id=\"square{$r}{$c}\"><span class=\"chesspiece\" id=\"chesspiece{$r}{$c}\">"
 			.$board[ strtolower($c) ][ $r-1 ]
 			."</span></td>";
 	}
-	echo "<th>$r</th>\n"
+	echo "<th>{$r}</th>\n"
 		."\t</tr>";
 }
 ?>

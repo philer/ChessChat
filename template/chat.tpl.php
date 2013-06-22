@@ -49,7 +49,7 @@ remaining $route from PATH_INFO:
 								/>
 						</div>
 						<button	type="submit" name="submit" id="chatSubmit">
-							<?php echo lang('chat.send') ?>
+							<?php echo $this->lang('chat.send') ?>
 						</button>
 					</fieldset>
 				</form>

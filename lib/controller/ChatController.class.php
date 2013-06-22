@@ -17,7 +17,7 @@ class ChatController {
 	 * GameController as a parent.
 	 * @param 	GameController 	$gameController
 	 */
-	public function __construct($gameController) {
+	public function __construct(GameController $gameController) {
 		$this->gameController = $gameController;
 	}
 	
