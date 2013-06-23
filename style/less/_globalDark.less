@@ -1,33 +1,33 @@
 @import "_mixins.less";
 
 a:hover {
-	text-shadow: 1px 1px 0 #fff,
-				 0 0 3px rgba(0,0,0,.2);
+	text-shadow: 1px 1px 0 #111,
+				 0 0 3px rgba(255,255,255,.2);
 }
 
-@panel-top-color: #f5f5f5;
-@panel-bottom-color: #e0e0e0;
+@panel-top-color: #333;
+@panel-bottom-color: #222;
 header#header,
 footer#footer {
-	color: #444;
-	text-shadow: 1px 1px 0 white;
+	color: #888;
+	text-shadow: -1px -1px 0 #111;
 	.vertical-gradient (@panel-top-color, @panel-bottom-color);
-	box-shadow: 0 0 4px #777;
+	box-shadow: 0 0 4px #000;
 }
 
 #panel ul {
 	border-color:	red
-					rgba(255,255,255,.4)
+					rgba(255,255,255,.05)
 					red
-					rgba(0,0,0,.1);
+					rgba(0,0,0,.4);
 	border-width: 0 1px;
 	
 	li a {
 		color: #666;
 		border-color:	red
-						rgba(0,0,0,.1)
+						rgba(0,0,0,.4)
 						red
-						rgba(255,255,255,.4);
+						rgba(255,255,255,.05);
 		border-width: 0 1px;
 		
 		&:hover {
@@ -39,8 +39,9 @@ footer#footer {
 
 
 div#main {
-	color: #444;
-	background-color: #ececec;
+	color: #999;
+	background-color: #202020;
+	background-image: url('images/bg-dark.png');
 	
 	> section {
 	font-size: .85em;
@@ -54,16 +55,16 @@ div#main {
 		
 		> header {
 			color: #666;
-			text-shadow: 1px 1px 0 white;
-			background-color: #f5f5f5;
-			box-shadow: 0 0 2px #999;
+			text-shadow: -1px -1px 0 #111;
+			background-color: #242424;
+			box-shadow: 0 0 2px #000;
 		}
 	}
 }
 
 footer#footer {
-	color: #888;
+	color: #555;
 	a:hover {
-		color: #555;
+		color: #777;
 	}
 }
