@@ -70,4 +70,16 @@ class User {
 	public function getName() {
 		return $this->name;
 	}
+	
+	/**
+	 * Creates a blowfish hash for password encryption.
+	 * TODO create random salt
+	 * @param 	string 	$password
+	 * @param 	string 	$salt
+	 * @return 	string
+	 */
+	public static function getPasswordHash($password, $salt) {
+		$bcryptParams = '$2a$07$';
+		return crypt(crypt($password, $bcryptParams.GLOBAL_SALT), $bcryptParams.$salt);
+	}
 }

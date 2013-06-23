@@ -34,7 +34,9 @@
 echo get_class(Core::getController());?>
 
 remaining $route from PATH_INFO:
-<?php var_dump(Core::getRoute())?></span>
+<?php var_dump(Core::getRoute());
+echo User::getPasswordHash('testpassword','testsaltisveryverylong');
+?></span>
 						</p>
 					</div><!-- #chatLog -->
 				</section><!-- #chatLogFrame -->
