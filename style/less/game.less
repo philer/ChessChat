@@ -66,6 +66,7 @@
 		thead td,
 		tfoot td,
 		th {
+			font-family: 'Georgia';
 			font-size: .33em;
 			font-weight: normal;
 		}
@@ -116,32 +117,54 @@
 		overflow-x: hidden;
 		overflow-y: auto;
 		#chatLog {
-			display: table;
 			width: 100%;
 			max-width: 100%;
+			/* chatLog table layout */
+			// display: table;
+			// p {
+			// 	display: table-row;
+			// 	span {
+			// 		display: table-cell;
+			// 		padding: .15em .3em;
+			// 		&.msgTime {
+			// 			font-weight: 300;
+			// 			padding-left: 0;
+			// 			padding-right: .1em;
+			// 		}
+			// 		&.msgAuthor {
+			// 			text-align: right;
+			//			border-right-width: 1px;
+			// 		}
+			// 		&.msgText {
+			// 		    padding-right: 0;
+			// 			word-wrap: break-word;
+			// 			//word-break: break-all;
+			// 		}
+			// 	}
+			// 	&.msgBot span {
+			// 		padding-top: .5em;
+			// 		padding-bottom: .5em;
+			// 	}
+			// }
+			/* chatLog blocks layout */
 			p {
-				display: table-row;
+				display: block;
+				margin-bottom: 5px;
 				span {
-					display: table-cell;
-					padding: .15em .3em;
-					&.msgTime {
-						opacity: .5;
-						font-weight: 300;
-						padding-left: 0;
-						padding-right: .1em;
-					}
+					padding: 3px 5px;
 					&.msgAuthor {
-						text-align: right;
+						display: block;
+						font-weight: bold;
+						font-size: 0.85em;
+					}
+					&.msgTime {
+						float: right;
+						font-size: 0.85em;
 					}
 					&.msgText {
-					    padding-right: 0;
-						word-wrap: break-word;
-						//word-break: break-all;
+						display: block;
+						border-radius: 0 0 3px 3px;
 					}
-				}
-				&.msgBot span {
-					padding-top: .5em;
-					padding-bottom: .5em;
 				}
 			}
 		}
@@ -201,3 +224,4 @@
 
 
 @import "_gameColor.less";
+// @import "_gameDark.less";
