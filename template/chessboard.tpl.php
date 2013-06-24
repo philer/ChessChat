@@ -69,9 +69,9 @@ for ($i=1; $i<=8; $i++,$light=!$light) {
 	for ($c='A'; $c<='H'; $c++,$light=!$light) {
 		echo "<td class=\"square "
 			.($light ? "light" : "dark")  // altering squares color
-			."\" id=\"square{$r}{$c}\"><span class=\"chesspiece\" id=\"chesspiece{$r}{$c}\">"
+			."\" id=\"square-{$c}{$r}\"><div><span class=\"chesspiece\" id=\"chesspiece-{$c}{$r}\">"
 			.$board[ strtolower($c) ][ $r-1 ]
-			."</span></td>";
+			."</span></div></td>";
 	}
 	echo "<th>{$r}</th>\n"
 		."\t</tr>";

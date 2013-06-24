@@ -21,8 +21,10 @@ $(function() {
 
 // functions
 
-function sendMessage() {
-	var msg = chatText.val();
+function sendMessage(msg) {
+	if (typeof msg !== 'string') {
+		msg = chatText.val();
+	}
 	if (msg) {
 		msgData = 'controller=Game'
 				+ '&gameId=' + '1' // TODO
@@ -42,7 +44,7 @@ function sendMessage() {
 function showMessage(msgTpl) {  
 	chatLog.append(msgTpl);
 	chatText.val('')
-	              .focus();
+	        .focus();
 	scrollChatToBottom();
 }
 

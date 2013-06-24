@@ -26,6 +26,7 @@ class GameController implements RequestController, AjaxController {
 		// new Game(); // TODO phil
 
 		Core::getTemplateEngine()->registerAsyncScript("chessboardLayout");
+		Core::getTemplateEngine()->registerAsyncScript("chess");
 		Core::getTemplateEngine()->registerAsyncScript("chat");
 		Core::getTemplateEngine()->registerStylesheet("game");
 		Core::getTemplateEngine()->showPage("game");
