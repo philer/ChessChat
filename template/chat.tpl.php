@@ -25,7 +25,6 @@
 							<span class="msgAuthor">Larissa</span>
 							<span class="msgText">That's a lot of text</span>
 						</p>
-						</p>
 						<p class="msgBot">
 							<span class="msgTime">21:15</span>
 							<span class="msgAuthor">Debug</span>
