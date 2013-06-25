@@ -21,7 +21,7 @@ class GameController implements RequestController, AjaxController {
 	/**
 	 * Does what needs to be done for this request.
 	 */
-	public function handleRequest() {
+	public function handleRequest(array $route) {
 
 		// new Game(); // TODO phil
 

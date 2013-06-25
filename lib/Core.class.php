@@ -152,14 +152,10 @@ class Core {
 	protected function handleRequest() {
 		
 		if (empty(self::$route)) {
-			
 			// no route at all, use default page
-			self::$controller  = new IndexController();
-			self::$controller->handleRequest();
-			// (new IndexController())->handleRequest(); // not supported in PHP 5.3
+			self::$controller = new IndexController();
 			
 		} elseif (self::$route[0] === "ajax") {
-				
 			// ajax request route
 			$controllerClass = $_POST['controller']."Controller";
 			
@@ -171,9 +167,9 @@ class Core {
 			} else throw new InvalidAjaxException($controllerClass." is not an AjaxController");
 			
 			self::$controller->handleAjaxRequest();
+			return;
 			
 		} else {
-			
 			// regular request route
 			$controllerClass = self::$route[0]."Controller";
 			
@@ -184,15 +180,14 @@ class Core {
 				self::$controller = new $controllerClass();
 				
 			} elseif (Game::hashPregMatch(self::$route[0])) {
-				
 				// special feature: shorter urls for Game
 				self::$controller = new GameController();
 				
 			} else throw new PageNotFoundException();
 			
-			self::$controller->handleRequest();
-			
 		}
+		
+		self::$controller->handleRequest(self::$route);
 	}
 	
 	/**

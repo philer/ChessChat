@@ -7,6 +7,6 @@
  */
 interface RequestController {
 	
-	public function handleRequest();
+	public function handleRequest(array $route);
 		
 }
