@@ -93,7 +93,9 @@ final class Language {
 	 */
 	protected function determineLanguage($langCode) {
 		// does the requested language exist?
-		if ($langCode && array_key_exists($langCode, self::$languages)) {
+		if (empty($langCode)) $langCode = Core::getUser()->getLanguage();
+		
+		if (!empty($langCode) && array_key_exists($langCode, self::$languages)) {
 			return $langCode;
 		} elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))  {
 			// try browser language settings

@@ -52,7 +52,8 @@ class Core {
 		$this->setDB();
 		
 		//TODO user/session
-		self::$user = new User(1,"DU"); // Dummy User
+		// self::$user = new User(1,"DU"); // Dummy User
+		$this->setUser();
 		
 		$this->setLanguage();
 		$this->setTemplateEngine();
@@ -82,6 +83,53 @@ class Core {
 	 */
 	public static function getDB() {
 		return self::$db;
+	}
+	
+	/**
+	 * Tries to authenticate the user by session or cookie.
+	 * If no authentification parameters are provided,
+	 * default to Guest
+	 */
+	protected function setUser() {
+		
+		session_name('userSession');
+		session_start();
+		
+		if (isset($_SESSION['userObject'])) {
+			// request has a running session
+			
+			if (isset($_SESSION['cookieHash'])) {
+				// check cookieHash for some additional security
+				if (!empty($_COOKIE['cookieHash'])
+					&& safeEquals($_SESSION['cookieHash'], $_COOKIE['cookieHash'])) {
+					self::$user = unserialize($_SESSION['userObject']);
+				} else {
+					throw new FatalException('invalid session'); // TODO
+				}
+			} else {
+				self::$user = unserialize($_SESSION['userObject']);
+			}
+			
+		} elseif (isset($_COOKIE['userId']) && isset($_COOKIE['cookieHash'])) {
+			// user sent cookie information
+			$userData = $this->db->sendQuery(
+				'SELECT * FROM `user` WHERE `userId` = ' // TODO replace *
+				. intval($_COOKIE['userId'])
+			)->fetch_assoc();
+			
+			if ($userData && safeEquals($userData['cookieHash'], $_COOKIE['cookieHash'])) {
+				self::$user = new User($userData['userId'], $userData['userName'], $userData['email']);
+				$_SESSION['userObject'] = serialize(self::$user);
+				$_SESSION['cookieHash'] = $userData['cookieHash'];
+			} else {
+				throw new FatalException('invalid login'); // TODO
+			}
+			
+		} else {
+			// guest
+			self::$user = new User(0, 'Guest' . rand(1000,9999) );
+			$_SESSION['userObject'] = serialize(self::$user);
+		}
 	}
 	
 	/**

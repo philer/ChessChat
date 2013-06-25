@@ -11,38 +11,35 @@ class User {
 	 * Unique UserID
 	 * @var integer
 	 */
-	protected $id = 0;
+	protected $userId = 0;
 	
 	/**
 	 * Users have names.
 	 * @var string
 	 */
-	protected $name = "";
+	protected $userName = '';
 	
 	/**
 	 * Registered users need an email adress
 	 * @var string
 	 */
-	protected $email = "";
+	protected $email = '';
 	
 	/**
-	 * Password for registered users
+	 * User's preferred language as string (e.g. 'en')
 	 * @var string
 	 */
-	protected $password = "";
-	
-	/**
-	 * unique PlayerHash for cookie identification
-	 * @var string
-	 */
-	protected $cookieHash = "";
+	protected $language = '';
 	
 	/**
 	 * TODO
 	 */
-	public function __construct($id, $name = "", $password = "", $hash = "") {
+	public function __construct($id, $userName, $email = '', $language = '') {
 		$this->id = $id;
-		if (!empty($name)) $this->name = $name;
+		$this->userName = $userName;
+		if (!empty($email))    $this->email    = $email;
+		if (!empty($language)) $this->language = $language;
+		// TODO remove password + hash?
 	}
 	
 	/**
@@ -52,7 +49,7 @@ class User {
 	 * @return 	string
 	 */
 	public function __toString() {
-		return $this->name;
+		return $this->userName;
 	}
 	
 	/**
@@ -68,9 +65,19 @@ class User {
 	 * @return 	string
 	 */
 	public function getName() {
-		return $this->name;
+		return $this->userName;
 	}
 	
+	/**
+	 * Getter for this User's preferred language,
+	 * returns false if no language is specified.
+	 * @return 	string
+	 */
+	public function getLanguage() {
+		if (empty($this->language)) return false;
+		else return $this->language;
+	}	
+		
 	/**
 	 * Creates a blowfish hash for password encryption.
 	 * TODO create random salt
@@ -81,5 +88,12 @@ class User {
 	public static function getPasswordHash($password, $salt) {
 		$bcryptParams = '$2a$07$';
 		return crypt(crypt($password, $bcryptParams.GLOBAL_SALT), $bcryptParams.$salt);
+	}
+	
+	/**
+	 * TODO
+	 */
+	public function isRegisteredUser() {
+		return $this->userId > 0;
 	}
 }

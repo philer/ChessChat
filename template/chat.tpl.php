@@ -29,14 +29,22 @@
 						<p class="msgBot">
 							<span class="msgTime">21:15</span>
 							<span class="msgAuthor">Debug</span>
-							<span class="msgText" style="white-space:pre;font-family:mono;color:grey"
-								>using Controller: <?php
-echo get_class(Core::getController());?>
+							<span class="msgText" style="white-space:pre;font-family:mono;color:grey"><?php
 
-remaining $route from PATH_INFO:
-<?php var_dump(Core::getRoute());
-echo User::getPasswordHash('testpassword','testsaltisveryverylong');
-?></span>
+echo "using Controller: "
+	.get_class(Core::getController())
+	."\n";
+
+echo "\nremaining \$route from PATH_INFO: \n";
+var_dump(Core::getRoute());
+
+echo "\nbcrypt hash\n";
+echo User::getPasswordHash('testpassword','testsaltisveryverylong')."\n";
+
+echo "\nsession\n";
+var_dump($_SESSION);
+
+						?></span>
 						</p>
 					</div><!-- #chatLog -->
 				</section><!-- #chatLogFrame -->
