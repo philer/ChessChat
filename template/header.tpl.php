@@ -7,8 +7,15 @@
 			</h1>
 			<nav id="panel">
 				<ul>
-					<li><a href="index.php/Game"><?php echo $this->lang('site.menu.newgame') ?></a></li
-					><li><a href="#"><?php echo $this->lang('site.menu.settings') ?></a></li>
+					<li><a href="<?php
+						echo $this->url('Game/new');
+					?>"><?php
+						echo $this->lang('site.menu.newgame')
+					?></a></li><li><a href="<?php
+						echo $this->url('User/edit');
+					?>"><?php
+						echo $this->lang('site.menu.settings')
+					?></a></li>
 				</ul>
 			</nav>
 		</header>

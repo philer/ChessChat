@@ -46,7 +46,7 @@ final class TemplateEngine {
 	 * for registered templates.
 	 * @var array<mixed>
 	 */
-	protected $vars = array();
+	protected $var = array();
 	
 	/**
 	 * Initializes this TemplateEngine
@@ -62,7 +62,7 @@ final class TemplateEngine {
 	 * @param 	mixed 	$value
 	 */
 	public function addVar($key, $value) {
-		$this->vars[$key] = $value;
+		$this->var[$key] = $value;
 	}
 	
 	/**
@@ -73,6 +73,16 @@ final class TemplateEngine {
 	 */
 	function lang($langVar) {
 		return $this->language->getLanguageItem($langVar);
+	}
+	
+	/**
+	 * Convenience function for easy use in templates,
+	 * returns an absolute url for a given route.
+	 * @param 	string 	$route
+	 * @return 	string
+	 */
+	function url($route) {
+		return HOST . 'index.php/' . $route;
 	}
 	
 	/**
@@ -119,7 +129,7 @@ final class TemplateEngine {
 	 * @param 	array 	$vars 		variables to be added
 	 */
 	protected function includeTemplate($template, array $vars = array()) {
-		$this->vars = array_merge($this->vars, $vars);
+		$this->var = array_merge($this->var, $vars);
 		$this->show($template, false);
 	}
 	

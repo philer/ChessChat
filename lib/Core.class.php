@@ -59,12 +59,7 @@ class Core {
 				
 		$this->setRoute();
 		
-		try {
-			$this->handleRequest();
-		} catch (InvalidAjaxRequestException $bre) {
-			// TODO exit; // exit silently
-			throw $bre;
-		}
+		$this->handleRequest();
 	}
 	
 	/**
@@ -157,18 +152,23 @@ class Core {
 			
 		} elseif (self::$route[0] === "ajax") {
 			// ajax request route
-			$controllerClass = $_POST['controller']."Controller";
-			
-			if (class_exists($controllerClass)
-					&& is_subclass_of($controllerClass,'AjaxController')) {
+			try {
+				$controllerClass = $_POST['controller']."Controller";
 				
-				self::$controller = new $controllerClass();
+				if (class_exists($controllerClass)
+						&& is_subclass_of($controllerClass,'AjaxController')) {
+					
+					self::$controller = new $controllerClass();
+					
+				} else throw new RequestException($controllerClass." is not an AjaxController");
 				
-			} else throw new InvalidAjaxException($controllerClass." is not an AjaxController");
-			
-			self::$controller->handleAjaxRequest();
-			return;
-			
+				self::$controller->handleAjaxRequest();
+				return;
+			} catch (RequestException $re) {
+				// don't respond to bad ajax requests
+				exit;
+			}
+				
 		} else {
 			// regular request route
 			$controllerClass = self::$route[0]."Controller";
@@ -183,7 +183,7 @@ class Core {
 				// special feature: shorter urls for Game
 				self::$controller = new GameController();
 				
-			} else throw new PageNotFoundException();
+			} else throw new NotFoundException();
 			
 		}
 		
@@ -195,7 +195,7 @@ class Core {
 	 * @see set_exception_handler()
 	 */
 	public static function exceptionHandler(Exception $e) {
-		if (method_exists($e,'toTpl')) $e->toTpl();
+		if (method_exists($e,'show')) $e->show();
 		else echo $e;
 		exit;
 	}

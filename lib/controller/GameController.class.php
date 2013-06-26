@@ -24,7 +24,8 @@ class GameController implements RequestController, AjaxController {
 	public function handleRequest(array $route) {
 
 		// new Game(); // TODO phil
-
+		// throw new PermissionDeniedException("test");
+		
 		Core::getTemplateEngine()->registerAsyncScript("chessboardLayout");
 		Core::getTemplateEngine()->registerAsyncScript("chess");
 		Core::getTemplateEngine()->registerAsyncScript("chat");
@@ -50,8 +51,8 @@ class GameController implements RequestController, AjaxController {
 						$move = esc($_POST['move']);
 						if (Game::matchMovePattern($move)) {
 							$this-move($move);
-						} else throw new InvalidAjaxException("'".$move."' is not a valid move");
-					} else throw new InvalidAjaxException("No move specified");
+						} else throw new RequestException("'".$move."' is not a valid move");
+					} else throw new RequestException("No move specified");
 					break;
 
 				case "post":
@@ -63,7 +64,7 @@ class GameController implements RequestController, AjaxController {
 							$this->chatController = new ChatController($this);
 							$this->chatController->post($msg); // TODO
 						}
-					} else throw new InvalidAjaxException("No message specified");
+					} else throw new RequestException("No message specified");
 					break;
 				
 				case "offerDraw":
@@ -75,9 +76,9 @@ class GameController implements RequestController, AjaxController {
 					break;
 				
 				default:
-					throw new InvalidAjaxException("Method '".$_POST['method']."' does not exist");
+					throw new RequestException("Method '".$_POST['method']."' does not exist");
 			}
-		} else throw new InvalidAjaxException("No method specified");
+		} else throw new RequestException("No method specified");
 		
 	}
 	

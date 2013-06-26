@@ -2,7 +2,7 @@
 		<footer id="footer">
 			<nav id="footerMenu">
 				<ul>
-					<li><a href="index.php/LegalNotice"><?php echo $this->lang('site.legalnotice') ?></a></li>
+					<li><a href="<?php echo $this->url('LegalNotice'); ?>"><?php echo $this->lang('site.legalnotice') ?></a></li>
 				</ul>
 			</nav>
 			<div style="float:right;"><?php echo round(microtime(true) - START_TIME, 4); ?></div>

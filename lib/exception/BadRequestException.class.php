@@ -1,7 +1,0 @@
-<?
-
-class BadRequestException extends Exception {
-	
-	
-	
-}
