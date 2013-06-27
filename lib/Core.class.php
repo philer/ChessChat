@@ -93,6 +93,7 @@ class Core {
 	protected function setUser() {
 		
 		session_name('userSession');
+		session_set_cookie_params(0, str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
 		session_start();
 		
 		if (isset($_SESSION['userObject'])) {

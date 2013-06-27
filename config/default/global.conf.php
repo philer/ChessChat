@@ -1,5 +1,6 @@
 <?php
 define('SITENAME', 'ChessChat');
+// TODO obsolete: $_SERVER[] -> HTTP_HOST, REQUEST_SCRIPTNAME
 define('HOST', "");
 
 //TODO security risk!
