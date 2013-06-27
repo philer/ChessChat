@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Represents a single chess piece
+ * @author Philipp Miller
+ */
 abstract class ChessPiece {
 	
 	/**

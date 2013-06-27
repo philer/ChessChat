@@ -7,12 +7,6 @@
 class GameController implements RequestController {
 	
 	/**
-	 * We may need a Game object.
-	 * @var Game
-	 */
-	protected $game = null;
-	
-	/**
 	 * We may need a ChatController.
 	 * @var Chat
 	 */
@@ -58,14 +52,15 @@ class GameController implements RequestController {
 	/**
 	 * TODO
 	 */
-	public function move($move, $gameId) {
-		// TODO request correct game
-		$this->game = new Game($this);
+	public function move($moveString, $gameId) {
+		// TODO construct correct game
+		$game = new Game($this);
 		
-		$success = $this->game->move($move);
+		$move = new Move($moveString);
+		$game->move($move);
 		
-		if ($success === true) {
-			AjaxController::queueReply('move', strtoupper($move));
+		if ($move->valid) {
+			AjaxController::queueReply('move', $move->__toString());
 			$this->getChatController()->post(
 				'TODO dynamic langvars; success: ' . $move,
 				$gameId,
@@ -74,7 +69,7 @@ class GameController implements RequestController {
 			
 		} else {
 			$this->getChatController()->post(
-				'TODO dynamic langvars; ' . $success . ' ' . $move,
+				$move->invalidReason,
 				$gameId,
 				Core::getUser()->getName()
 			);

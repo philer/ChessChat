@@ -61,7 +61,7 @@ class ChatController extends AjaxController {
 					break;
 					
 				default:
-					if (Game::matchMovePattern($_POST['msg'])) {
+					if (Move::patternMatch($_POST['msg'])) {
 						$this->getGameController()->move(
 							$_POST['msg'],
 							intval($_POST['gameId'])
