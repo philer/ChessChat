@@ -7,9 +7,10 @@ class UserController implements RequestController {
 	/**
 	 * TODO
 	 */
-	public function handleRequest() {
+	public function handleRequest(array $route) {
 		// TODO
-		throw new FatalException('not implemented');
+		throw new NotFoundException('not implemented');
+
 	}
 	
 	// TODO
