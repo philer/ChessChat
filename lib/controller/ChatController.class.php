@@ -27,7 +27,7 @@ class ChatController {
 	 * @param 	string 	$msg
 	 * @param 	string 	$botName
 	 */
-	public function post($msg, $botName = "") {
+	public function post($msg, $botName = '') {
 		if (empty($botName)) {
 			$msgObj = new ChatMessage(Core::getUser()->getId(), Core::getUser()->getName(), $msg);
 		} else {
@@ -35,8 +35,10 @@ class ChatController {
 		}
 		// TODO mysql_escape, save
 		Core::getTemplateEngine()->addVar('msg',$msgObj);
-		// TODO json_encode
-		Core::getTemplateEngine()->show("chatMessage");
+		// TODO reply function
+		$reply = Core::getTemplateEngine()->fetch('chatMessage');
+		echo json_encode(array('msg' => $reply));
+		
 	}
 	
 	//TODO

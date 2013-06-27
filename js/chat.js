@@ -1,56 +1,63 @@
-var playerName = 'Phil';
-//var playerID = 1;
-
-// DOM vars
-var chatLog;
-var chatLogFrame;
-var chatText;
-var chatSubmit;
-
-// init
 $(function() {
-	chatLog      = $('#chatLog');
-	chatLogFrame = $('#chatLogFrame');
-	chatText     = $('#chatText');
-	chatSubmit   = $('#chatSubmit');
-	
-	chatSubmit.click(sendMessage);
-	
-	scrollChatToBottom();
+	chat.init();
 });
 
-// functions
+var chat = {
+	
+	chatLog :      null,
+	chatLogFrame : null,
+	chatText :     null,
+	chatSubmit :   null,
 
-function sendMessage(msg) {
-	if (typeof msg !== 'string') {
-		msg = chatText.val();
-	}
-	if (msg) {
-		msgData = 'controller=Game'
-				+ '&gameId=' + '1' // TODO
-				+ '&method=post'
-				+ '&msg=' + msg;
+	
+	init : function() {
+		chat.chatLog      = $('#chatLog');
+		chat.chatLogFrame = $('#chatLogFrame');
+		chat.chatText     = $('#chatText');
+		chat.chatSubmit   = $('#chatSubmit');
 		
-		$.ajax({  
-			type: 'POST',  
-			url: 'index.php/ajax',
-			data: msgData,  
-			success: showMessage
-	    });
+		chat.chatSubmit.click(chat.sendMessage);
+		
+		chat.scrollToBottom();
+	},
+	
+	sendMessage : function(msg) {
+		
+		if (typeof msg !== 'string') {
+			msg = chat.chatText.val();
+			chat.chatText
+				.val('')
+				.focus();
+		}
+		
+		if (msg) {
+			msgData = 'controller=Game'
+					+ '&gameId=' + '1' // TODO
+					+ '&method=post'
+					+ '&msg=' + msg;
+			
+			$.ajax({  
+				type: 'POST',
+				url: 'index.php/ajax',
+				data: msgData,
+				dataType: 'json',
+				success: [chat.handleReply, chess.handleReply]
+		    });
+		}
+		return false;
+	},
+	
+	handleReply : function(reply) {
+		if (reply.msg) {
+			chat.chatLog.append(reply.msg);
+			chat.scrollToBottom();
+		}
+	},
+
+	scrollToBottom : function() {
+		chat.chatLogFrame.animate(
+			{scrollTop: chat.chatLog.height() - chat.chatLogFrame.height()}, 
+			200
+		);
 	}
-	return false;
-}
-
-function showMessage(msgTpl) {  
-	chatLog.append(msgTpl);
-	chatText.val('')
-	        .focus();
-	scrollChatToBottom();
-}
-
-function scrollChatToBottom() {
-	chatLogFrame.animate(
-		{scrollTop: chatLog.height() - chatLogFrame.height()}, 
-		200
-	);
 }
