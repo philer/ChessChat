@@ -33,7 +33,7 @@ class ChatController {
 		} else {
 			$msgObj = new ChatMessage(0, $botName, $msg, NOW, true);
 		}
-		// TODO save
+		// TODO mysql_escape, save
 		Core::getTemplateEngine()->addVar('msg',$msgObj);
 		// TODO json_encode
 		Core::getTemplateEngine()->show("chatMessage");

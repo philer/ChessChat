@@ -48,7 +48,7 @@ class GameController implements RequestController, AjaxController {
 				
 				case "move":
 					if (isset($_POST['move'])) {
-						$move = esc($_POST['move']);
+						$move = $_POST['move'];
 						if (Game::matchMovePattern($move)) {
 							$this-move($move);
 						} else throw new RequestException("'".$move."' is not a valid move");
@@ -57,7 +57,7 @@ class GameController implements RequestController, AjaxController {
 
 				case "post":
 					if (isset($_POST['msg'])) {
-						$msg = esc($_POST['msg']);
+						$msg = htmlspecialchars($_POST['msg']);
 						if (Game::matchMovePattern($msg)) {
 							$this->move($msg);
 						} else {
