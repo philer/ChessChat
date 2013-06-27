@@ -41,7 +41,7 @@ echo "\nbcrypt hash\n";
 echo User::getPasswordHash('testpassword','testsaltisveryverylong')."\n";
 
 echo "\nsession\n";
-var_dump($_SESSION);
+// var_dump($_SESSION);
 // echo "\nsession cookie\n";
 // var_dump(session_get_cookie_params());
 
@@ -49,7 +49,7 @@ var_dump($_SESSION);
 						</p>
 					</div><!-- #chatLog -->
 				</section><!-- #chatLogFrame -->
-				<form id="chatForm" action="">
+				<form id="chatForm">
 					<fieldset>
 						<div>
 							<input 	type="text"

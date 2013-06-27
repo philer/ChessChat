@@ -3,18 +3,18 @@
 // default board
 //$board = Game::boardFromString(Game::DEFAULT_BOARD_STRING); //TODO
 $board = array(
-	'a' => array(new Rook(false), new Pawn(false), "", "", "", "", new Pawn(true), new Rook(true)),
-	'b' => array(new Knight(false), new Pawn(false), "", "", "", "", new Pawn(true), new Knight(true)),
-	'c' => array(new Bishop(false), new Pawn(false), "", "", "", "", new Pawn(true), new Bishop(true)),
-	'd' => array(new Queen(false), new Pawn(false), "", "", "", "", new Pawn(true), new Queen(true)),
-	'e' => array(new King(false), new Pawn(false), "", "", "", "", new Pawn(true), new King(true)),
-	'f' => array(new Bishop(false), new Pawn(false), "", "", "", "", new Pawn(true), new Bishop(true)),
-	'g' => array(new Knight(false), new Pawn(false), "", "", "", "", new Pawn(true), new Knight(true)),
-	'h' => array(new Rook(false), new Pawn(false), "", "", "", "", new Pawn(true), new Rook(true)),
+	'a' => array(new Rook(true), new Pawn(true), null, null, null, null, new Pawn(false), new Rook(false)),
+	'b' => array(new Knight(true), new Pawn(true), null, null, null, null, new Pawn(false), new Knight(false)),
+	'c' => array(new Bishop(true), new Pawn(true), null, null, null, null, new Pawn(false), new Bishop(false)),
+	'd' => array(new Queen(true), new Pawn(true), null, null, null, null, new Pawn(false), new Queen(false)),
+	'e' => array(new King(true), new Pawn(true), null, null, null, null, new Pawn(false), new King(false)),
+	'f' => array(new Bishop(true), new Pawn(true), null, null, null, null, new Pawn(false), new Bishop(false)),
+	'g' => array(new Knight(true), new Pawn(true), null, null, null, null, new Pawn(false), new Knight(false)),
+	'h' => array(new Rook(true), new Pawn(true), null, null, null, null, new Pawn(false), new Rook(false)),
 	);
 // prisons
-$board[] = array(new Pawn(true), new Pawn(true), new Bishop(true), new Queen(true));
-$board[] = array(new Rook(false), new Knight(false), new Bishop(false), new Pawn(false), new Pawn(false));
+$board[] = array(new Pawn(false), new Pawn(false), new Bishop(false), new Queen(false));
+$board[] = array(new Rook(true), new Knight(true), new Bishop(true), new Pawn(true), new Pawn(true));
 // have they performed a castling yet?
 $board['whiteCastled'] = false;
 $board['blackCastled'] = false;
@@ -69,9 +69,15 @@ for ($i=1; $i<=8; $i++,$light=!$light) {
 	for ($c='A'; $c<='H'; $c++,$light=!$light) {
 		echo "<td class=\"square "
 			.($light ? "light" : "dark")  // altering squares color
-			."\" id=\"square-{$c}{$r}\"><div><span class=\"chesspiece\" id=\"chesspiece-{$c}{$r}\">"
-			.$board[ strtolower($c) ][ $r-1 ]
-			."</span></div></td>";
+			."\" id=\"square-{$c}{$r}\"><div>";
+		if (!is_null($board[ strtolower($c) ][ $r-1 ])) {
+			echo "<span class=\"chesspiece "
+				.($board[strtolower($c)][$r-1]->isWhite() ? 'white' : 'black' )
+				."\" id=\"chesspiece-{$c}{$r}\">"
+				.$board[strtolower($c)][$r-1]
+				."</span>";
+		}	
+		echo "</div></td>";
 	}
 	echo "<th>{$r}</th>\n"
 		."\t</tr>";

@@ -10,18 +10,6 @@ abstract class ChessPiece {
 	protected $white;
 	
 	/**
-	 * ChessPiece color as boolean
-	 * @var 	boolean
-	 */
-	const WHITE = true;
-	
-	/**
-	 * ChessPiece color as boolean
-	 * @var 	boolean
-	 */
-	const BLACK = false;
-	
-	/**
 	 * This ChessPiece's position: file (column)
 	 * @var 	string
 	 */
@@ -38,18 +26,18 @@ abstract class ChessPiece {
 	 * @var 	array<string>
 	 */
 	public static $utf8Entities = array(
-		"bKing" => "&#x2654;",
-		"bQueen" => "&#x2655;",
-		"bRook" => "&#x2656;",
-		"bBishop" => "&#x2657;",
-		"bKnight" => "&#x2658;",
-		"bPawn" => "&#x2659;",
-		"wKing" => "&#x265A;",
-		"wQueen" => "&#x265B;",
-		"wRook" => "&#x265C;",
-		"wBishop" => "&#x265D;",
-		"wKnight" => "&#x265E;",
-		"wPawn" => "&#x265F;",
+		"wKing" => "&#x2654;",
+		"wQueen" => "&#x2655;",
+		"wRook" => "&#x2656;",
+		"wBishop" => "&#x2657;",
+		"wKnight" => "&#x2658;",
+		"wPawn" => "&#x2659;",
+		"bKing" => "&#x265A;",
+		"bQueen" => "&#x265B;",
+		"bRook" => "&#x265C;",
+		"bBishop" => "&#x265D;",
+		"bKnight" => "&#x265E;",
+		"bPawn" => "&#x265F;",
 		);
 	
 	abstract public function validateMove($move);
@@ -82,6 +70,14 @@ abstract class ChessPiece {
 	 * @return 	string
 	 */
 	public function __toString() {
-		return self::$utf8Entities[(($this->white) ? 'w' : 'b').get_class($this)];
+		return self::$utf8Entities[(($this->white) ? 'w' : 'b') . get_class($this)];
+	}
+	
+	/**
+	 * Is this a white chesspiece?
+	 * @return 	boolean
+	 */
+	public function isWhite() {
+		return $this->white;
 	}
 }

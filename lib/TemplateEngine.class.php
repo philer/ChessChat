@@ -133,6 +133,14 @@ final class TemplateEngine {
 		$this->show($template, false);
 	}
 	
+	/**
+	 * Registered scripts and stylesheets that are globally accessible
+	 */
+	public function registerDefaultScripts() {
+		$this->registerScript('jquery-2.0.0.min');
+		$this->registerScript('jquery-ui-1.10.3.custom.min');
+		$this->registerStylesheet('global');
+	}
 			
 	/**
 	 * Adds a stylesheet that will be linked in the document head

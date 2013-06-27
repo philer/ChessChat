@@ -235,7 +235,7 @@ class Core {
 			} else throw new NotFoundException();
 			
 		}
-		
+		self::getTemplateEngine()->registerDefaultScripts();
 		self::$controller->handleRequest(self::$route);
 	}
 	
