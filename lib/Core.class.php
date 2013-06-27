@@ -212,9 +212,11 @@ class Core {
 				} else throw new RequestException($controllerClass." is not an AjaxController");
 				
 				self::$controller->handleAjaxRequest();
+				AjaxController::sendReply();
 				return;
 			} catch (RequestException $re) {
 				// don't respond to bad ajax requests
+				if (DEBUG_MODE) throw $re;
 				exit;
 			}
 				

@@ -7,13 +7,19 @@
 class ChatMessage {
 	
 	/**
-	 * userId of this messages author
+	 * gameId of this message's game
+	 * @var integer
+	 */
+	public $gameId = 0;
+	
+	/**
+	 * userId of this message's author
 	 * @var integer
 	 */
 	public $authorId = 0;
 	
 	/**
-	 * userName of this messages author
+	 * userName of this message's author
 	 * May be the name of a bot.
 	 * @var string
 	 */
@@ -49,7 +55,7 @@ class ChatMessage {
 	 * @param 	integer 	$timestamp
 	 * @param 	boolean 	$isBotMsg
 	 */
-	public function __construct($authorId, $authorName, $messageText, $timestamp = NOW, $isBotMsg = false) {
+	public function __construct($gameId, $authorId, $authorName, $messageText, $timestamp = NOW, $isBotMsg = false) {
 		$this->authorId = $authorId;
 		$this->authorName = $authorName;
 		$this->messageText = $messageText;

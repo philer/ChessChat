@@ -10,14 +10,14 @@ class Game {
 	 * Unique game id
 	 * @var integer
 	 */
-	protected $id = 0;
+	protected $gameId = 0;
 	
 	/**
 	 * This hash will be used in URLs for non-public games
 	 * (compare YouTube or PastBin URLs)
 	 * @var string
 	 */
-	protected $hash = '';
+	protected $gameHash = '';
 	
 	/**
 	 * Timestamp when the game was created
@@ -163,7 +163,7 @@ class Game {
 	}
 	
 	//TODO
-	public function validateMove($move) {}
+	public function validateMove($move) {return true;}
 	public static function boardFromString($boardStr) {}
 	public static function boardToString($board) {}
 	

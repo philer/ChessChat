@@ -31,9 +31,9 @@ var chat = {
 		}
 		
 		if (msg) {
-			msgData = 'controller=Game'
-					+ '&gameId=' + '1' // TODO
-					+ '&method=post'
+			msgData = 'controller=Chat'
+					+ '&gameId=' + '1'
+					// + '&method=post'
 					+ '&msg=' + msg;
 			
 			$.ajax({  

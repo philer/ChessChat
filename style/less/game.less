@@ -40,6 +40,12 @@
 	position: relative;
 	margin: 50px auto 0; /* default */
 	font-size: 60px; /* default */
+	
+	// prevent text selection, varying browser support
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 
 	ol.prison {
 		font-size: .55em;

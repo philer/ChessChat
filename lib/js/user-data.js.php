@@ -1,1 +1,4 @@
-var userName = <?php echo $this->user->name; //TODO?>
+var user = {
+	name : "<?php echo Core::getUser()->getName(); ?>",
+	id :   <?php echo Core::getUser()->getId(); ?>
+}
