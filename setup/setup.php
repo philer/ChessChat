@@ -76,5 +76,5 @@ foreach ($queries as $q) {
 	}
 }
 
-
+echo "=== sent " . $db->getQueryCount() . " queries\n";
 echo "=== done\n";

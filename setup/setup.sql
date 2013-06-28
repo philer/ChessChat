@@ -1,20 +1,55 @@
-DROP TABLE IF EXISTS `user`;
+-- clear leftover tables
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `user` CASCADE;
+DROP TABLE IF EXISTS `game`;
+DROP TABLE IF EXISTS `chatMessage`;
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- create all new tables
 CREATE TABLE `user` (
-	userId INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	userName VARCHAR(255) NOT NULL DEFAULT '',
-	email VARCHAR(255) NOT NULL DEFAULT '',
-	password VARCHAR(100) NOT NULL DEFAULT '',
-	cookieHash VARCHAR(100) NOT NULL DEFAULT '',
-	language VARCHAR(2) NOT NULL DEFAULT ''
+	`userId` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`userName` VARCHAR(100) NOT NULL,
+	`email` VARCHAR(255) NOT NULL,
+	`password` VARCHAR(100) NOT NULL,
+	`cookieHash` VARCHAR(100) NOT NULL DEFAULT '',
+	`language` VARCHAR(2) NOT NULL DEFAULT '',
+	PRIMARY KEY (`userId`),
+	UNIQUE KEY (`userName`)
 );
 
-DROP TABLE IF EXISTS `chatMessage`;
-CREATE TABLE `chatMessage` (
-	messageId INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	gameId INT(10) NOT NULL,
-	authorId INT(10) NOT NULL,
-	authorName VARCHAR(255) NOT NULL,
-	messageText TEXT(255) NOT NULL,
-	time INT(10) NOT NULL DEFAULT '0',
-	isBotMsg BIT(1) NOT NULL DEFAULT b'0'
+CREATE TABLE `game` (
+	`gameId` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`gameHash` VARCHAR(22) NOT NULL,
+	`whitePlayerId` INT(10) UNSIGNED NOT NULL,
+	`blackPlayerId` INT(10) UNSIGNED NOT NULL,
+	`board` CHAR(96) NOT NULL DEFAULT '', -- fixed length
+	-- `status` BIT(4) NOT NULL DEFAULT 0,   -- status is 0 trough 15
+	`status` TINYINT(2) NOT NULL DEFAULT 0,
+	`lastUpdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`gameId`),
+	UNIQUE KEY (`gameHash`),
+	KEY (`whitePlayerId`),
+	KEY (`blackPlayerId`),
+	KEY (`whitePlayerId`, `blackPlayerId`)
 );
+
+CREATE TABLE `chatMessage` (
+	`messageId` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`gameId` INT(10) UNSIGNED NOT NULL,
+	`authorId` INT(10) UNSIGNED NOT NULL,
+	-- `authorName` VARCHAR(100) NOT NULL,
+	`messageText` TEXT NOT NULL,
+	`time` INT(10) NOT NULL DEFAULT 0,
+	`isBotMsg` BIT(1) NOT NULL DEFAULT b'0',
+	PRIMARY KEY (`messageId`),
+	KEY (`gameId`),
+	KEY (`gameId`, `time`)
+);
+
+-- add foreign keys
+ALTER TABLE `game`
+	ADD FOREIGN KEY (`whitePlayerId`) REFERENCES `user` (`userId`),
+	ADD FOREIGN KEY (`blackPlayerId`) REFERENCES `user` (`userId`);
+ALTER TABLE `chatMessage`
+	ADD FOREIGN KEY (`gameId`) REFERENCES `game` (`gameId`) ON DELETE CASCADE,
+	ADD	FOREIGN KEY (`authorId`) REFERENCES `user` (`userId`);
