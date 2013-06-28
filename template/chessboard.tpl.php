@@ -13,8 +13,8 @@ $board = array(
 	'h' => array(new Rook(true), new Pawn(true), null, null, null, null, new Pawn(false), new Rook(false)),
 	);
 // prisons
-$board[] = array(new Pawn(false), new Pawn(false), new Bishop(false), new Queen(false));
-$board[] = array(new Rook(true), new Knight(true), new Bishop(true), new Pawn(true), new Pawn(true));
+$board['blackPrison'] = array(new Pawn(false), new Pawn(false), new Bishop(false), new Queen(false));
+$board['whitePrison'] = array(new Rook(true), new Knight(true), new Bishop(true), new Pawn(true), new Pawn(true));
 // have they performed a castling yet?
 $board['whiteCastled'] = false;
 $board['blackCastled'] = false;
@@ -25,19 +25,11 @@ $whitePlayer = true; //TODO replace this with something like $thisPlayer->white
 
 ?>
 <div id="chessboard">
-	<ol id="own-prison" class="prison">
-<?php
-foreach($board[(integer)!$whitePlayer] as $chesspiece) {
-	echo "<li>{$chesspiece}</li>";
-}
-?>
+	<ol class="prison white" id="<?php echo $whitePlayer ? 'own' : 'opp'; ?>-prison">
+<?php foreach ($board['whitePrison'] as $chesspiece) echo "<li>{$chesspiece}</li>"; ?>
 	</ol>
-	<ol id="opp-prison" class="prison">
-<?php
-foreach($board[(integer)$whitePlayer] as $chesspiece) {
-	echo "<li>{$chesspiece}</li>";
-}
-?>
+	<ol class="prison black" id="<?php echo $whitePlayer ? 'opp' : 'own'; ?>-prison">
+<?php foreach ($board['blackPrison'] as $chesspiece) echo "<li>{$chesspiece}</li>"; ?>
 	</ol>
 	<table id="chessboardTable">
 		<colgroup>

@@ -10,8 +10,11 @@
 				<footer>
 					<nav id="gameMenu">
 						<ul>
-							<li><a href="#"><?php echo $this->lang('game.menu.resign') ?></a></li
-							><li><a href="#"><?php echo $this->lang('game.menu.offerdraw') ?></a></li>
+							<li><a id="resign" class="jsAnchor"><?php
+								echo $this->lang('game.menu.resign')
+							?></a></li><li><a id="offerDraw" class="jsAnchor"><?php
+								echo $this->lang('game.menu.offerdraw')
+							?></a></li>
 						</ul>
 					</nav>
 				</footer>

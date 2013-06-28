@@ -39,11 +39,8 @@ class GameController implements RequestController {
 	public function handleRequest(array $route) {
 
 		// new Game(); // TODO phil
-		// throw new PermissionDeniedException('test');
 		
-		Core::getTemplateEngine()->registerAsyncScript('chessboardLayout');
-		Core::getTemplateEngine()->registerAsyncScript('chess');
-		Core::getTemplateEngine()->registerAsyncScript('chat');
+		Core::getTemplateEngine()->registerAsyncScript('game');
 		Core::getTemplateEngine()->registerDynamicScript('chess-data');
 		Core::getTemplateEngine()->registerStylesheet('game');
 		Core::getTemplateEngine()->showPage('game');
@@ -68,11 +65,14 @@ class GameController implements RequestController {
 			);
 			
 		} else {
-			$this->getChatController()->post(
-				$move->invalidReason,
-				$gameId,
-				Core::getUser()->getName()
-			);
+			AjaxController::queueReply('invalidMove', $move->__toString());
+			if (!empty($move->invalidReason)) {
+				$this->getChatController()->post(
+					$move->invalidReason,
+					$gameId,
+					Core::getUser()->getName()
+				);	
+			}
 		}
 	}
 	
