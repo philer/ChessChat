@@ -32,34 +32,17 @@ class Core {
 	protected static $templateEngine = null;
 	
 	/**
-	 * The Controller takes care of executing this request.
-	 * Array contains route
-	 * @var array
-	 */
-	protected static $route = array();
-	
-	/**
-	 * @var Controller
-	 */
-	protected static $controller = null;
-	public static function getController() { return self::$controller; } // debugging
-	
-	/**
 	 * Calls all core init methods
 	 */
 	public function __construct() {
 		
 		$this->setDB();
-		
-		//TODO user/session
-		// self::$user = new User(1,"DU"); // Dummy User
+
 		$this->setUser();
 		
 		$this->setLanguage();
 		$this->setTemplateEngine();
 				
-		$this->setRoute();
-		
 		$this->handleRequest();
 	}
 	
@@ -150,14 +133,6 @@ class Core {
 	}
 	
 	/**
-	 * Returns Language Object for the selected Language
-	 * @return Language
-	 */
-	public static function getLanguage() {
-		return self::$language;
-	}
-	
-	/**
 	 * Initiates TemplateEngine.
 	 */
 	protected function setTemplateEngine() {
@@ -173,45 +148,27 @@ class Core {
 	}
 	
 	/**
-	 * Creates route array from PATH_INFO.
-	 */
-	protected function setRoute() {
-		if (isset($_SERVER['PATH_INFO'])) {
-			self::$route = explode('/',trim($_SERVER['PATH_INFO'],'/ '));
-		}
-	}
-	
-	/**
-	 * Returns array containing route.
-	 * @return array
-	 */
-	public static function getRoute() {
-		return self::$route;
-	}
-	
-	/**
 	 * Identifies the request and sets and calls
 	 * the according controller.
 	 */
 	protected function handleRequest() {
+		$route = Util::getRoute();
 		
-		if (empty(self::$route)) {
+		if (empty($route)) {
 			// no route at all, use default page
-			self::$controller = new IndexController();
+			$controller = new IndexController();
 			
-		} elseif (self::$route[0] === "ajax") {
+		} elseif ($route[0] === "ajax") {
 			// ajax request route
 			try {
-				$controllerClass = $_POST['controller']."Controller";
-				
+				$controllerClass = $_POST['controller'] . 'Controller';
 				if (class_exists($controllerClass)
-						&& is_subclass_of($controllerClass,'AjaxController')) {
-					
-					self::$controller = new $controllerClass();
-					
-				} else throw new RequestException($controllerClass." is not an AjaxController");
-				
-				self::$controller->handleAjaxRequest();
+						&& is_subclass_of($controllerClass, 'AjaxController')) {
+					$controller = new $controllerClass();
+				} else {
+					throw new RequestException("'" . $controllerClass . "' is not an AjaxController");
+				}
+				$controller->handleAjaxRequest();
 				AjaxController::sendReply();
 				return;
 			} catch (RequestException $re) {
@@ -222,23 +179,21 @@ class Core {
 				
 		} else {
 			// regular request route
-			$controllerClass = self::$route[0]."Controller";
-			
+			$controllerClass = $route[0] . 'Controller';
 			if (class_exists($controllerClass)
-					&& is_subclass_of($controllerClass,'RequestController')) {
+					&& is_subclass_of($controllerClass, 'RequestController')) {
+				array_shift($route);
+				$controller = new $controllerClass();
 				
-				array_shift(self::$route);
-				self::$controller = new $controllerClass();
-				
-			} elseif (Game::hashPregMatch(self::$route[0])) {
-				// special feature: shorter urls for Game
-				self::$controller = new GameController();
-				
-			} else throw new NotFoundException();
+			} elseif (Game::hashPatternMatch($route[0])) {
+				// special feature: shorter urls for Games
+				$controller = new GameController();
+			}
 			
 		}
 		self::getTemplateEngine()->registerDefaultScripts();
-		self::$controller->handleRequest(self::$route);
+		if (is_null($controller)) throw new NotFoundException();
+		$controller->handleRequest($route);
 	}
 	
 	/**

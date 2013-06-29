@@ -30,20 +30,8 @@
 							<span class="msgAuthor">Debug</span>
 							<span class="msgText" style="white-space:pre;font-family:mono;color:grey"><?php
 
-echo "using Controller: "
-	.get_class(Core::getController())
-	."\n";
-
-echo "\nremaining \$route from PATH_INFO: \n";
-var_dump(Core::getRoute());
-
-echo "\nbcrypt hash\n";
-echo User::getPasswordHash('testpassword','testsaltisveryverylong')."\n";
-
 echo "\nsession\n";
-// var_dump($_SESSION);
-// echo "\nsession cookie\n";
-// var_dump(session_get_cookie_params());
+var_dump($_SESSION);
 
 						?></span>
 						</p>
@@ -53,13 +41,12 @@ echo "\nsession\n";
 					<fieldset>
 						<div>
 							<input 	type="text"
-									name="chatText"
 									id="chatText"
 									autofocus="autofocus"
 									autocomplete="off"
 								/>
 						</div>
-						<button	type="submit" name="submit" id="chatSubmit">
+						<button	type="submit" id="chatSubmit">
 							<?php echo $this->lang('chat.send') ?>
 						</button>
 					</fieldset>
