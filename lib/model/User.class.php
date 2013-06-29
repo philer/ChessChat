@@ -34,8 +34,8 @@ class User {
 	/**
 	 * TODO
 	 */
-	public function __construct($id, $userName, $email = '', $language = '') {
-		$this->id = $id;
+	public function __construct($userId, $userName, $email = '', $language = '') {
+		$this->userId = $userId;
 		$this->userName = $userName;
 		if (!empty($email))    $this->email    = $email;
 		if (!empty($language)) $this->language = $language;
@@ -57,8 +57,8 @@ class User {
 	 * @return 	integer
 	 */
 	public function getId() {
-		return $this->id;
-	}	
+		return $this->userId;
+	}
 	
 	/**
 	 * Getter for this User's name
@@ -74,10 +74,11 @@ class User {
 	 * @return 	string
 	 */
 	public function getLanguage() {
-		if (empty($this->language)) return false;
-		else return $this->language;
-	}	
-		
+		// if (empty($this->language)) return false;
+		// else return $this->language;
+		return $this->language;
+	}
+	
 	/**
 	 * Creates a blowfish hash for password encryption.
 	 * TODO create random salt
@@ -93,7 +94,7 @@ class User {
 	/**
 	 * TODO
 	 */
-	public function isRegisteredUser() {
-		return $this->userId > 0;
+	public function guest() {
+		return $this->userId == 0;
 	}
 }

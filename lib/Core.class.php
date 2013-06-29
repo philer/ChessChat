@@ -87,8 +87,8 @@ class Core {
 	 */
 	protected function setUser() {
 		
-		session_name('userSession');
-		session_set_cookie_params(0, str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
+		session_name('cc_sid');
+		session_set_cookie_params(0, Util::cookiePath());
 		session_start();
 		
 		if (isset($_SESSION['userObject'])) {
@@ -96,8 +96,8 @@ class Core {
 			
 			if (isset($_SESSION['cookieHash'])) {
 				// check cookieHash for some additional security
-				if (!empty($_COOKIE['cookieHash'])
-					&& safeEquals($_SESSION['cookieHash'], $_COOKIE['cookieHash'])) {
+				if (!empty($_COOKIE['cc_cookieHash'])
+					&& Util::safeEquals($_SESSION['cookieHash'], $_COOKIE['cc_cookieHash'])) {
 					self::$user = unserialize($_SESSION['userObject']);
 				} else {
 					throw new FatalException('invalid session'); // TODO
@@ -106,15 +106,20 @@ class Core {
 				self::$user = unserialize($_SESSION['userObject']);
 			}
 			
-		} elseif (isset($_COOKIE['userId']) && isset($_COOKIE['cookieHash'])) {
+		} elseif (isset($_COOKIE['cc_userId']) && isset($_COOKIE['cc_cookieHash'])) {
 			// user sent cookie information
-			$userData = $this->db->sendQuery(
-				'SELECT * FROM `user` WHERE `userId` = ' // TODO replace *
-				. intval($_COOKIE['userId'])
+			$userData = self::$db->sendQuery(
+				'SELECT `userId`, `userName`, `email`, `cookieHash`, `language`
+				 FROM `cc_user`
+				 WHERE `userId` = ' . intval($_COOKIE['userId'])
 			)->fetch_assoc();
 			
-			if ($userData && safeEquals($userData['cookieHash'], $_COOKIE['cookieHash'])) {
-				self::$user = new User($userData['userId'], $userData['userName'], $userData['email']);
+			if ($userData && safeEquals($userData['cookieHash'], $_COOKIE['cc_cookieHash'])) {
+				self::$user = new User(
+					$userData['userId'],
+					$userData['userName'],
+					$userData['email'],
+					$userData['language']);
 				$_SESSION['userObject'] = serialize(self::$user);
 				$_SESSION['cookieHash'] = $userData['cookieHash'];
 			} else {

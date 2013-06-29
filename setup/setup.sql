@@ -1,12 +1,12 @@
 -- clear leftover tables
 SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE IF EXISTS `user` CASCADE;
-DROP TABLE IF EXISTS `game`;
-DROP TABLE IF EXISTS `chatMessage`;
+DROP TABLE IF EXISTS `cc_user` CASCADE;
+DROP TABLE IF EXISTS `cc_game`;
+DROP TABLE IF EXISTS `cc_chatMessage`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- create all new tables
-CREATE TABLE `user` (
+CREATE TABLE `cc_user` (
 	`userId` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`userName` VARCHAR(100) NOT NULL,
 	`email` VARCHAR(255) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE `user` (
 	UNIQUE KEY (`userName`)
 );
 
-CREATE TABLE `game` (
+CREATE TABLE `cc_game` (
 	`gameId` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`gameHash` VARCHAR(22) NOT NULL,
 	`whitePlayerId` INT(10) UNSIGNED NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE `game` (
 	KEY (`whitePlayerId`, `blackPlayerId`)
 );
 
-CREATE TABLE `chatMessage` (
+CREATE TABLE `cc_chatMessage` (
 	`messageId` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`gameId` INT(10) UNSIGNED NOT NULL,
 	`authorId` INT(10) UNSIGNED NOT NULL,
@@ -47,9 +47,9 @@ CREATE TABLE `chatMessage` (
 );
 
 -- add foreign keys
-ALTER TABLE `game`
-	ADD FOREIGN KEY (`whitePlayerId`) REFERENCES `user` (`userId`),
-	ADD FOREIGN KEY (`blackPlayerId`) REFERENCES `user` (`userId`);
-ALTER TABLE `chatMessage`
-	ADD FOREIGN KEY (`gameId`) REFERENCES `game` (`gameId`) ON DELETE CASCADE,
-	ADD	FOREIGN KEY (`authorId`) REFERENCES `user` (`userId`);
+ALTER TABLE `cc_game`
+	ADD FOREIGN KEY (`whitePlayerId`) REFERENCES `cc_user` (`userId`),
+	ADD FOREIGN KEY (`blackPlayerId`) REFERENCES `cc_user` (`userId`);
+ALTER TABLE `cc_chatMessage`
+	ADD FOREIGN KEY (`gameId`) REFERENCES `cc_game` (`gameId`) ON DELETE CASCADE,
+	ADD	FOREIGN KEY (`authorId`) REFERENCES `cc_user` (`userId`);
