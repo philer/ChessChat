@@ -9,34 +9,40 @@ final class Language {
 	/**
 	 * Language code for this language
 	 * as used by request headers etc.
-	 * @var 	string
+	 * @var string
 	 */
 	protected $langCode;
 	
 	/**
 	 * name of language in this language
-	 * @var 	string
+	 * @var string
 	 */
 	protected $name;
 	
 	/**
 	 * all languages known by this system
-	 * @var 	array
+	 * @var array<array>
 	 */
 	protected static $languages;
 	
 	/**
 	 * all language variables of this language
-	 * @var 	array
+	 * @var array<string>
 	 */
 	protected $langVars;
 	
 	/**
 	 * global language variables are the same in all
 	 * languages
-	 * @var 	array
+	 * @var array<string>
 	 */
 	protected static $globalLangVars;
+	
+	/**
+	 * Identifier for parameters in dynamic language variables
+	 * @var string
+	 */
+	const P_IDENTIFIER = '%';
 	
 	/**
 	 * Loads the appropriate language files.
@@ -52,21 +58,24 @@ final class Language {
 	}
 	
 	/**
-	 * Returns the language variable in this language
-	 * see alias lang($langVar) for use in templates.
+	 * Returns the language variable in this language.
+	 * If $params array is specified, array keys will be searched
+	 * and replaced accordingly.
 	 * @param 	string 	$langVar
 	 * @return 	string
 	 */
-	public function getLanguageItem($langVar) {
-		// search in language specific vars first
+	public function getLanguageItem($langVar, array $params = null) {
 		if (array_key_exists($langVar,$this->langVars)) {
-			return $this->langVars[$langVar];
+			$langVar = $this->langVars[$langVar];
+		} elseif (array_key_exists($langVar,self::$globalLangVars)) {
+			$langVar = self::$globalLangVars[$langVar];
 		}
-		// then search in global vars
-		if (array_key_exists($langVar,self::$globalLangVars)) {
-			return self::$globalLangVars[$langVar];
+		
+		if (!is_null($params)) {
+			foreach ($params as $key => $value) {
+				$langVar = str_replace(self::P_IDENTIFIER . $key, $value, $langVar);
+			}
 		}
-		// nothing found -> let's print the langVar instead
 		return $langVar;
 	}
 	

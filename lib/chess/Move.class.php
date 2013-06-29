@@ -19,6 +19,24 @@ class Move {
 	protected $fileOffset = 0;
 	
 	/**
+	 * Chesspiece that was moved.
+	 * @var ChessPiece
+	 */
+	public $chesspiece = null;
+	
+	/**
+	 * From where did we move?
+	 * @var string
+	 */
+	public $from = '';
+	
+	/**
+	 * From where did we move?
+	 * @var string
+	 */
+	public $to = '';
+	
+	/**
 	 * Once the move has been checked it will be flagged as (not) valid.
 	 * @var boolean
 	 */
@@ -46,7 +64,8 @@ class Move {
 			$this->moveString = self::formatMoveString($moveString);
 		} else throw new Exception('Invalid move string');
 		// TODO larissa
-		// set offsets, write getters
+		// set offsets, $from, $to, $chesspiece
+		// write getters
 		// set $valid and $invalidReason where it is appropriate
 	}
 	

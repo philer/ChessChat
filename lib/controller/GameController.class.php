@@ -59,7 +59,15 @@ class GameController implements RequestController {
 		if ($move->valid) {
 			AjaxController::queueReply('move', $move->__toString());
 			$this->getChatController()->post(
-				'TODO dynamic langvars; success: ' . $move,
+				Core::getLanguage()->getLanguageItem(
+					'chess.moved',
+					// TODO Move info
+					array(
+						'user'  => Core::getUser(),
+						'piece' => '[piece]',
+						'from'  => '[from]',
+						'to'    => '[to]')
+				),
 				$gameId,
 				Core::getUser()->getName()
 			);

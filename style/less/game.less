@@ -147,7 +147,7 @@
 			// 			//word-break: break-all;
 			// 		}
 			// 	}
-			// 	&.msgBot span {
+			// 	&.botMsg span {
 			// 		padding-top: .5em;
 			// 		padding-bottom: .5em;
 			// 	}
@@ -171,6 +171,11 @@
 						display: block;
 						overflow: hidden;
 						border-radius: 0 0 3px 3px;
+					}
+				}
+				&.botMsg {
+					span.msgAuthor, span.msgTime {
+						display: none;
 					}
 				}
 			}

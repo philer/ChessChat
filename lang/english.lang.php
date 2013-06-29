@@ -36,4 +36,7 @@ $this->langVars = array(
 "chess.term.enpassant"	=> "en passant",
 
 "chess.rule.nocastling"	=> "Castling is no longer allowed after the king has been moved at least once.",
+
+'chess.moved'			=> '<strong>%user</strong> moved %piece from <strong>%from</strong> to <strong>%to</strong>',
+
 );
