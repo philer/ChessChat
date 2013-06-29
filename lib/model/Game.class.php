@@ -213,7 +213,7 @@ class Game {
 	 * @param 	string 		$string
 	 * @return 	integer 	1, 0 or FALSE
 	 */
-	public static function hashPregMatch($string) {
+	public static function hashPatternMatch($string) {
 		return preg_match(self::getHashPattern(), $string);
 	}
 	

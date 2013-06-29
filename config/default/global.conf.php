@@ -3,6 +3,9 @@ define('SITENAME', 'ChessChat');
 // TODO obsolete: $_SERVER[] -> HTTP_HOST, REQUEST_SCRIPTNAME
 define('HOST', "");
 
+// options
+define('QUICK_LOGIN', true);
+
 //TODO security risk!
 define('GLOBAL_SALT',''); // for passwords
 define('GAME_SALT',''); // for game identification

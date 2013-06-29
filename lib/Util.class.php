@@ -6,6 +6,17 @@
 class Util {
 	
 	/**
+	 * Creates route array from PATH_INFO.
+	 * @return 	array<string>
+	 */
+	public static function getRoute() {
+		if (isset($_SERVER['PATH_INFO'])) {
+			$route = explode('/',trim($_SERVER['PATH_INFO'],'/ '));
+		}
+		return !isset($route) ? array() : $route;
+	}
+	
+	/**
 	 * TODO
 	 * @return 	string
 	 */
