@@ -39,6 +39,7 @@ class Core {
 		$this->setDB();
 		$this->setUser();
 		$this->setLanguage();
+		
 		$this->setTemplateEngine();
 		
 		$this->handleRequest();
@@ -133,6 +134,14 @@ class Core {
 			// let the Language class determine the appropriate language
 			self::$language = new Language();
 		}
+	}
+	
+	/**
+	 * Returns the Language object
+	 * @return 	Language
+	 */
+	public static function getLanguage() {
+		return self::$language;
 	}
 	
 	/**
