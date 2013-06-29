@@ -8,6 +8,10 @@
 			<nav id="panel">
 				<ul>
 					<li><a href="<?php
+						echo $this->url('Game');
+					?>"><?php
+						echo $this->lang('site.menu.gamelist')
+					?></a></li><li><a href="<?php
 						echo $this->url('Game/new');
 					?>"><?php
 						echo $this->lang('site.menu.newgame')

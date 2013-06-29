@@ -20,12 +20,6 @@ class Game {
 	protected $gameHash = '';
 	
 	/**
-	 * Timestamp when the game was created
-	 * @var integer
-	 */
-	protected $timestamp = 0;
-	
-	/**
 	 * Player one's id
 	 * @var integer
 	 */
@@ -41,13 +35,19 @@ class Game {
 	 * Player one
 	 * @var Player
 	 */
-	protected $whitePlayer = null;
+	protected $whitePlayerName = '';
 	
 	/**
 	 * Player two
 	 * @var Player
 	 */
-	protected $blackPlayer = null;
+	protected $blackPlayerName = '';
+	
+	/**
+	 * Last update for this game
+	 * @var integer ?
+	 */
+	protected $lastUpdate = 0;
 	
 	/**
 	 * Chessboard
@@ -160,19 +160,13 @@ class Game {
 	const STATUS_FIFTY_MOVES = 15;
 	
 	/**
-	 * Every Game needs a GameController as a parent
-	 * @var GameController
+	 * Creates a Game object using provided data.
+	 * @param 	array
 	 */
-	protected $gameController = null;
-	
-	/**
-	 * Initializes a Game with a
-	 * GameController as a parent.
-	 * @param 	GameController 	$gameController
-	 */
-	public function __construct(GameController $gameController) {
-		$this->gameController = $gameController;
-		// TODO
+	public function __construct(array $gameData = array()) {
+		foreach ($gameData as $key => $value) {
+			$this->$key = $value;
+		}
 	}
 	
 	/**
@@ -222,7 +216,7 @@ class Game {
 	 * @return 	string
 	 */
 	public function getHash() {
-		return $this->hash;
+		return $this->gameHash;
 	}
 	
 	/**
@@ -258,8 +252,37 @@ class Game {
 		// $move->valid = false;
 		// $move->invalidReason = 'You Suck';
 	}
-	public static function boardFromString($boardStr) {}
-	public static function boardToString($board) {}
+	// TODO larissa
+	public static function boardFromString($boardStr) {
+		return array();
+	}
+	public static function boardToString($board) {
+		return self::DEFAULT_BOARD_STRING;
+	}
+	
+	/**
+	 * When was the game last updated?
+	 * @return 	integer 	UNIX timestamp
+	 */
+	public function getLastUpdate() {
+		return $this->lastUpdate;
+	}
+	
+	/**
+	 * Returns white player's name
+	 * @return 	string
+	 */
+	public function getWhitePlayerName() {
+		return $this->whitePlayerName;
+	}
+	
+	/**
+	 * Returns black player's name
+	 * @return 	string
+	 */
+	public function getBlackPlayerName() {
+		return $this->blackPlayerName;
+	}
 	
 	/**
 	 * Returns this games current status.
@@ -268,6 +291,22 @@ class Game {
 	 */
 	public function getStatus() {
 		return $this->status;
+	}
+	
+	/**
+	 * Returns a string explaining this
+	 * games status in a user presentable way.
+	 * @return 	string
+	 */
+	public function getStatusString() {
+		if (!$this->isOver()) {
+			return 'next: ' . ((boolean) $this->status % 2 ? $this->whitePlayerName : $this->blackPlayerName);
+		} elseif ($this->isDraw()) {
+			return 'draw';
+		} else {
+			return ((boolean) $this->status % 2 ? $this->whitePlayerName : $this->blackPlayerName) . ' won';
+		}
+ 		return $this->status;
 	}
 	
 	/**
@@ -296,10 +335,10 @@ class Game {
 	 */
 	public function getWinner() {
 		if ($this->isOver()) {
-			if ($this->draw()) {
+			if ($this->isDraw()) {
 				return false;
 			} else {
-				return ((boolean) $this->status % 2) ? $this->whitePlayer : $this->blackPlayer;
+				return (boolean) $this->status % 2 ? $this->whitePlayerName : $this->blackPlayerName;
 			}
 		}
 		return null;

@@ -41,4 +41,25 @@ class Util {
 		return sha1(openssl_random_pseudo_bytes(24));
 	}
 	
+	/**
+	 * Takes a timestamp and returns a user friendly
+	 * string representation like '5 minutes ago'.
+	 * TODO dynamic lang variables
+	 * @param 	integer 	UNIX timestamp
+	 * @return 	string
+	 */
+	public static function formatTime($timestamp) {
+		if (NOW-$timestamp <= 60) {
+			return 'now';
+		} elseif (60 >= $minutes = (integer) ((NOW-$timestamp) / 60)) {
+			return $minutes . ' minutes ago';
+		} elseif (24 >= $hours = (integer) ((NOW-$timestamp) / (60*24))) {
+			return $hours . ' hours ago';
+		} elseif (3600*24*2 >= NOW-$timestamp) {
+			return 'yesterday';
+		} else {
+			return date('Y-m-d', $timestamp);
+		}
+	}
+	
 }

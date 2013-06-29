@@ -37,13 +37,45 @@ class GameController implements RequestController {
 	 * Does what needs to be done for this request.
 	 */
 	public function handleRequest(array $route) {
-
-		// new Game(); // TODO phil
 		
-		Core::getTemplateEngine()->registerAsyncScript('game');
-		Core::getTemplateEngine()->registerDynamicScript('chess-data');
-		Core::getTemplateEngine()->registerStylesheet('game');
-		Core::getTemplateEngine()->showPage('game');
+		if (!empty($route)) {
+			switch ($x = array_shift($route)) {
+				case 'new':
+					// TODO
+					throw new NotFoundException('not implemented');
+					break;
+				
+				default:
+					// new Game(); // TODO phil
+					Core::getTemplateEngine()->registerAsyncScript('game');
+					Core::getTemplateEngine()->registerDynamicScript('chess-data');
+					Core::getTemplateEngine()->registerStylesheet('game');
+					Core::getTemplateEngine()->showPage('game');
+					break;
+			}
+		} else {
+			$gamesData = Core::getDB()->sendQuery(
+				'SELECT `gameId`,
+				        `gameHash`,
+				        `W`.`userName` as `whitePlayerName`,
+				        `B`.`userName` as `blackPlayerName`,
+				        `status`,
+				        UNIX_TIMESTAMP(`lastUpdate`) as `lastUpdate`
+				 FROM `cc_game`
+					JOIN `cc_user` `W` ON `cc_game`.`whitePlayerId` = `W`.`userId`
+					JOIN `cc_user` `B` ON `cc_game`.`blackPlayerId` = `B`.`userId`
+				 ORDER BY `status`, `lastUpdate`'
+			);
+			
+			$games = array();
+			while ($gameData = $gamesData->fetch_assoc()) {
+				$games[] = new Game($gameData);
+			}
+			
+			Core::getTemplateEngine()->addVar('games', $games);
+			Core::getTemplateEngine()->registerStylesheet('gameList');
+			Core::getTemplateEngine()->showPage('gameList');
+		}
 	}
 	
 	/**
@@ -51,7 +83,7 @@ class GameController implements RequestController {
 	 */
 	public function move($moveString, $gameId) {
 		// TODO construct correct game
-		$game = new Game($this);
+		$game = new Game();
 		
 		$move = new Move($moveString);
 		$game->move($move);
