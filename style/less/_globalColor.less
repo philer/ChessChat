@@ -15,25 +15,30 @@ footer#footer {
 	box-shadow: 0 0 4px #777;
 }
 
-#panel ul {
-	border-color:	red
-					rgba(255,255,255,.4)
-					red
-					rgba(0,0,0,.1);
-	border-width: 0 1px;
-	
-	li a {
-		color: #666;
+nav#panel {
+	ul {
 		border-color:	red
-						rgba(0,0,0,.1)
+						rgba(255,255,255,.4)
 						red
-						rgba(255,255,255,.4);
+						rgba(0,0,0,.1);
 		border-width: 0 1px;
 		
-		&:hover {
-			.vertical-gradient (@panel-bottom-color, @panel-top-color);
-			box-shadow: inset 0 0 10px rgba(0,0,0,.1);
+		li a {
+			color: #666;
+			border-color:	red
+							rgba(0,0,0,.1)
+							red
+							rgba(255,255,255,.4);
+			border-width: 0 1px;
+			
+			&:hover {
+				.vertical-gradient (@panel-bottom-color, @panel-top-color);
+				box-shadow: inset 0 0 10px rgba(0,0,0,.1);
+			}
 		}
+	}
+	div#userInfo a {
+		color: #888;
 	}
 }
 

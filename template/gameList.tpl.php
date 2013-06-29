@@ -2,10 +2,16 @@
 				<header>
 					<h1><?php echo $this->lang('game.list'); ?></h1>
 				</header>
-				<ul class="gameList"><?php
-
+				<h2><?php echo $this->lang('game.list.running'); ?></h2>
+				<ul class="gameList running"><?php
+$runningGames = true;
 foreach ($this->var['games'] as $game) {
-
+if ($runningGames && $game->getStatus() >= Game::STATUS_RESIGNED) {
+	$runningGames = false;
+	echo '</ul><h2>'
+		. $this->lang('game.list.finished')
+		. '</h2><ul class="gameList finished">';
+}
 					?><li class="status-<?php echo $game->getStatus(); ?>">
 						<a href="<?php echo $this->url('Game/' . $game->getHash()) ?>">
 							<dl>

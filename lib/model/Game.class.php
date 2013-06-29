@@ -300,11 +300,17 @@ class Game {
 	 */
 	public function getStatusString() {
 		if (!$this->isOver()) {
-			return 'next: ' . ((boolean) $this->status % 2 ? $this->whitePlayerName : $this->blackPlayerName);
+			return Core::getLanguage()->getLanguageItem(
+				'game.status.nextturn',
+				array('u' => $this->getCurrentPlayer())
+			);
 		} elseif ($this->isDraw()) {
-			return 'draw';
+			return Core::getLanguage()->getLanguageItem('game.status.draw');
 		} else {
-			return ((boolean) $this->status % 2 ? $this->whitePlayerName : $this->blackPlayerName) . ' won';
+			return Core::getLanguage()->getLanguageItem(
+				'game.status.won',
+				array('u' => $this->getCurrentPlayer())
+			);
 		}
  		return $this->status;
 	}
@@ -328,20 +334,13 @@ class Game {
 	}
 	
 	/**
-	 * Returns a games winner or
-	 * false if it's a draw or
-	 * null if it's not over yet.
-	 * @return 	User|boolean
+	 * Returns the player who is active
+	 * according to status.
+	 * This _may_ mean that it is his turn.
+	 * @return 	string
 	 */
-	public function getWinner() {
-		if ($this->isOver()) {
-			if ($this->isDraw()) {
-				return false;
-			} else {
-				return (boolean) $this->status % 2 ? $this->whitePlayerName : $this->blackPlayerName;
-			}
-		}
-		return null;
+	public function getCurrentPlayer() {
+		return (boolean) $this->status % 2 ? $this->whitePlayerName : $this->blackPlayerName;
 	}
 	
 }

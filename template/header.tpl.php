@@ -10,11 +10,11 @@
 					<li><a href="<?php
 						echo $this->url('Game');
 					?>"><?php
-						echo $this->lang('site.menu.gamelist')
+						echo $this->lang('game.list')
 					?></a></li><li><a href="<?php
 						echo $this->url('Game/new');
 					?>"><?php
-						echo $this->lang('site.menu.newgame')
+						echo $this->lang('game.new')
 					?></a></li><li><a href="<?php
 						echo $this->url('User/edit');
 					?>"><?php
@@ -42,11 +42,13 @@
 				</form>
 <?php } } else { ?>
 				<div id="userInfo">
-					<span>Logged in as <a href="<?php
-						echo $this->url('User/logout');
-					?>"><?php
-						echo Core::getUser();
-					?></a></span>
+					<span><?php echo $this->lang('site.loggedinas'); ?>
+						<a href="<?php
+							echo $this->url('User/logout');
+						?>"><?php
+							echo Core::getUser();
+						?></a>
+					</span>
 				</div>
 <?php } ?>
 			</nav>

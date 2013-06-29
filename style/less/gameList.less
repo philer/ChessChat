@@ -6,8 +6,7 @@ ul.gameList {
 	
 	> li {
 		display: inline-block;
-		width: 33%;
-		min-width: 20em;
+		// min-width: 25em;
 		
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;
@@ -17,21 +16,46 @@ ul.gameList {
 		&:hover {
 			background-color: #eee;
 		}
-		&:nth-child(2n) {
-			background-color: #ddd;
-			&:hover {
-				background-color: #d0d0d0;
+		
+		width: 100%;
+		@media all and (min-width: 700px) and (max-width: 1023px) {
+			width: 50%;
+			&:nth-child(4n), &:nth-child(4n+1) {
+				background-color: #ddd;
+				&:hover {
+					background-color: #d0d0d0;
+				}
+			}
+		}
+		@media all and (min-width: 1024px) and (max-width: 1399px) {
+			width: 33.3%;
+		}
+		@media all and (min-width: 1400px) {
+			width: 25%;
+			&:nth-child(8n), &:nth-child(8n+1), &:nth-child(8n+3), &:nth-child(8n+6) {
+				background-color: #ddd;
+				&:hover {
+					background-color: #d0d0d0;
+				}
+			}
+		}
+		@media all and (max-width: 699px), (min-width: 1024px) and (max-width: 1399px) {
+			&:nth-child(odd) {
+				background-color: #ddd;
+				&:hover {
+					background-color: #d0d0d0;
+				}
 			}
 		}
 		
+		
 		> a, > a:hover {
 			display: inline-block;
-			padding: 1em;
+			padding: 1em 10%;
 			color: inherit !important;
 			text-shadow: none;
-			width: 100%;
+			width: 80%;
 			height: 100%;
-			min-height: 5em;
 		}
 		dl {
 			display: inline-block;
@@ -51,6 +75,9 @@ ul.gameList {
 				content: " vs ";
 				font-weight: normal;
 			}
+		}
+		.lastUpdate {
+			display: inline-block;
 		}
 	}
 	
