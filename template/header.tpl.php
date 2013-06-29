@@ -17,6 +17,34 @@
 						echo $this->lang('site.menu.settings')
 					?></a></li>
 				</ul>
+<?php if (Core::getUser()->guest()) { if (QUICK_LOGIN) { ?>
+				<form id="loginForm" method="post" action="<?php
+					echo $this->url('User/login');
+				?>">
+					<fieldset>
+						<input type="hidden" name="userId" value="3" />
+						<input 	type="text"
+								name="userName"
+								id="loginName"
+							/>
+						<input 	type="password"
+								name="password"
+								id="loginPassword"
+							/>
+						<button	type="submit" id="loginSubmit"><?php
+							echo $this->lang('login');
+						?></button>
+					</fieldset>
+				</form>
+<?php } } else { ?>
+				<div id="userInfo">
+					<span>Logged in as <a href="<?php
+						echo $this->url('User/logout');
+					?>"><?php
+						echo Core::getUser();
+					?></a></span>
+				</div>
+<?php } ?>
 			</nav>
 		</header>
 		<div id="main">

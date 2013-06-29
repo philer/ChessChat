@@ -86,7 +86,6 @@ class Core {
 	 * default to Guest
 	 */
 	protected function setUser() {
-		
 		session_name('cc_sid');
 		session_set_cookie_params(0, Util::cookiePath());
 		session_start();
@@ -105,8 +104,11 @@ class Core {
 			} else {
 				self::$user = unserialize($_SESSION['userObject']);
 			}
+			return;
 			
-		} elseif (isset($_COOKIE['cc_userId']) && isset($_COOKIE['cc_cookieHash'])) {
+		}
+		
+		if (isset($_COOKIE['cc_userId']) && isset($_COOKIE['cc_cookieHash'])) {
 			// user sent cookie information
 			$userData = self::$db->sendQuery(
 				'SELECT `userId`, `userName`, `email`, `cookieHash`, `language`
@@ -122,15 +124,13 @@ class Core {
 					$userData['language']);
 				$_SESSION['userObject'] = serialize(self::$user);
 				$_SESSION['cookieHash'] = $userData['cookieHash'];
-			} else {
-				throw new FatalException('invalid login'); // TODO
 			}
-			
-		} else {
-			// guest
-			self::$user = new User(0, 'Guest' . rand(1000,9999) );
-			$_SESSION['userObject'] = serialize(self::$user);
+			return;
 		}
+		
+		// guest
+		self::$user = new User(0, 'Guest' . rand(1000,9999) );
+		$_SESSION['userObject'] = serialize(self::$user);
 	}
 	
 	/**
@@ -239,11 +239,12 @@ class Core {
 				// special feature: shorter urls for Game
 				self::$controller = new GameController();
 				
-			} else throw new NotFoundException();
+			}
 			
 		}
 		self::getTemplateEngine()->registerDefaultScripts();
-		self::$controller->handleRequest(self::$route);
+		if (is_null(self::$controller)) throw new NotFoundException();
+		else self::$controller->handleRequest(self::$route);
 	}
 	
 	/**

@@ -13,18 +13,16 @@ class UserController implements RequestController {
 		if (!is_null($method)) {
 			switch ($method) {
 				case 'login':
-					// TODO remove exceptions
 					if ($this->login()) {
-						throw new NotFoundException('successfully logged in');
+						header('Location: ' . Core::getTemplateEngine()->url('User'));
 					} else {
-						throw new PermissionDeniedException('loggin failed');
+						throw new PermissionDeniedException('login failed');
 					}
 					break;
 					
 				case 'logout':
-					// TODO remove exceptions
 					if ($this->logout()) {
-						throw new NotFoundException('successfully logged out');
+						header('Location: ' . Core::getTemplateEngine()->url('Index'));
 					} else {
 						throw new PermissionDeniedException('logout failed');
 					}
@@ -39,8 +37,12 @@ class UserController implements RequestController {
 					throw new NotFoundException();
 					break;
 			}
+		
+		} elseif (!Core::getUser()->guest()) {
+			Core::getTemplateEngine()->showPage('userProfile');
+		} else {
+			throw new NotFoundException('no route specified');
 		}
-		throw new NotFoundException('no route specified');
 	}
 	
 	/**
@@ -50,11 +52,12 @@ class UserController implements RequestController {
 		if (!Core::getUser()->guest()) {
 			throw new PermissionDeniedException('already logged in');
 		}
-		if (isset($_GET['userId'])) { //TEST
+		if (isset($_POST['userName'])) {
+		// if (isset($_GET['userId'])) { //TEST
 			$userData = Core::getDB()->sendQuery(
-		 		'SELECT `userId`, `userName`, `email`, `cookieHash`, `language`
+		 		"SELECT `userId`, `userName`, `email`, `cookieHash`, `language`
 		 		 FROM `cc_user`
-		 		 WHERE `userId` = ' . intval($_GET['userId']) // TEST
+		 		 WHERE `userName` = '" . esc($_POST['userName']) . "'"
 		 	)->fetch_assoc();
 		 	if (!empty($userData)) { // TODO password check
 		 		$user = new User(
@@ -66,13 +69,12 @@ class UserController implements RequestController {
 		 		setcookie('cc_userId', $userData['userId'], NOW+60*60*24*100, Util::cookiePath());
 		 		
 		 		$this->regenerateCookieHash($userData['userId']);
-		 		
 		 	} else {
 		 		// TODO user feedback
 		 		return false;
 		 	}
 		} else {
-			// TODO user feedback
+			// TODO send login form
 			return false;
 		}
 		return true;
@@ -95,10 +97,14 @@ class UserController implements RequestController {
 		return true;
 	}
 	
+	// TODO
 	protected function edit() {}
 	protected function register() {}
 	
-	
+	/**
+	 * TODO
+	 * @param 	integer 	$userId
+	 */
 	protected function regenerateCookieHash($userId) {
 		$cookieHash = Util::getRandomHash();
 		
