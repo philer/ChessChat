@@ -1,13 +1,10 @@
 <?php
 /**
- * Define utility, alias and magical functions here
- */
-
-/**
- * Magic function autoload is called whenever a
- * unknown Class is instanciated ("new").
- * It checks for a <classname>.class|interface.php file in
- * all known directories (inside lib/) and includes it
+ * Magic function autoload is called whenever an
+ * unknown class is requested.
+ * It checks for a <classname>.(class|if).php file in
+ * all known directories (inside lib/) and includes it.
+ * @author Philipp Miller
  */
 function __autoload($className) {
 	
@@ -34,13 +31,4 @@ function __autoload($className) {
 	}
 	
 	//throw new ClassNotFoundException($className);
-}
-
-/**
- * Alias function for safely handing string parameters
- * @var 	string 	$str
- * @return 	string
- */
-function esc($str) {
-	return Core::getDB()->escapeString($str);
 }

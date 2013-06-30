@@ -1,10 +1,5 @@
 @import "_mixins.less";
 
-a:hover {
-	text-shadow: 1px 1px 0 #fff,
-				 0 0 3px rgba(0,0,0,.2);
-}
-
 @panel-top-color: #f5f5f5;
 @panel-bottom-color: #e0e0e0;
 header#header,
@@ -13,6 +8,10 @@ footer#footer {
 	text-shadow: 1px 1px 0 white;
 	.vertical-gradient (@panel-top-color, @panel-bottom-color);
 	box-shadow: 0 0 4px #777;
+	a:hover {
+		text-shadow: 1px 1px 0 #fff,
+					 0 0 3px rgba(0,0,0,.2);
+	}
 }
 
 nav#panel {

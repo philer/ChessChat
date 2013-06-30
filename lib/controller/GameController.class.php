@@ -57,7 +57,9 @@ class GameController implements RequestController {
 			$gamesData = Core::getDB()->sendQuery(
 				'SELECT `gameId`,
 				        `gameHash`,
+				        `W`.`userId`   as `whitePlayerId`,
 				        `W`.`userName` as `whitePlayerName`,
+				        `B`.`userId`   as `blackPlayerId`,
 				        `B`.`userName` as `blackPlayerName`,
 				        `status`,
 				        UNIX_TIMESTAMP(`lastUpdate`) as `lastUpdate`

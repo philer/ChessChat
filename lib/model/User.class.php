@@ -89,6 +89,14 @@ class User extends GenericModel {
 	}
 	
 	/**
+	 * For use in URLs
+	 * @return 	string
+	 */
+	public function getRoute() {
+		return 'User/' . $this->userId . '-' . $this->userName;
+	}
+	
+	/**
 	 * Creates a blowfish hash for password encryption.
 	 * TODO create random salt
 	 * @param 	string 	$password

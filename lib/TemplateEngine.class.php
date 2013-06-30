@@ -71,18 +71,8 @@ final class TemplateEngine {
 	 * @param 	string 	$langVar
 	 * @return 	string
 	 */
-	function lang($langVar) {
+	protected function lang($langVar) {
 		return $this->language->getLanguageItem($langVar);
-	}
-	
-	/**
-	 * Convenience function for easy use in templates,
-	 * returns an absolute url for a given route.
-	 * @param 	string 	$route
-	 * @return 	string
-	 */
-	function url($route) {
-		return HOST . 'index.php/' . $route;
 	}
 	
 	/**

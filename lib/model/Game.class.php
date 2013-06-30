@@ -20,28 +20,16 @@ class Game extends GenericModel {
 	protected $gameHash = '';
 	
 	/**
-	 * Player one's id
-	 * @var integer
-	 */
-	protected $whitePlayerId = 0;
-	
-	/**
-	 * Player two's id
-	 * @var integer
-	 */
-	protected $blackPlayerId = 0;
-	
-	/**
 	 * Player one
-	 * @var Player
+	 * @var integer
 	 */
-	protected $whitePlayerName = '';
+	protected $whitePlayer = null;
 	
 	/**
 	 * Player two
-	 * @var Player
+	 * @var integer
 	 */
-	protected $blackPlayerName = '';
+	protected $blackPlayer = null;
 	
 	/**
 	 * Last update for this game
@@ -164,8 +152,20 @@ class Game extends GenericModel {
 	 * or a new game if none is provided.
 	 * @param 	array<mixed> $gameData
 	 */
-	public function __construct(array $gameData = null) {
-		if (is_null($gameData)) {
+	public function __construct(array $gameData = array()) {
+		if (isset($gameData['whitePlayerId'])) {
+			// assume both white's and black's Id and name are set
+			$userData = array();
+			$userData['userId']   = $gameData['whitePlayerId'];
+			$userData['userName'] = $gameData['whitePlayerName'];
+			$this->whitePlayer = new User($userData);
+			$userData['userId']   = $gameData['blackPlayerId'];
+			$userData['userName'] = $gameData['blackPlayerName'];
+			$this->blackPlayer = new User($userData);
+		}
+		unset($gameData['whitePlayerId'], $gameData['whitePlayerName'], $gameData['blackPlayerId'], $gameData['blackPlayerName']);
+		
+		if (empty($gameData)) {
 			$this->boardString = self::DEFAULT_BOARD_STRING;
 			// $this->board = $this->boardFromString($this->boardString);
 			$this->status = self::STATUS_WHITES_TURN;
@@ -267,18 +267,26 @@ class Game extends GenericModel {
 	
 	/**
 	 * Returns white player's name
-	 * @return 	string
+	 * @return 	User
 	 */
-	public function getWhitePlayerName() {
-		return $this->whitePlayerName;
+	public function getWhitePlayer() {
+		return $this->whitePlayer;
 	}
 	
 	/**
 	 * Returns black player's name
+	 * @return 	User
+	 */
+	public function getBlackPlayer() {
+		return $this->blackPlayer;
+	}
+	
+	/**
+	 * For use in URLs
 	 * @return 	string
 	 */
-	public function getBlackPlayerName() {
-		return $this->blackPlayerName;
+	public function getRoute() {
+		return 'Game/' . $this->gameHash;
 	}
 	
 	/**
@@ -295,7 +303,7 @@ class Game extends GenericModel {
 	 * games status in a user presentable way.
 	 * @return 	string
 	 */
-	public function getStatusString() {
+	public function getFormattedStatus() {
 		if (!$this->isOver()) {
 			return Core::getLanguage()->getLanguageItem(
 				'game.status.nextturn',
@@ -334,10 +342,10 @@ class Game extends GenericModel {
 	 * Returns the player who is active
 	 * according to status.
 	 * This _may_ mean that it is his turn.
-	 * @return 	string
+	 * @return 	User
 	 */
 	public function getCurrentPlayer() {
-		return (boolean) $this->status % 2 ? $this->whitePlayerName : $this->blackPlayerName;
+		return (boolean) $this->status % 2 ? $this->whitePlayer : $this->blackPlayer;
 	}
 	
 }

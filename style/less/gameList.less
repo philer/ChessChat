@@ -6,6 +6,7 @@ ul.gameList {
 	
 	> li {
 		display: inline-block;
+		padding: 1em;
 		// min-width: 25em;
 		
 		-moz-box-sizing: border-box;
@@ -48,14 +49,8 @@ ul.gameList {
 			}
 		}
 		
-		
-		> a, > a:hover {
-			display: inline-block;
-			padding: 1em 10%;
-			color: inherit !important;
-			text-shadow: none;
-			width: 80%;
-			height: 100%;
+		> a {
+			float: right;
 		}
 		dl {
 			display: inline-block;
@@ -74,6 +69,7 @@ ul.gameList {
 			&.whitePlayer:after {
 				content: " vs ";
 				font-weight: normal;
+				opacity: .66;
 			}
 		}
 		.lastUpdate {

@@ -48,14 +48,14 @@ class UserController implements RequestController {
 		switch ($param) {
 			case 'login':
 				if ($this->login()) {
-					header('Location: ' . Core::getTemplateEngine()->url('User'));
+					header('Location: ' . Util::url('User'));
 					break;
 				}
 				throw new PermissionDeniedException('login failed');
 				
 			case 'logout':
 				if ($this->logout()) {
-					header('Location: ' . Core::getTemplateEngine()->url('Index'));
+					header('Location: ' . Util::url('Index'));
 					break;
 				}
 				throw new PermissionDeniedException('logout failed');
@@ -82,7 +82,7 @@ class UserController implements RequestController {
 			$userData = Core::getDB()->sendQuery(
 		 		"SELECT `userId`, `userName`, `email`, `cookieHash`, `language`
 		 		 FROM `cc_user`
-		 		 WHERE `userName` = '" . esc($_POST['userName']) . "'"
+		 		 WHERE `userName` = '" . Util::esc($_POST['userName']) . "'"
 		 	)->fetch_assoc();
 		
 		 	if (!empty($userData)) { // TODO password check

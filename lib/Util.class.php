@@ -17,6 +17,16 @@ class Util {
 	}
 	
 	/**
+	 * Convenience function for easy use in templates etc,
+	 * returns an absolute url for a given route.
+	 * @param 	string 	$route
+	 * @return 	string
+	 */
+	public static function url($route) {
+		return HOST . 'index.php/' . $route;
+	}
+	
+	/**
 	 * TODO
 	 * @return 	string
 	 */
@@ -57,6 +67,15 @@ class Util {
 	 */
 	public static function getCookie($name) {
 		return isset($_COOKIE[COOKIE_PREFIX . $name]) ? $_COOKIE[COOKIE_PREFIX . $name] : null;
+	}
+	
+	/**
+	 * Alias function for safely handing string parameters
+	 * @var 	string 	$str
+	 * @return 	string
+	 */
+	public static function esc($str) {
+		return Core::getDB()->escapeString($str);
 	}
 	
 	/**

@@ -8,22 +8,22 @@
 			<nav id="panel">
 				<ul>
 					<li><a href="<?php
-						echo $this->url('Game');
+						echo Util::url('Game');
 					?>"><?php
 						echo $this->lang('game.list')
 					?></a></li><li><a href="<?php
-						echo $this->url('Game/new');
+						echo Util::url('Game/new');
 					?>"><?php
 						echo $this->lang('game.new')
 					?></a></li><li><a href="<?php
-						echo $this->url('User/edit');
+						echo Util::url('User/edit');
 					?>"><?php
 						echo $this->lang('site.menu.settings')
 					?></a></li>
 				</ul>
 <?php if (Core::getUser()->guest()) { if (QUICK_LOGIN) { ?>
 				<form id="loginForm" method="post" action="<?php
-					echo $this->url('User/login');
+					echo Util::url('User/login');
 				?>">
 					<fieldset>
 						<input type="hidden" name="userId" value="3" />
@@ -44,7 +44,7 @@
 				<div id="userInfo">
 					<span><?php echo $this->lang('site.loggedinas'); ?>
 						<a href="<?php
-							echo $this->url('User');
+							echo Util::url('User');
 						?>"><?php
 							echo Core::getUser();
 						?></a>

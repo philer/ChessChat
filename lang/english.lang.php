@@ -24,6 +24,7 @@ $this->langVars = array(
 'game.list' 			=> 'Games',
 'game.list.running' 	=> 'Running games',
 'game.list.finished'	=> 'Finished games',
+'game.list.gotogame' 	=> 'view',
 'game.new'				=> 'New Game',
 'game.lastupdate' 		=> 'last update',
 'game.status.nextturn' 	=> "It's %u's turn",
