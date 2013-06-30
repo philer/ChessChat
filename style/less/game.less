@@ -1,3 +1,50 @@
+span.vs,
+dl.gameData dd.whitePlayer:after {
+	content: " vs ";
+	font-weight: normal;
+	opacity: .66;
+}
+
+dl.gameData {
+	dt {
+		&.whitePlayer, &.blackPlayer,
+		&.status {
+			display: none;
+		}
+	}
+	dd {
+		&.whitePlayer, &.blackPlayer {
+			display: inline-block;
+			font-weight: bold;
+		}
+	}
+	.lastUpdate {
+		display: inline-block;
+	}
+}
+
+ul.gameList > li {
+	> a, > a:hover {
+		float: left;
+		color: inherit !important;
+		span {
+			display: none;
+			&.icon {
+				font-size: 4em;
+				line-height: 3/4em;
+				vertical-align: middle;
+				padding: 0;
+				margin-right: .25em;
+				opacity: .5;
+				text-shadow: 1px 1px 2px #aaa;
+				&:hover {
+					opacity: 1;
+				}
+			}
+		}
+	}
+}
+
 div#main {
 	> section#game {
 		width: 75%;
@@ -10,23 +57,14 @@ div#main {
 		
 		> header {
 			position: static; // undo positioning in global.less
-			#clock {
+			
+			dl.gameData {
 				float: right;
-				text-align: center;
-				span {
-					display: block;
+				color: #999;
+				dd {
+					display: inline-block;
+					line-height: 2em;
 				}
-				#timer {
-					font-weight: bold;
-				}
-				#playtime {
-					font-size: .75em;
-				}
-			}
-			span.vs {
-				opacity: .5;
-				font-weight: normal;
-				padding: 0 .2em;
 			}
 		}
 		

@@ -8,6 +8,8 @@
 echo "\nsession\n";
 var_dump($_SESSION);
 
+echo "\ngame\n";
+var_dump($this->var['game']);
 						?></span>
 						</p>
 					</div><!-- #chatLog -->

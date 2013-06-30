@@ -1,12 +1,31 @@
+<?php
+// shortcut
+$game = $this->var['game'];
+?>
 			<section id="game">
 				<header>
-					<h1>Phil <span class="vs">vs</span> Larissa</h1>
-					<div id="clock">
-						<span id="timer">3:00</span>
-						<span id="playtime">0:27:49</span>
-					</div><!--#clock-->
+					<h1><a href="<?php
+						echo Util::url(
+							$game->getWhitePlayer()->getRoute())
+					?>"><?php
+						echo $game->getWhitePlayer();
+					?></a><span class="vs"> vs </span><a href="<?php
+						echo Util::url(
+							$game->getBlackPlayer()->getRoute())
+					?>"><?php
+						echo $game->getBlackPlayer();
+					?></a></h1>
+					<dl class="gameData">
+						<dt class="status"><?php
+							echo $this->lang('game.status');
+						?></dt>
+						<dd class="status"><?php
+							echo $game->getFormattedStatus();
+						?></dd>
+					</dl>
 				</header>
 <?php include("chessboard.tpl.php"); ?>
+<?php if (!is_null($game->isWhitePlayer())) { ?>
 				<footer>
 					<nav id="gameMenu">
 						<ul>
@@ -18,6 +37,7 @@
 						</ul>
 					</nav>
 				</footer>
+<?php } ?>
 			</section><!-- #game -->
 			<aside id="chat">
 <?php include("chat.tpl.php"); ?>

@@ -3,17 +3,17 @@
 					<h1><?php echo $this->lang('game.list'); ?></h1>
 				</header>
 				<h2><?php echo $this->lang('game.list.running'); ?></h2>
-				<ul class="gameList running"><?php
+				<ul class="gameList dataList"><?php
 $runningGames = true;
 foreach ($this->var['games'] as $game) {
 if ($runningGames && $game->getStatus() >= Game::STATUS_RESIGNED) {
 	$runningGames = false;
 	echo '</ul><h2>'
 		. $this->lang('game.list.finished')
-		. '</h2><ul class="gameList finished">';
+		. '</h2><ul class="gameList dataList">';
 }
 					?><li class="status-<?php echo $game->getStatus(); ?>">
-						<dl>
+						<dl class="gameData">
 							<dt class="whitePlayer"><?php
 								echo $this->lang('game.whiteplayer');
 							?></dt>

@@ -1,6 +1,9 @@
 $(function() {
+	
 	chat.init();
-	chess.init();
+	if (game !== 'undefined') {
+		chess.init();
+	}
 	
 	chess.setBoardSize();
 	$(window).resize(chess.setBoardSize);
@@ -80,13 +83,15 @@ var chess = {
 	squares     : null,
 	whitePrison : null,
 	blackPrison : null,
+	statusField : null,
 	
 	init : function() {
 		
-		chess.chesspieces = $('table#chessboardTable .chesspiece.' + ownColor);
+		chess.chesspieces = $('table#chessboardTable .chesspiece.' + game.ownColor);
 		chess.squares     = $('table#chessboardTable .square');
 		chess.whitePrison = $('.prison.white');
 		chess.blackPrison = $('.prison.black');
+		chess.statusField = $('.status');
 				
 		chess.chesspieces.draggable({
 			containment   : 'table#chessboardTable',
@@ -119,6 +124,7 @@ var chess = {
 	handleReply : function(reply) {
 		if (reply.move) {
 			chess.executeMove(reply.move);
+			chess.statusField.html(reply.status);
 		}
 		if (reply.invalidMove) {
 			chess.resetMove(reply.invalidMove);

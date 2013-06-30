@@ -1,4 +1,4 @@
-ul.gameList {
+ul.dataList {
 	margin: 0 0 1em 0;
 	padding: 0;
 	text-align: left;
@@ -8,18 +8,21 @@ ul.gameList {
 	border: 1px solid #ddd;
 	
 	> li {
-		display: inline-block;
-		padding: 1em;
-		// min-width: 25em;
-		
-		-moz-box-sizing: border-box;
-		-webkit-box-sizing: border-box;
-		box-sizing: border-box;
-		
 		background-color: #e5e5e5;
 		&:hover {
 			background-color: #eee;
 		}
+		dl {
+			display: inline-block;
+		}		
+		
+		// data list multi-column layout
+		display: inline-block;
+		padding: 1em;
+		// min-width: 25em;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
 		
 		width: 100%;
 		@media all and (min-width: 780px) and (max-width: 1159px) {
@@ -51,50 +54,5 @@ ul.gameList {
 				}
 			}
 		}
-		
-		> a, > a:hover {
-			float: left;
-			color: inherit !important;
-			span {
-				display: none;
-				&.icon {
-					font-size: 4em;
-					line-height: 3/4em;
-					vertical-align: middle;
-					padding: 0;
-					margin-right: .25em;
-					opacity: .5;
-					text-shadow: 1px 1px 2px #aaa;
-					&:hover {
-						opacity: 1;
-						// color: #555;
-					}
-				}
-			}
-		}
-		dl {
-			display: inline-block;
-		}
-		dt {
-			&.whitePlayer, &.blackPlayer,
-			&.status {
-				display: none;
-			}
-		}
-		dd {
-			&.whitePlayer, &.blackPlayer {
-				display: inline-block;
-				font-weight: bold;
-			}
-			&.whitePlayer:after {
-				content: " vs ";
-				font-weight: normal;
-				opacity: .66;
-			}
-		}
-		.lastUpdate {
-			display: inline-block;
-		}
 	}
-	
 }

@@ -21,6 +21,9 @@ $this->langVars = array(
 'legal.representatives'	=> 'Representative',
 //'legal.taxID'			=> 'Tax ID',
 
+'game.whiteplayer' 		=> 'White player',
+'game.blackplayer' 		=> 'Black player',
+'game.status' 			=> 'Status',
 'game.list' 			=> 'Games',
 'game.list.running' 	=> 'Running games',
 'game.list.finished'	=> 'Finished games',

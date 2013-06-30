@@ -9,8 +9,7 @@ class UserController implements RequestController {
 	 * TODO
 	 */
 	public function handleRequest(array $route) {
-		$param = array_shift($route);
-		if (is_null($param)) {
+		if (is_null($param = array_shift($route))) {
 			// own profile
 			if (!Core::getUser()->guest()) {
 				Core::getTemplateEngine()->showPage('userProfile');

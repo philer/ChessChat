@@ -205,7 +205,10 @@ class Game extends GenericModel {
 	 * @return 	integer 	1, 0 or FALSE
 	 */
 	public static function hashPatternMatch($string) {
-		return preg_match(self::getHashPattern(), $string);
+		return preg_match(
+			'#^[[:alnum:]]{' . GAME_HASH_LENGTH . '}$#i',
+			$string
+		);
 	}
 	
 	/**
@@ -214,16 +217,6 @@ class Game extends GenericModel {
 	 */
 	public function getHash() {
 		return $this->gameHash;
-	}
-	
-	/**
-	 * Returns the regex pattern for a valid
-	 * game hash string.
-	 * Unfortunately this can not be implemented as a const.
-	 * @return 	string
-	 */
-	public static function getHashPattern() {
-		return "#^[[:alnum:]]{".GAME_HASH_LENGTH."}$#i";
 	}
 	
 	/**
@@ -354,5 +347,20 @@ class Game extends GenericModel {
 	 */
 	public function whitesTurn() {
 		return (boolean) ($this->status % 2);
+	}
+	
+	/**
+	 * Checks if the user is white,
+	 * returns null if he is not a player in this game.
+	 * @return 	boolean
+	 */
+	public function isWhitePlayer() {
+		if (Core::getUser()->getId() == $this->whitePlayer->getId()) {
+			return true;
+		}
+		if (Core::getUser()->getId() == $this->blackPlayer->getId()) {
+			return false;
+		}
+		return null;
 	}
 }
