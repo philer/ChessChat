@@ -44,7 +44,16 @@ if ($runningGames && $game->getStatus() >= Game::STATUS_RESIGNED) {
 							?></dd>
 						</dl>
 						<a href="<?php echo Util::url($game->getRoute()) ?>">
-							<?php echo $this->lang('game.list.gotogame'); ?>
+							<span class="icon"><?php
+								if ($game->isDraw()) {
+									echo new Pawn(false);
+								} else {
+									echo new King($game->whitesTurn());
+								}
+							?></span>
+							<span><?php
+								echo $this->lang('game.list.gotogame');
+							?></span>
 						</a>
 					</li><?php
 

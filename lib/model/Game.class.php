@@ -345,7 +345,14 @@ class Game extends GenericModel {
 	 * @return 	User
 	 */
 	public function getCurrentPlayer() {
-		return (boolean) $this->status % 2 ? $this->whitePlayer : $this->blackPlayer;
+		return $this->whitesTurn() ? $this->whitePlayer : $this->blackPlayer;
 	}
 	
+	/**
+	 * Wether or not it is white player's turn
+	 * @return 	boolean
+	 */
+	public function whitesTurn() {
+		return (boolean) ($this->status % 2);
+	}
 }

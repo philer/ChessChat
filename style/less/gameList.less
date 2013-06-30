@@ -3,6 +3,9 @@ ul.gameList {
 	padding: 0;
 	text-align: left;
 	font-size: .9em;
+	border-radius: 4px;
+	overflow: hidden;
+	border: 1px solid #ddd;
 	
 	> li {
 		display: inline-block;
@@ -19,7 +22,7 @@ ul.gameList {
 		}
 		
 		width: 100%;
-		@media all and (min-width: 700px) and (max-width: 1023px) {
+		@media all and (min-width: 780px) and (max-width: 1159px) {
 			width: 50%;
 			&:nth-child(4n), &:nth-child(4n+1) {
 				background-color: #ddd;
@@ -28,10 +31,10 @@ ul.gameList {
 				}
 			}
 		}
-		@media all and (min-width: 1024px) and (max-width: 1399px) {
+		@media all and (min-width: 1160px) and (max-width: 1549px) {
 			width: 33.3%;
 		}
-		@media all and (min-width: 1400px) {
+		@media all and (min-width: 1550px) {
 			width: 25%;
 			&:nth-child(8n), &:nth-child(8n+1), &:nth-child(8n+3), &:nth-child(8n+6) {
 				background-color: #ddd;
@@ -40,7 +43,7 @@ ul.gameList {
 				}
 			}
 		}
-		@media all and (max-width: 699px), (min-width: 1024px) and (max-width: 1399px) {
+		@media all and (max-width: 779px), (min-width: 1160px) and (max-width: 1549px) {
 			&:nth-child(odd) {
 				background-color: #ddd;
 				&:hover {
@@ -49,8 +52,25 @@ ul.gameList {
 			}
 		}
 		
-		> a {
-			float: right;
+		> a, > a:hover {
+			float: left;
+			color: inherit !important;
+			span {
+				display: none;
+				&.icon {
+					font-size: 4em;
+					line-height: 3/4em;
+					vertical-align: middle;
+					padding: 0;
+					margin-right: .25em;
+					opacity: .5;
+					text-shadow: 1px 1px 2px #aaa;
+					&:hover {
+						opacity: 1;
+						// color: #555;
+					}
+				}
+			}
 		}
 		dl {
 			display: inline-block;
