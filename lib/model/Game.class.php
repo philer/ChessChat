@@ -4,7 +4,7 @@
  * Represents a Game
  * @author Philipp Miller
  */
-class Game {
+class Game extends GenericModel {
 	
 	/**
 	 * Unique game id
@@ -160,21 +160,18 @@ class Game {
 	const STATUS_FIFTY_MOVES = 15;
 	
 	/**
-	 * Creates a Game object using provided data.
-	 * @param 	array
+	 * Creates a Game object using provided data
+	 * or a new game if none is provided.
+	 * @param 	array<mixed> $gameData
 	 */
-	public function __construct(array $gameData = array()) {
-		foreach ($gameData as $key => $value) {
-			$this->$key = $value;
+	public function __construct(array $gameData = null) {
+		if (is_null($gameData)) {
+			$this->boardString = self::DEFAULT_BOARD_STRING;
+			// $this->board = $this->boardFromString($this->boardString);
+			$this->status = self::STATUS_WHITES_TURN;
+		} else {
+			parent::__construct($gameData);
 		}
-	}
-	
-	/**
-	 * TODO
-	 */
-	public static function create() {
-		// TODO
-		// return new self(self::DEFAULT_BOARD_STRING);
 	}
 	
 	/**

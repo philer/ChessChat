@@ -44,7 +44,7 @@
 				<div id="userInfo">
 					<span><?php echo $this->lang('site.loggedinas'); ?>
 						<a href="<?php
-							echo $this->url('User/logout');
+							echo $this->url('User');
 						?>"><?php
 							echo Core::getUser();
 						?></a>

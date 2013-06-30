@@ -25,6 +25,41 @@ class Util {
 	}
 	
 	/**
+	 * Sets a cookie. Cookienames are prepended with
+	 * a global prefix.
+	 * @see 	global.conf.php COOKIE_PREFIX
+	 * @param 	string 	$name 	global prefix will be prepended automatically
+	 * @param 	string 	$value
+	 * @param 	integer $expiration 	optional expiration timestamp
+	 */
+	public static function setCookie ($name, $value, $expiration = null) {
+		setcookie(
+			COOKIE_PREFIX . $name,
+			$value,
+			is_null($expiration) ? COOKIE_DAYS*3600*24 + NOW : $expiration,
+		 	self::cookiePath()
+		);
+	}
+	
+	/**
+	 * Deletes a cookie of specified name.
+	 * @see 	Util::setCookie()
+	 * @param 	string 	$name 	global prefix will be prepended automatically
+	 */
+	public static function deleteCookie($name) {
+		self::setCookie($name, '', 1);
+	}
+	
+	/**
+	 * Returns the value of the given cookie or null if it doesn't exist.
+	 * @param 	string 	$name 	global prefix will be prepended automatically
+	 * @return 	mixed
+	 */
+	public static function getCookie($name) {
+		return isset($_COOKIE[COOKIE_PREFIX . $name]) ? $_COOKIE[COOKIE_PREFIX . $name] : null;
+	}
+	
+	/**
 	 * Compares two strings for equality.
 	 * This function is secure against timing attacks
 	 * @see TODO

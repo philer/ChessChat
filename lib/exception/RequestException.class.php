@@ -3,7 +3,7 @@
 class RequestException extends Exception {
 	
 	protected $title = '';
-	protected $http_code = 200;
+	protected $httpCode = 200;
 	
 	/**
 	 * Creates a new RequestException.
@@ -16,11 +16,16 @@ class RequestException extends Exception {
 	}
 	
 	/**
-	 * Display a nice message to user
+	 * Display a nice message to user.
+	 * Detailed messages in debug mode only.
 	 */
 	public function show() {
-		Core::getTemplateEngine()->addVar('errorTitle', $this->getTitle());
-		Core::getTemplateEngine()->addVar('errorMessage', $this->message);
+		if (DEBUG_MODE) {
+			Core::getTemplateEngine()->addVar('errorTitle', $this->getTitle());
+			Core::getTemplateEngine()->addVar('errorMessage', $this->message);
+		} else {
+			Core::getTemplateEngine()->addVar('errorMessage', Core::getLanguage()->getLanguageItem('exception.' . $this->httpCode . '.msg'));
+		}
 		Core::getTemplateEngine()->showPage('error');
 	}
 	
@@ -29,8 +34,8 @@ class RequestException extends Exception {
 	 * @return 	string
 	 */
 	public function getTitle() {
-		if ($this->http_code >= 400) {
-			return $this->http_code . ' ' . $this->title;
+		if ($this->httpCode >= 400) {
+			return $this->httpCode . ' ' . $this->title;
 		} else {
 			return $this->title;
 		}

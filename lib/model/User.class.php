@@ -5,7 +5,7 @@
  * A user may be a Guest, a Player, a Spectator...
  * @author Philipp Miller
  */
-class User {
+class User extends GenericModel {
 	
 	/**
 	 * Unique UserID
@@ -26,20 +26,29 @@ class User {
 	protected $email = '';
 	
 	/**
+	 * Cookie hash is used for login via cookie.
+	 * @var string
+	 */
+	protected $cookieHash = '';
+	
+	/**
 	 * User's preferred language as string (e.g. 'en')
 	 * @var string
 	 */
 	protected $language = '';
 	
 	/**
-	 * TODO
+	 * Creates a User object using provided data
+	 * or a Guest if none is provided.
+	 * @param 	array<mixed> $userData
 	 */
-	public function __construct($userId, $userName, $email = '', $language = '') {
-		$this->userId = $userId;
-		$this->userName = $userName;
-		if (!empty($email))    $this->email    = $email;
-		if (!empty($language)) $this->language = $language;
-		// TODO remove password + hash?
+	public function __construct(array $userData = null) {
+		if (is_null($userData)) {
+			$this->userId = 0;
+			$this->userName = 'Guest' . rand(1000,9999);
+		} else {
+			parent::__construct($userData);
+		}
 	}
 	
 	/**
@@ -96,5 +105,36 @@ class User {
 	 */
 	public function guest() {
 		return $this->userId == 0;
+	}
+	
+	/**
+	 * Generates a new cookieHash, saves it in database
+	 * and sends it to client.
+	 */
+	public function regenerateCookieHash() {
+		$cookieHash = Util::getRandomHash();
+		if (Core::getDB()->sendQuery(
+			"UPDATE `cc_user`
+			 SET `cookieHash` = '" . $cookieHash . "' 
+			 WHERE `userId` = " . $this->userId
+		) !== true) throw new FatalException('could not reset cookieHash');
+		Util::setCookie('cookieHash', $cookieHash);
+		$this->cookieHash = $cookieHash;
+	}
+	
+	/**
+	 * Checks if the sent cookieHash matches this
+	 * cookieHash.
+	 * @return 	boolean
+	 */
+	public function checkCookieHash() {
+		if (!empty($this->cookieHash)) {
+			$cookieHash = Util::getCookie('cookieHash');
+			if (!is_null($cookieHash)) {
+				return Util::safeEquals($this->cookieHash, $cookieHash);
+			}
+			return false;
+		}
+		return true;
 	}
 }

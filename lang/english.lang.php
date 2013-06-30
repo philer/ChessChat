@@ -47,4 +47,7 @@ $this->langVars = array(
 
 'chess.moved'			=> '<strong>%user</strong> moved %piece from <strong>%from</strong> to <strong>%to</strong>',
 
+'exception.404.msg' 	=> 'This page is no longer available.<br /><a href="index.php">Return to home</a>',
+'exception.403.msg' 	=> 'You don\'t have access to this page.<br /><a href="index.php">Return to home</a>',
+
 );

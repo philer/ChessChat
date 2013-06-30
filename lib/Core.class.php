@@ -39,7 +39,6 @@ class Core {
 		$this->setDB();
 		$this->setUser();
 		$this->setLanguage();
-		
 		$this->setTemplateEngine();
 		
 		$this->handleRequest();
@@ -68,50 +67,39 @@ class Core {
 	 * default to Guest
 	 */
 	protected function setUser() {
-		session_name('cc_sid');
+		session_name(COOKIE_PREFIX . 'sid');
 		session_set_cookie_params(0, Util::cookiePath());
 		session_start();
 		
+		// existing session
 		if (isset($_SESSION['userObject'])) {
-			// request has a running session
-			
-			if (isset($_SESSION['cookieHash'])) {
-				// check cookieHash for some additional security
-				if (!empty($_COOKIE['cc_cookieHash'])
-					&& Util::safeEquals($_SESSION['cookieHash'], $_COOKIE['cc_cookieHash'])) {
-					self::$user = unserialize($_SESSION['userObject']);
-				} else {
-					throw new FatalException('invalid session'); // TODO
-				}
-			} else {
-				self::$user = unserialize($_SESSION['userObject']);
+			$user = unserialize($_SESSION['userObject']);
+			if ($user->checkCookieHash()) {
+				self::$user = $user;
+				return;
 			}
-			return;
-			
 		}
 		
-		if (isset($_COOKIE['cc_userId']) && isset($_COOKIE['cc_cookieHash'])) {
-			// user sent cookie information
+		// no session but cookie
+		elseif (!is_null($userId = Util::getCookie('userId'))) {
 			$userData = self::$db->sendQuery(
 				'SELECT `userId`, `userName`, `email`, `cookieHash`, `language`
 				 FROM `cc_user`
-				 WHERE `userId` = ' . intval($_COOKIE['cc_userId'])
+				 WHERE `userId` = ' . intval($userId)
 			)->fetch_assoc();
 			
-			if ($userData && Util::safeEquals($userData['cookieHash'], $_COOKIE['cc_cookieHash'])) {
-				self::$user = new User(
-					$userData['userId'],
-					$userData['userName'],
-					$userData['email'],
-					$userData['language']);
-				$_SESSION['userObject'] = serialize(self::$user);
-				$_SESSION['cookieHash'] = $userData['cookieHash'];
+			if (!empty($userData)) {
+				$user = new User($userData);
+				if ($user->checkCookieHash()) {
+					self::$user = $user;
+					$_SESSION['userObject'] = serialize(self::$user);
+					return;
+				}
 			}
-			return;
 		}
 		
 		// guest
-		self::$user = new User(0, 'Guest' . rand(1000,9999) );
+		self::$user = new User();
 		$_SESSION['userObject'] = serialize(self::$user);
 	}
 	
