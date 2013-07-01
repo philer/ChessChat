@@ -19,7 +19,7 @@ $game = $this->var['game'];
 						<dt class="status"><?php
 							echo $this->lang('game.status');
 						?></dt>
-						<dd class="status"><?php
+						<dd class="status" id="status"><?php
 							echo $game->getFormattedStatus();
 						?></dd>
 					</dl>

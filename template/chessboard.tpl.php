@@ -21,20 +21,20 @@ $board['blackCastled'] = false;
 
 
 
-$whitePlayer = true; //TODO replace this with something like $thisPlayer->white
+$whitePlayer = $game->isWhitePlayer(); //TODO replace this with something like $thisPlayer->white
 
 ?>
 <div id="chessboard">
-	<ol class="prison white" id="<?php echo $whitePlayer ? 'own' : 'opp'; ?>-prison">
+	<ol id="whitePrison" class="prison white <?php echo $whitePlayer ? 'own' : 'opp'; ?>-prison">
 <?php foreach ($board['whitePrison'] as $chesspiece) echo "<li>{$chesspiece}</li>"; ?>
 	</ol>
-	<ol class="prison black" id="<?php echo $whitePlayer ? 'opp' : 'own'; ?>-prison">
+	<ol id="blackPrison" class="prison black <?php echo $whitePlayer ? 'opp' : 'own'; ?>-prison">
 <?php foreach ($board['blackPrison'] as $chesspiece) echo "<li>{$chesspiece}</li>"; ?>
 	</ol>
 	<table id="chessboardTable">
 		<colgroup>
 			<col id="numbersColumnLeft" class="numbersColumn"/>
-<?php for ($c='A'; $c<='H'; $c++) echo "<col class=\"file{$c}\" />"; ?>
+<?php for ($c='A'; $c<='H'; $c++) echo "<col id=\"file{$c}\" class=\"file\"/>"; ?>
 			<col id="numbersColumnRight" class="numbersColumn"/>
 		</colgroup>
 		<thead>
@@ -56,7 +56,7 @@ $whitePlayer = true; //TODO replace this with something like $thisPlayer->white
 $light = true;  // altering squares color
 for ($i=1; $i<=8; $i++,$light=!$light) {
 	$r = $whitePlayer ? 9-$i : $i;  // turn board upside down for black //TODO $whitePlayer
-	echo "<tr id=\"rank{$r}\">\n"
+	echo "<tr id=\"rank{$r}\" class=\"rank\">\n"
 		."\t<th>{$r}</th>";
 	for ($c='A'; $c<='H'; $c++,$light=!$light) {
 		echo "<td class=\"square "

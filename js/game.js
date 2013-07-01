@@ -1,12 +1,12 @@
 $(function() {
 	
+	chess.setBoardSize();
+	$(window).resize(chess.setBoardSize);
+	
 	chat.init();
 	if (game !== 'undefined') {
 		chess.init();
 	}
-	
-	chess.setBoardSize();
-	$(window).resize(chess.setBoardSize);
 	
 	$('#resign').click(function(){
 		return chat.sendMessage('/resign');
@@ -15,9 +15,6 @@ $(function() {
 		return chat.sendMessage('/offerDraw');
 	});
 });
-
-
-
 
 ////// CHAT //////
 var chat = {
@@ -42,7 +39,7 @@ var chat = {
 	sendMessage : function(msg) {
 		if (typeof msg !== 'string') {
 			msg = chat.chatText.val();
-			chat.chatText.val('')
+			chat.chatText.val('');
 		}
 		if (msg) {
 			msgData = 'controller=Chat'
@@ -84,21 +81,32 @@ var chess = {
 	whitePrison : null,
 	blackPrison : null,
 	statusField : null,
+	selected    : null,
 	
 	init : function() {
 		
-		chess.chesspieces = $('table#chessboardTable .chesspiece.' + game.ownColor);
-		chess.squares     = $('table#chessboardTable .square');
-		chess.whitePrison = $('.prison.white');
-		chess.blackPrison = $('.prison.black');
-		chess.statusField = $('.status');
-				
+		chess.chesspieces = $('table#chessboardTable span.chesspiece.' + game.ownColor);
+		chess.squares     = $('td.square');
+		chess.whitePrison = $('#whitePrison');
+		chess.blackPrison = $('#blackPrison');
+		chess.statusField = $('#status');
+		
+		chess.chesspieces.click(chess.select);
+		chess.squares.click(chess.moveTo);
+		
 		chess.chesspieces.draggable({
 			containment   : 'table#chessboardTable',
-			stack         : '.chesspiece',
-			snap          : '.square > div',
+			stack         : 'table#chessboardTable span.chesspiece',
+			snap          : 'td.square > div',
 			snapMode      : 'inner',
-			snapTolerance : '10'
+			snapTolerance : '10',
+			revert        : 'invalid',
+			start         : function(event, ui) {
+			                	if (chess.selected !== null) {
+			                		chess.selected.removeClass('selected');
+								}
+								chess.selected = $(this).addClass('selected noClick');
+			                }
 		});
 		
 		chess.squares.droppable({
@@ -107,24 +115,45 @@ var chess = {
 		});
 	},
 	
+	select : function(event) {
+		if (chess.selected !== null) {
+			chess.selected.removeClass('selected');
+			if (chess.selected.getField() === $(this).getField()) {
+				chess.selected = null;
+				return;
+			}
+		}
+		chess.selected = $(this).addClass('selected');
+	},
+	
+	moveTo : function(event) {
+		if (chess.selected !== null
+			&& chess.selected.getField() !== $(this).getField() ) {
+			chat.sendMessage(
+				chess.selected.getField()
+				+ '-'
+				+ $(this).getField()
+			);
+			chess.selected.removeClass('selected');
+			chess.selected = null;
+		}
+	},
+	
 	handleMove : function(event, ui) {
 		// ui.draggable.draggable( 'option', 'revert', false );
-		
-		from = ui.draggable.attr('id');
-		to = $(this).attr('id');
-		
-		// chat.sendMessage('#' + from + ' was dropped on #' + to);
-		chat.sendMessage(
-			from.substr( from.indexOf('-')+1 )
-			+ '-'
-			+ to.substr( to.indexOf('-')+1 )
-		);
+		var move = ui.draggable.getField() + '-' + $(this).getField();
+		if (ui.draggable.getField() !== $(this).getField()) {
+			chat.sendMessage(move);
+		} else {
+			chess.resetMove(move);
+		}
+		ui.draggable.removeClass('selected');
 	},
 	
 	handleReply : function(reply) {
 		if (reply.move) {
-			chess.executeMove(reply.move);
-			chess.statusField.html(reply.status);
+			chess.executeMove(reply.move)
+			     .statusField.html(reply.status);
 		}
 		if (reply.invalidMove) {
 			chess.resetMove(reply.invalidMove);
@@ -148,9 +177,9 @@ var chess = {
 			}
 		}
 		newsquare.empty();
-		chesspiece.appendTo(newsquare);
-		chesspiece.css({top: '0px', left: '0px'});
-		chesspiece.attr('id', 'chesspiece-' + to);
+		chesspiece.appendTo(newsquare)
+		          .css({top: '0px', left: '0px'})
+		          .attr('id', 'chesspiece-' + to);
 	},
 	
 	resetMove : function(move) {
@@ -164,10 +193,16 @@ var chess = {
 		var gw = $("#game").innerWidth();
 		var a = Math.min(gh,gw-100);
 		
-		$("#chessboardTable").height(.9*a);
-		$("#chessboardTable").width(.9*a);
+		$("#chessboardTable").height(.9*a)
+		                     .width(.9*a);
 		
-		$("#chessboard").css("margin-top", (gh-0.9*a )/2);
-		$("#chessboard").css("font-size",0.07*a+"px");
+		$("#chessboard").css("margin-top", (gh-0.9*a )/2)
+		                .css("font-size",0.07*a+"px");
 	}
-}
+};
+
+/// chess lib ////
+jQuery.fn.getField = function() {
+	id = $(this[0]).attr('id');
+	return id.substr( id.indexOf('-')+1 );
+};

@@ -6,10 +6,10 @@
 							<span class="msgText" style="white-space:pre;font-family:mono;color:grey"><?php
 
 echo "\nsession\n";
-var_dump($_SESSION);
+print_r($_SESSION);
 
 echo "\ngame\n";
-var_dump($this->var['game']);
+print_r($this->var['game']);
 						?></span>
 						</p>
 					</div><!-- #chatLog -->
