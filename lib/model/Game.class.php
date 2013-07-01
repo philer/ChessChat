@@ -166,12 +166,22 @@ class Game extends GenericModel {
 		unset($gameData['whitePlayerId'], $gameData['whitePlayerName'], $gameData['blackPlayerId'], $gameData['blackPlayerName']);
 		
 		if (empty($gameData)) {
+			// TODO create database entry, get gameId
+			$this->gameHash = $this->generateHash();
 			$this->boardString = self::DEFAULT_BOARD_STRING;
 			// $this->board = $this->boardFromString($this->boardString);
 			$this->status = self::STATUS_WHITES_TURN;
 		} else {
 			parent::__construct($gameData);
 		}
+	}
+	
+	/**
+	 * Returns this game's gameId
+	 * @return 	integer
+	 */
+	public function getId() {
+		return $this->gameId;
 	}
 	
 	/**
@@ -182,11 +192,11 @@ class Game extends GenericModel {
 		// put anything useful in the gamehash.
 		// it doesn't have to be cryptographically safe,
 		// just don't stumble over it.
-		$hashString = $this->id
-					+ $this->timestamp
-					+ Core::$user->getName()
-					+ $this->otherPlayer->getName()
-					+ GAME_SALT;
+		$hashString = $this->gameId
+					. NOW
+					. GAME_SALT
+					. $this->whitePlayer
+					. $this->blackPlayer;
 		// generate hash:
 		// generate md5, base64 it,
 		// remove bad characters, then take only first few characters
