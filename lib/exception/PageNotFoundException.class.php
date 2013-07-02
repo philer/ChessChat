@@ -1,7 +1,0 @@
-<?
-
-class PageNotFoundException extends BadRequestException {
-	
-	
-	
-}

@@ -1,14 +1,4 @@
-.vertical-gradient (@top-color: red, @bottom-color: blue) {
-	background: @top-color;
-	background: -moz-linear-gradient(top,  @top-color 0%, @bottom-color 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@top-color), color-stop(100%,@bottom-color));
-	background: -webkit-linear-gradient(top,  @top-color 0%,@bottom-color 100%);
-	background: -o-linear-gradient(top,  @top-color 0%,@bottom-color 100%);
-	background: -ms-linear-gradient(top,  @top-color 0%,@bottom-color 100%);
-	background: linear-gradient(to bottom,  @top-color 0%,@bottom-color 100%);
-	//filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@top-color', endColorstr='@bottom-color',GradientType=0 );
-}
-
+@import "_mixins.less";
 
 a:hover {
 	text-shadow: 1px 1px 0 #fff,
@@ -77,3 +67,15 @@ footer#footer {
 		color: #555;
 	}
 }
+
+
+/*** additional stuff ***/
+
+.error {
+	color: #644;
+	text-shadow: 1px 1px 0 #fee;
+	background-color: #edd;
+	border-color: #caa;
+	box-shadow: 1px 1px 2px #ccc;
+}
+

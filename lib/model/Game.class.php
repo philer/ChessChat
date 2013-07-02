@@ -10,14 +10,14 @@ class Game {
 	 * Unique game id
 	 * @var integer
 	 */
-	protected $id = 0;
+	protected $gameId = 0;
 	
 	/**
 	 * This hash will be used in URLs for non-public games
 	 * (compare YouTube or PastBin URLs)
 	 * @var string
 	 */
-	protected $hash = '';
+	protected $gameHash = '';
 	
 	/**
 	 * Timestamp when the game was created
@@ -89,7 +89,7 @@ class Game {
 	 * GameController as a parent.
 	 * @param 	GameController 	$gameController
 	 */
-	public function __construct($gameController) {
+	public function __construct(GameController $gameController) {
 		$this->gameController = $gameController;
 		// TODO
 	}
@@ -163,7 +163,7 @@ class Game {
 	}
 	
 	//TODO
-	public function validateMove($move) {}
+	public function validateMove($move) {return true;}
 	public static function boardFromString($boardStr) {}
 	public static function boardToString($board) {}
 	

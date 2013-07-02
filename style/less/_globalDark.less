@@ -1,0 +1,70 @@
+@import "_mixins.less";
+
+a:hover {
+	text-shadow: 1px 1px 0 #111,
+				 0 0 3px rgba(255,255,255,.2);
+}
+
+@panel-top-color: #333;
+@panel-bottom-color: #222;
+header#header,
+footer#footer {
+	color: #888;
+	text-shadow: -1px -1px 0 #111;
+	.vertical-gradient (@panel-top-color, @panel-bottom-color);
+	box-shadow: 0 0 4px #000;
+}
+
+#panel ul {
+	border-color:	red
+					rgba(255,255,255,.05)
+					red
+					rgba(0,0,0,.4);
+	border-width: 0 1px;
+	
+	li a {
+		color: #666;
+		border-color:	red
+						rgba(0,0,0,.4)
+						red
+						rgba(255,255,255,.05);
+		border-width: 0 1px;
+		
+		&:hover {
+			.vertical-gradient (@panel-bottom-color, @panel-top-color);
+			box-shadow: inset 0 0 10px rgba(0,0,0,.1);
+		}
+	}
+}
+
+
+div#main {
+	color: #999;
+	background-color: #202020;
+	background-image: url('images/bg-dark.png');
+	
+	> section {
+	font-size: .85em;
+		
+		a {
+			color: #777;
+			&:hover {
+				color: #999;
+			}
+		}
+		
+		> header {
+			color: #666;
+			text-shadow: -1px -1px 0 #111;
+			background-color: #242424;
+			box-shadow: 0 0 2px #000;
+		}
+	}
+}
+
+footer#footer {
+	color: #555;
+	a:hover {
+		color: #777;
+	}
+}

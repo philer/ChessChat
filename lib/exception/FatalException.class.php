@@ -29,7 +29,7 @@ class FatalException extends Exception {
 	 * Template is included here for maximum reliability
 	 * (e.g. file system problems preventing opening other files)
 	 */
-	public function toTpl() {
+	public function show() {
 		?><!DOCTYPE html>
 <html>
 	<head>

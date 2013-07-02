@@ -37,19 +37,23 @@ function __autoload($className) {
 }
 
 /**
- * Alias function for easy use in templates
- * outputs the appropriate value for a language variable.
- * @var string
- */
-function lang($langVar) {
-	return Core::getLanguage()->getLanguageItem($langVar);
-}
-
-/**
  * Alias function for safely handing string parameters
  * @var 	string 	$str
  * @return 	string
  */
 function esc($str) {
 	return Core::getDB()->escapeString($str);
+}
+
+/**
+ * Compares two strings for equality.
+ * This function is secure against timing attacks
+ * @see TODO
+ * @param 	string 	$str1
+ * @param 	string 	$str1
+ * @return 	boolean
+ */
+function safeEquals($str1, $str2) {
+	// TODO 
+	return false;
 }

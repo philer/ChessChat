@@ -56,8 +56,8 @@ final class Database {
 	 */
 	protected function connect() {
 		$this->db = new MySQLi($this->host, $this->user, $this->pass, $this->name);
-		if ($this->db->connect_error) {
-			throw new DatabaseException("Database Connection Failed: ".mysqli_connect_error());
+		if ($this->db->connect_errno) {
+			throw new DatabaseException("Database Connection Failed: ".$this->db->connect_error());
 		}
 		$this->db->set_charset("utf8");
 	}
@@ -73,9 +73,9 @@ final class Database {
 		$this->sentQueries[] = $query;
 		if(!$result) {
 			$errmsg = "<p>Sending Query "
-					 ."'<span style='font-size:0.8em;'>".$query."</span>' "
+					 ."'<span style='font-size:0.8em;'>{$query}</span>' "
 					 ."failed.</p>"
-					 ."<p>".$this->db->error."</p>";
+					 ."<p>{$this->db->error}</p>";
 			throw new DatabaseException($errmsg);
 			//echo $this->db->error;
 		}

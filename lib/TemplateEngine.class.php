@@ -10,6 +10,12 @@
 final class TemplateEngine {
 	
 	/**
+	 * The selected Language
+	 * @var Language
+	 */
+	protected $language = null;
+	
+	/**
 	 * Array contains all JavaScript files to be linked
 	 * @var array<string>
 	 */
@@ -40,7 +46,15 @@ final class TemplateEngine {
 	 * for registered templates.
 	 * @var array<mixed>
 	 */
-	protected $vars = array();
+	protected $var = array();
+	
+	/**
+	 * Initializes this TemplateEngine
+	 * @param 	Language 	$language 	The language to be used
+	 */
+	public function __construct(Language $language) {
+		$this->language = $language;
+	}
 	
 	/**
 	 * Add a variable to be used in template.
@@ -48,7 +62,27 @@ final class TemplateEngine {
 	 * @param 	mixed 	$value
 	 */
 	public function addVar($key, $value) {
-		$this->vars[$key] = $value;
+		$this->var[$key] = $value;
+	}
+	
+	/**
+	 * Alias function for easy use in templates,
+	 * returns the appropriate value for a language variable.
+	 * @param 	string 	$langVar
+	 * @return 	string
+	 */
+	function lang($langVar) {
+		return $this->language->getLanguageItem($langVar);
+	}
+	
+	/**
+	 * Convenience function for easy use in templates,
+	 * returns an absolute url for a given route.
+	 * @param 	string 	$route
+	 * @return 	string
+	 */
+	function url($route) {
+		return HOST . 'index.php/' . $route;
 	}
 	
 	/**
@@ -83,7 +117,7 @@ final class TemplateEngine {
 	 */
 	public function fetch($template) {
 		ob_start();
-		$this->show($template, false);
+		$this->show($template);
 		$result = ob_get_contents();
 		ob_end_clean();
 		return $result;
@@ -94,11 +128,20 @@ final class TemplateEngine {
 	 * @param 	string 	$template 	name of the template
 	 * @param 	array 	$vars 		variables to be added
 	 */
-	protected function includeTemplate($template, $vars = array()) {
-		$this->vars = array_merge($this->vars, $vars);
+	protected function includeTemplate($template, array $vars = array()) {
+		$this->var = array_merge($this->var, $vars);
 		$this->show($template, false);
 	}
 	
+	/**
+	 * Registered scripts and stylesheets that are globally accessible
+	 */
+	public function registerDefaultScripts() {
+		$this->registerScript('jquery-2.0.0.min');
+		$this->registerScript('jquery-ui-1.10.3.custom.min');
+		$this->registerDynamicScript('user-data');
+		$this->registerStylesheet('global');
+	}
 			
 	/**
 	 * Adds a stylesheet that will be linked in the document head

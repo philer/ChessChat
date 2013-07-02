@@ -6,7 +6,7 @@
  */
 class IndexController implements RequestController {
 	
-	public function handleRequest() {
+	public function handleRequest(array $route) {
 		Core::getTemplateEngine()->registerStylesheet("game");
 		Core::getTemplateEngine()->showPage("index");
 	}
