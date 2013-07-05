@@ -34,6 +34,7 @@ abstract class AjaxController {
 	 * ajax reply as a JSON array.
 	 */
 	final public static function sendReply() {
+		header('Content-Type: application/json');
 		echo json_encode(self::$reply);
 	}
 	
