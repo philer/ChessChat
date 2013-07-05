@@ -29,7 +29,7 @@ echo "=== DATABASE SETUP ===\n";
 if (!defined('ROOT_DIR')) define('ROOT_DIR', dirname(__FILE__).'/../');
 if ($verbose) echo 'ROOT_DIR: ' . ROOT_DIR . "\n";
 
-require_once(ROOT_DIR . 'lib/util.inc.php');
+require_once(ROOT_DIR . 'lib/autoload.inc.php');
 
 if (!isset($db)) {
 	echo "=== connecting to Database...\n";

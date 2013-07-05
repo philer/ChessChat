@@ -11,40 +11,22 @@ class UserController implements RequestController {
 	public function handleRequest(array $route) {
 		if (is_null($param = array_shift($route))) {
 			// own profile
-			if (!Core::getUser()->guest()) {
-				Core::getTemplateEngine()->showPage('userProfile');
-				return;
-			} else {
-				throw new NotFoundException('you are a guest');
-			}	
+			$this->userProfile();
+			return;
 		}
-		// user profile
 		$userId = (explode('-', $param));
-		if (0 < $userId = intval(array_shift($userId))) {
-			// own profile
-			if ($userId == Core::getUser()->getId()) {
-				Core::getTemplateEngine()->showPage('userProfile');
-				return;
-			}
-			
-			$userData = Core::getDB()->sendQuery(
-		 		'SELECT `userId`, `userName`, `email`
-		 		 FROM `cc_user`
-		 		 WHERE `userId` = ' . $userId
-		 	)->fetch_assoc();
-			
-			if (!empty($userData)) {
-				$user = new User($userData);
-				Core::getTemplateEngine()->addVar('user', $user);
-				Core::getTemplateEngine()->showPage('userProfile');
-				return;
-			}
-			
-			throw new NotFoundException('user doesn\'t exist');
+		if (is_numeric($userId[0])) {
+			// specified profile
+			$this->userProfile($userId[0]);
+			return;
 		}
-	
+		
 		// method
 		switch ($param) {
+			case 'list':
+				$this->userList();
+				break;
+			
 			case 'login':
 				if ($this->login()) {
 					header('Location: ' . Util::url('User'));
@@ -96,7 +78,7 @@ class UserController implements RequestController {
 		 	}
 		} else {
 			// TODO send login form
-			return false;
+			throw new NotFoundException('loginForm not implemented');
 		}
 		return true;
 	}
@@ -121,5 +103,51 @@ class UserController implements RequestController {
 	// TODO
 	protected function edit() {}
 	protected function register() {}
+	
+	/**
+	 * Shows a list of registered Users
+	 */
+	protected function userList() {
+		$usersData = Core::getDB()->sendQuery(
+			'SELECT `userId`,
+			        `userName`
+			 FROM `cc_user`
+			 ORDER BY `userName`
+			 LIMIT 30'
+		);
+		
+		$users = array();
+		while ($userData = $usersData->fetch_assoc()) {
+			$users[] = new User($userData);
+		}
+		
+		Core::getTemplateEngine()->addVar('users', $users);
+		Core::getTemplateEngine()->showPage('userList');
+	}
+	
+	/**
+	 * Shows a User's profile page
+	 */
+	protected function userProfile($userId = 0) {
+		if ($userId == 0) {
+			// own profile
+			if (Core::getUser()->guest()) {
+				throw new NotFoundException('you are a guest');
+			} else {
+				$user = Core::getUser();
+			}
+		} else {
+			$userData = Core::getDB()->sendQuery(
+		 		'SELECT `userId`, `userName`, `email`
+		 		 FROM `cc_user`
+		 		 WHERE `userId` = ' . intval($userId)
+		 	)->fetch_assoc();
+			
+			if (!empty($userData)) $user = new User($userData);
+			else throw new NotFoundException('user does not exist');
+		}
+		Core::getTemplateEngine()->addVar('user', $user);
+		Core::getTemplateEngine()->showPage('userProfile');
+	}
 	
 }

@@ -6,22 +6,50 @@
 				</a>
 			</h1>
 			<nav id="panel">
-				<ul>
-					<li><a href="<?php
-						echo Util::url('Game');
-					?>"><?php
-						echo $this->lang('game.list')
-					?></a></li><li><a href="<?php
-						echo Util::url('Game/new');
-					?>"><?php
-						echo $this->lang('game.new')
-					?></a></li><li><a href="<?php
-						echo Util::url('User/edit');
-					?>"><?php
-						echo $this->lang('site.menu.settings')
-					?></a></li>
+				<ul id="mainMenu">
+<?php
+$guest = Core::getUser()->guest();
+$menuItems = array(
+	array(
+		'name'  => $this->lang('game.list'),
+		'route' => Util::url('Game'),
+		'show'  => true,
+	),
+	array(
+		'name'  => $this->lang('game.new'),
+		'route' => Util::url('Game/new'),
+		'show'  => !$guest,
+	),
+	array(
+		'name'  => $this->lang('user.profile'),
+		'route' => Util::url('User'),
+		'show'  => !$guest,
+	),
+	array(
+		'name'  => $this->lang('user.logout'),
+		'route' => Util::url('User/logout'),
+		'show'  => !$guest,
+	),
+	array(
+		'name'  => $this->lang('user.register'),
+		'route' => Util::url('User/register'),
+		'show'  => $guest,
+	),
+	array(
+		'name'  => $this->lang('user.login'),
+		'route' => Util::url('User/login'),
+		'show'  => !QUICK_LOGIN,
+	),
+);
+foreach ($menuItems as $mi) {
+	if ($mi['show']) {
+		echo "<li><a href=\"{$mi['route']}\">{$mi['name']}</a></li>";
+	}
+}
+?>
 				</ul>
-<?php if (Core::getUser()->guest()) { if (QUICK_LOGIN) { ?>
+
+<?php if (QUICK_LOGIN && Core::getUser()->guest()) { ?>
 				<form id="loginForm" method="post" action="<?php
 					echo Util::url('User/login');
 				?>">
@@ -40,17 +68,8 @@
 						?></button>
 					</fieldset>
 				</form>
-<?php } } else { ?>
-				<div id="userInfo">
-					<span><?php echo $this->lang('site.loggedinas'); ?>
-						<a href="<?php
-							echo Util::url('User');
-						?>"><?php
-							echo Core::getUser();
-						?></a>
-					</span>
-				</div>
 <?php } ?>
+
 			</nav>
 		</header>
 		<div id="main">

@@ -93,7 +93,8 @@ class User extends GenericModel {
 	 * @return 	string
 	 */
 	public function getRoute() {
-		return 'User/' . $this->userId . '-' . $this->userName;
+		$flatName = trim(preg_replace('#([^[:alnum:]]+)#','-',$this->userName), '-');
+		return 'User/' . $this->userId . '-' . $flatName;
 	}
 	
 	/**

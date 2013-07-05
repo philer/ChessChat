@@ -60,37 +60,30 @@ header#header {
 		padding: 0 .1em;
 		font-size: 1.5em;
 		line-height: 2em;
+		// mainMenu centering
+		width: 0;
+		overflow: visible;
+		white-space: nowrap;
 	}
 	#panel {
-		margin: 0;// 25%;
+		margin: 0 12em;// 25%;
 		height: 100%;
 		overflow: hidden;
-		
-		/*ul,
-		ul li,
-		ul li a,
-		#userInfo,
-		#loginForm*/
 		* {
 			display: inline-block;
 			height: 100%;
 			margin: 0;
-		}
-		ul li a,
-		#userInfo,
-		#loginForm fieldset {
 			line-height: 3em;
 			font-size: 1em;
+		}
+		ul li a,
+		#loginForm fieldset {
 			padding: 0 1.5em;
 		}
-		#userInfo,
 		#loginForm {
 			float: right;
-		}
-		#userInfo span {
-			font-size: .8em;
-		}
-		#loginForm {
+			position: absolute;
+			right: 0;
 			input, button {
 				font-size: .8em;
 				height: 2em;
@@ -162,8 +155,11 @@ footer#footer {
 
 
 /*** imports ***/
+@import "_page.less";
+@import "_dataList.less";
+@import "_user.less";
+
 @import "_globalColor.less";
 //@import "_globalDark.less";
-@import "_page.less";
+
 //@import "_overlay.less";
-@import "_dataList.less";
