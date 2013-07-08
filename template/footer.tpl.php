@@ -2,11 +2,11 @@
 		<footer id="footer">
 			<nav id="footerMenu">
 				<ul>
-					<li><a href="<?php echo Util::url('LegalNotice'); ?>"><?php
-						echo $this->lang('site.legalnotice');
-					?></a></li><li><a href="<?php echo Util::url('User/list'); ?>"><?php
-						echo $this->lang('user.list');
-					?></a></li>
+					<li><?php
+						echo new Link('site.legalnotice', 'LegalNotice');
+					?></li><li><?php
+						echo new Link('user.list', 'User/list');
+					?></li>
 				</ul>
 			</nav>
 			<div id="benchmark" style="float:right;">

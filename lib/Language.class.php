@@ -65,10 +65,10 @@ final class Language {
 	 * @return 	string
 	 */
 	public function getLanguageItem($langVar, array $params = null) {
-		if (array_key_exists($langVar,$this->langVars)) {
-			$langVar = $this->langVars[$langVar];
-		} elseif (array_key_exists($langVar,self::$globalLangVars)) {
-			$langVar = self::$globalLangVars[$langVar];
+		if (array_key_exists((string) $langVar,$this->langVars)) {
+			$langVar = $this->langVars[(string) $langVar];
+		} elseif (array_key_exists((string) $langVar,self::$globalLangVars)) {
+			$langVar = self::$globalLangVars[(string) $langVar];
 		}
 		
 		if (!is_null($params)) {

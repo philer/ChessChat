@@ -17,19 +17,19 @@ if ($runningGames && $game->getStatus() >= Game::STATUS_RESIGNED) {
 							<dt class="whitePlayer"><?php
 								echo $this->lang('game.whiteplayer');
 							?></dt>
-							<dd class="whitePlayer"><a href="<?php
-									echo Util::url($game->getWhitePlayer()->getRoute());
-								?>"><?php
-									echo $game->getWhitePlayer();
-							?></a></dd>
+							<dd class="whitePlayer"><?php
+									echo new Link(
+										$game->getWhitePlayer(),
+										$game->getWhitePlayer()->getRoute()
+									); ?></dd>
 							<dt class="blackPlayer"><?php
 								echo $this->lang('game.blackplayer');
 							?></dt>
-							<dd class="blackPlayer"><a href="<?php
-									echo Util::url($game->getBlackPlayer()->getRoute());
-								?>"><?php
-									echo $game->getBlackPlayer();
-							?></a></dd>
+							<dd class="blackPlayer"><?php
+									echo new Link(
+										$game->getBlackPlayer(),
+										$game->getBlackPlayer()->getRoute()
+									); ?></dd>
 							<dt class="status"><?php
 								echo $this->lang('game.status');
 							?></dt>

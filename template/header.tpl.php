@@ -10,40 +10,16 @@
 <?php
 $guest = Core::getUser()->guest();
 $menuItems = array(
-	array(
-		'name'  => $this->lang('game.list'),
-		'route' => Util::url('Game'),
-		'show'  => true,
-	),
-	array(
-		'name'  => $this->lang('game.new'),
-		'route' => Util::url('Game/new'),
-		'show'  => !$guest,
-	),
-	array(
-		'name'  => $this->lang('user.profile'),
-		'route' => Util::url('User'),
-		'show'  => !$guest,
-	),
-	array(
-		'name'  => $this->lang('user.logout'),
-		'route' => Util::url('User/logout'),
-		'show'  => !$guest,
-	),
-	array(
-		'name'  => $this->lang('user.register'),
-		'route' => Util::url('User/register'),
-		'show'  => $guest,
-	),
-	array(
-		'name'  => $this->lang('user.login'),
-		'route' => Util::url('User/login'),
-		'show'  => !QUICK_LOGIN,
-	),
+	new Link('game.list', 'Game', true),
+	new Link('game.new', 'Game/new', !$guest),
+	new Link('user.profile', 'User', !$guest),
+	new Link('user.logout', 'User/logout', !$guest),
+	new Link('user.register', 'User/register', $guest),
+	new Link('user.login','User/login',!QUICK_LOGIN && $guest),
 );
 foreach ($menuItems as $mi) {
-	if ($mi['show']) {
-		echo "<li><a href=\"{$mi['route']}\">{$mi['name']}</a></li>";
+	if ($mi->isVisible()) {
+		echo "<li>{$mi}</li>";
 	}
 }
 ?>
@@ -58,13 +34,15 @@ foreach ($menuItems as $mi) {
 						<input 	type="text"
 								name="userName"
 								id="loginName"
+								placeholder="<?php echo $this->lang('user.name'); ?>"
 							/>
 						<input 	type="password"
 								name="password"
 								id="loginPassword"
+								placeholder="<?php echo $this->lang('user.password'); ?>"
 							/>
 						<button	type="submit" id="loginSubmit"><?php
-							echo $this->lang('login');
+							echo $this->lang('user.login');
 						?></button>
 					</fieldset>
 				</form>

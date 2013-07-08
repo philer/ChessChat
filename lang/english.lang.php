@@ -21,6 +21,14 @@ $this->langVars = array(
 'legal.representatives'	=> 'Representative',
 //'legal.taxID'			=> 'Tax ID',
 
+'user.name' 			=> 'User name',
+'user.password' 		=> 'Password',
+'user.login' 			=> 'Login',
+'user.logout' 			=> 'Logout',
+'user.register' 		=> 'Register',
+'user.profile'			=> 'Profile',
+'user.list' 			=> 'User list',
+
 'game.whiteplayer' 		=> 'White player',
 'game.blackplayer' 		=> 'Black player',
 'game.status' 			=> 'Status',

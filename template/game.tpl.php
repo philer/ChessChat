@@ -4,17 +4,15 @@ $game = $this->var['game'];
 ?>
 			<section id="game">
 				<header>
-					<h1><a href="<?php
-						echo Util::url(
-							$game->getWhitePlayer()->getRoute())
-					?>"><?php
-						echo $game->getWhitePlayer();
-					?></a><span class="vs"> vs </span><a href="<?php
-						echo Util::url(
-							$game->getBlackPlayer()->getRoute())
-					?>"><?php
-						echo $game->getBlackPlayer();
-					?></a></h1>
+					<h1><?php
+						echo new Link(
+							$game->getWhitePlayer(),
+							$game->getWhitePlayer()->getRoute()
+						); ?><span class="vs"> vs </span><?php
+						echo new Link(
+							$game->getBlackPlayer(),
+							$game->getBlackPlayer()->getRoute()
+						); ?></h1>
 					<dl class="gameData">
 						<dt class="status"><?php
 							echo $this->lang('game.status');

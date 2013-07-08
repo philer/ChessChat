@@ -13,7 +13,7 @@ function __autoload($className) {
 		'lib/',
 		'lib/controller/',
 		'lib/model/',
-		'lib/chess/',
+		'lib/model/chess/',
 		'lib/exception/',
 	);
 	

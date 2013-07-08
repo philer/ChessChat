@@ -10,12 +10,12 @@ define('START_TIME', microtime(true));
 // current time
 define('NOW', time());
 // for absolute include paths
-define('ROOT_DIR', dirname(__FILE__).'/');
+define('ROOT_DIR', dirname(__FILE__) . '/');
 
 // load global configs
-require_once(ROOT_DIR.'config/global.conf.php');
+require_once(ROOT_DIR . 'config/global.conf.php');
 // load utility functions
-require_once(ROOT_DIR.'lib/autoload.inc.php');
+require_once(ROOT_DIR . 'lib/autoload.inc.php');
 
 // use custom exception and error handling
 set_exception_handler(array('Core', 'exceptionHandler'));
