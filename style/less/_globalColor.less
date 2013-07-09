@@ -75,11 +75,20 @@ footer#footer {
 
 /*** additional stuff ***/
 
+@error-fg-color: #644;
+@error-bg-color: #edd;
+@error-gleam-color: #fee;
 .error {
-	color: #644;
-	text-shadow: 1px 1px 0 #fee;
-	background-color: #edd;
+	color: @error-fg-color;
+	text-shadow: 1px 1px 0 @error-gleam-color;
+	background-color: @error-bg-color;
 	border-color: #caa;
 	box-shadow: 1px 1px 2px #ccc;
+	&:before {
+		color: @error-bg-color;
+		background-color: @error-fg-color;
+		text-shadow: none;
+		box-shadow: 1px 1px 0 @error-gleam-color;
+	}
 }
 

@@ -14,7 +14,9 @@ abstract class GenericModel {
 	 */
 	public function __construct(array $data) {
 		foreach ($data as $key => $value) {
-			$this->$key = $value;
+			if (property_exists($this, $key)) {
+				$this->$key = $value;
+			}
 		}
 	}
 	

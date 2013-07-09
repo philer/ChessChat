@@ -1,30 +1,34 @@
 <?php
 
 /**
- * TODO
+ * Takes care of all User related actions
+ * @author  Philipp Miller
  */
 class UserController implements RequestController {
 	
 	/**
-	 * TODO
+	 * Does what needs to be done for this request.
 	 */
 	public function handleRequest(array $route) {
 		if (is_null($param = array_shift($route))) {
 			// own profile
-			$this->userProfile();
+			$this->prepareUserProfile();
+			Core::getTemplateEngine()->showPage('userProfile');
 			return;
 		}
 		$userId = (explode('-', $param));
 		if (is_numeric($userId[0])) {
 			// specified profile
-			$this->userProfile($userId[0]);
+			$this->prepareUserProfile($userId[0]);
+			Core::getTemplateEngine()->showPage('userProfile');
 			return;
 		}
 		
 		// method
 		switch ($param) {
 			case 'list':
-				$this->userList();
+				$this->prepareUserList();
+				Core::getTemplateEngine()->showPage('userList');
 				break;
 			
 			case 'login':
@@ -61,9 +65,9 @@ class UserController implements RequestController {
 		}
 		if (isset($_POST['userName'])) {
 			$userData = Core::getDB()->sendQuery(
-		 		"SELECT `userId`, `userName`, `email`, `cookieHash`, `language`
-		 		 FROM `cc_user`
-		 		 WHERE `userName` = '" . Util::esc($_POST['userName']) . "'"
+		 		"SELECT userId, userName, email, cookieHash, language
+		 		 FROM cc_user
+		 		 WHERE userName = '" . Util::esc($_POST['userName']) . "'"
 		 	)->fetch_assoc();
 		
 		 	if (!empty($userData)) { // TODO password check
@@ -105,14 +109,15 @@ class UserController implements RequestController {
 	protected function register() {}
 	
 	/**
-	 * Shows a list of registered Users
+	 * Prepares data for a user list to be
+	 * used in templates.
 	 */
-	protected function userList() {
+	protected function prepareUserList() {
 		$usersData = Core::getDB()->sendQuery(
-			'SELECT `userId`,
-			        `userName`
-			 FROM `cc_user`
-			 ORDER BY `userName`
+			'SELECT userId,
+			        userName
+			 FROM cc_user
+			 ORDER BY userName
 			 LIMIT 30'
 		);
 		
@@ -120,15 +125,17 @@ class UserController implements RequestController {
 		while ($userData = $usersData->fetch_assoc()) {
 			$users[] = new User($userData);
 		}
-		
 		Core::getTemplateEngine()->addVar('users', $users);
-		Core::getTemplateEngine()->showPage('userList');
 	}
 	
 	/**
-	 * Shows a User's profile page
+	 * Prepares data for a user profile to be
+	 * used in templates. If no $userId > 0 is
+	 * specified will default to the current user
+	 * or throw an error if this is a guest.
+	 * @param  integer $userId
 	 */
-	protected function userProfile($userId = 0) {
+	protected function prepareUserProfile($userId = 0) {
 		if ($userId == 0) {
 			// own profile
 			if (Core::getUser()->guest()) {
@@ -142,12 +149,14 @@ class UserController implements RequestController {
 		 		 FROM `cc_user`
 		 		 WHERE `userId` = ' . intval($userId)
 		 	)->fetch_assoc();
+			if (empty($userData)) throw new NotFoundException('user does not exist');
 			
-			if (!empty($userData)) $user = new User($userData);
-			else throw new NotFoundException('user does not exist');
+			$user = new User($userData);
 		}
 		Core::getTemplateEngine()->addVar('user', $user);
-		Core::getTemplateEngine()->showPage('userProfile');
+
+		$gameController = new GameController();
+		$gameController->prepareGameList($user->getId());
 	}
 	
 }

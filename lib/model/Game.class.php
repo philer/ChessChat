@@ -155,14 +155,17 @@ class Game extends GenericModel {
 	public function __construct(array $gameData = array()) {
 		if (isset($gameData['whitePlayerId'])) {
 			// assume both white's and black's Id and name are set
-			$userData = array();
-			$userData['userId']   = $gameData['whitePlayerId'];
-			$userData['userName'] = $gameData['whitePlayerName'];
-			$this->whitePlayer = new User($userData);
-			$userData['userId']   = $gameData['blackPlayerId'];
-			$userData['userName'] = $gameData['blackPlayerName'];
-			$this->blackPlayer = new User($userData);
+			$this->whitePlayer = new User(array(
+				'userId'   => $gameData['whitePlayerId'],
+				'userName' => $gameData['whitePlayerName']
+				));
+			$this->blackPlayer = new User(array(
+				'userId'   => $gameData['blackPlayerId'],
+				'userName' => $gameData['blackPlayerName']
+				));
+		
 		}
+		// don't need this anymore
 		unset($gameData['whitePlayerId'], $gameData['whitePlayerName'], $gameData['blackPlayerId'], $gameData['blackPlayerName']);
 		
 		if (empty($gameData)) {

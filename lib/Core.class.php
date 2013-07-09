@@ -83,9 +83,9 @@ class Core {
 		// no session but cookie
 		elseif (!is_null($userId = Util::getCookie('userId'))) {
 			$userData = self::$db->sendQuery(
-				'SELECT `userId`, `userName`, `email`, `cookieHash`, `language`
-				 FROM `cc_user`
-				 WHERE `userId` = ' . intval($userId)
+				'SELECT userId, userName, email, cookieHash, language
+				 FROM cc_user
+				 WHERE userId = ' . intval($userId)
 			)->fetch_assoc();
 			
 			if (!empty($userData)) {

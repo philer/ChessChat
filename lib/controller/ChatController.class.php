@@ -100,7 +100,7 @@ class ChatController extends AjaxController {
 		// TODO mysql_escape, save
 		// queue reply
 		Core::getTemplateEngine()->addVar('msg',$msgObj);
-		self::queueReply('msg', Core::getTemplateEngine()->fetch('chatMessage'));
+		self::queueReply('msg', Core::getTemplateEngine()->fetch('_chatMessage'));
 	}
 	
 	//TODO

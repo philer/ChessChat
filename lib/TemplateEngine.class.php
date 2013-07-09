@@ -89,13 +89,13 @@ final class TemplateEngine {
 	 * @param 	string 	$template 	name of the template
 	 */
 	public function showPage($template) {
-		$this->show("head");
+		$this->show("_head");
 		// we can send the header right away, so browsers may
 		// start requesting other scripts right away
 		flush();
-		$this->show("header");
+		$this->show("_header");
 		$this->show($template);
-		$this->show("footer");
+		$this->show("_footer");
 		// make sure everything gets there as quickly as possible
 		flush();
 	}

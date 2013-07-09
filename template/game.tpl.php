@@ -22,7 +22,7 @@ $game = $this->var['game'];
 						?></dd>
 					</dl>
 				</header>
-<?php include("chessboard.tpl.php"); ?>
+<?php include("_chessboard.tpl.php"); ?>
 <?php if (!is_null($game->isWhitePlayer())) { ?>
 				<footer>
 					<nav id="gameMenu">
@@ -38,5 +38,5 @@ $game = $this->var['game'];
 <?php } ?>
 			</section><!-- #game -->
 			<aside id="chat">
-<?php include("chat.tpl.php"); ?>
+<?php include("_chat.tpl.php"); ?>
 			</aside>

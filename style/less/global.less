@@ -148,8 +148,28 @@ footer#footer {
 	border-width: 1px;
 	border-style: solid;
 	border-radius: 4px;
+	&:before {
+		content: "!";
+		font-family: Georgia, serif;
+		float: left;
+		text-align: center;
+		font-size: 2em;
+		line-height: 1em;
+		height: 1em;
+		width: 1em;
+		padding: .1em;
+		margin: 0;
+		border-radius: 3em;
+		font-weight: normal;
+	}
+	h1, p {
+		margin-left: 3em;
+	}
 	h1 {
-		font-size: 1.2em;
+		font-size: 1em;
+	}
+	a {
+		text-decoration: underline;
 	}
 }
 

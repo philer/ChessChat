@@ -26,7 +26,7 @@ class RequestException extends Exception {
 		} else {
 			Core::getTemplateEngine()->addVar('errorMessage', Core::getLanguage()->getLanguageItem('exception.' . $this->httpCode . '.msg'));
 		}
-		Core::getTemplateEngine()->showPage('error');
+		Core::getTemplateEngine()->showPage('_error');
 	}
 	
 	/**
