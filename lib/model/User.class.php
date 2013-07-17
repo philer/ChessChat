@@ -110,10 +110,19 @@ class User extends GenericModel {
 	}
 	
 	/**
-	 * TODO
+	 * Checks if this user is a guest or a registered user
+	 * @return  boolean
 	 */
-	public function guest() {
-		return $this->userId == 0;
+	public function isGuest() {
+		return $this->userId === 0;
+	}
+	
+	/**
+	 * Checks if this user is the requesting user
+	 * @return boolean
+	 */
+	public function isSelf() {
+		return $this->userId === Core::getUser()->getId();
 	}
 	
 	/**

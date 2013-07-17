@@ -5,6 +5,13 @@
  */
 
 $this->langVars = array(
+// GENERAL
+'me'					=> 'Me',
+'opponent'				=> 'Opponent',
+
+'form.submit' 			=> 'Submit',
+
+// GLOBAL
 'site.index' 			=> 'Home',
 'site.legalnotice'		=> 'Legal Notice',
 'site.contact'			=> 'Contact Information',
@@ -12,6 +19,7 @@ $this->langVars = array(
 
 'site.loggedinas' 		=> 'Logged in as',
 
+// SITES
 'legal.name'			=> 'Name',
 'legal.address'			=> 'Address',
 'legal.nameAndAddress' 	=> 'Name and Address',
@@ -37,6 +45,7 @@ $this->langVars = array(
 'game.list.finished'	=> 'Finished games',
 'game.list.gotogame' 	=> 'view',
 'game.new'				=> 'New Game',
+'game.new.against'		=> 'Play against %opponent',
 'game.lastupdate' 		=> 'last update',
 'game.status.nextturn' 	=> "It's %u's turn",
 'game.status.won' 		=> '%u won',

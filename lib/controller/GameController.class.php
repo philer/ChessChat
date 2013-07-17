@@ -50,9 +50,14 @@ class GameController implements RequestController {
 			return;
 		}
 		// method
-		switch ($x = array_shift($route)) {
+		switch ($param) {
 			case 'new':
-				// TODO
+				if (!$this->create()) {
+					Core::getTemplateEngine()->showPage('gameForm');
+				}
+				break;
+			
+			case 'settings':
 				throw new NotFoundException('not implemented');
 				break;
 			
@@ -60,6 +65,38 @@ class GameController implements RequestController {
 				throw new NotFoundException('method doesn\'t exist');
 				break;
 		}
+	}
+	
+	/**
+	 * Creates a new Game from provided form data.
+	 * If creation failes due to incorrect user input
+	 * assigns template variables for form values.
+	 * @return boolean creation success
+	 */
+	public function create() {
+		if (Core::getUser()->isGuest()) {
+			// TODO manage this somewhere else
+			throw new PermissionDeniedException('need to be logged in');
+		}
+		if (isset($_POST['opponent']) && isset($_POST['whitePlayer'])) {
+			$opponent    = trim($_POST['opponent']);
+			$whitePlayer = $_POST['whitePlayer'] === 'self';
+			
+			$userData = Core::getDB()->sendQuery(
+		 		"SELECT userId
+		 		 FROM cc_user
+		 		 WHERE userName = '" . Util::esc($opponent) . "'"
+		 	)->fetch_assoc();
+			
+		 	if (!empty($userData)) { // TODO password check
+		 		// TODO create a game
+		 		echo 'success';
+		 		return true;
+		 	}
+		 	Core::getTemplateEngine()->addVar('errorMessage', 'bad input');
+		 	Core::getTemplateEngine()->addVar('invalid', array('opponent'));
+		}
+		return false;
 	}
 	
 	/**

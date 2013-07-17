@@ -49,6 +49,13 @@ final class TemplateEngine {
 	protected $var = array();
 	
 	/**
+	 * Name of the (full page) template that was requested
+	 * @see TemplateEngine::showPage()
+	 * @var string
+	 */
+	protected $page = '';
+	
+	/**
 	 * Initializes this TemplateEngine
 	 * @param 	Language 	$language 	The language to be used
 	 */
@@ -68,11 +75,12 @@ final class TemplateEngine {
 	/**
 	 * Alias function for easy use in templates,
 	 * returns the appropriate value for a language variable.
-	 * @param 	string 	$langVar
-	 * @return 	string
+	 * @param  string		$langVar
+	 * @param  array<mixed>	$params
+	 * @return string
 	 */
-	protected function lang($langVar) {
-		return $this->language->getLanguageItem($langVar);
+	protected function lang($langVar, array $params = null) {
+		return $this->language->getLanguageItem($langVar, $params);
 	}
 	
 	/**
@@ -89,6 +97,8 @@ final class TemplateEngine {
 	 * @param 	string 	$template 	name of the template
 	 */
 	public function showPage($template) {
+		$this->page = $template;
+		
 		$this->show("_head");
 		// we can send the header right away, so browsers may
 		// start requesting other scripts right away

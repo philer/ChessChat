@@ -32,22 +32,19 @@ class UserController implements RequestController {
 				break;
 			
 			case 'login':
-				if ($this->login()) {
-					header('Location: ' . Util::url('User'));
-					break;
+				if (!$this->login()) {
+					Core::getTemplateEngine()->showPage('loginForm');
 				}
-				throw new PermissionDeniedException('login failed');
+				break;
 				
 			case 'logout':
-				if ($this->logout()) {
-					header('Location: ' . Util::url('Index'));
-					break;
-				}
-				throw new PermissionDeniedException('logout failed');
+				$this->logout();
+				break;
 				
 			case 'register':
-				//TODO
-				throw new NotFoundException('not implemented');
+				if (!$this->register()) {
+					Core::getTemplateEngine()->showPage('registerForm');
+				}
 				break;
 				
 			default:
@@ -60,38 +57,37 @@ class UserController implements RequestController {
 	 * TODO
 	 */
 	protected function login() {
-		if (!Core::getUser()->guest()) {
+		if (!Core::getUser()->isGuest()) {
 			throw new PermissionDeniedException('already logged in');
 		}
-		if (isset($_POST['userName'])) {
+		if (!empty($_POST['userName'])) {
 			$userData = Core::getDB()->sendQuery(
 		 		"SELECT userId, userName, email, cookieHash, language
 		 		 FROM cc_user
 		 		 WHERE userName = '" . Util::esc($_POST['userName']) . "'"
 		 	)->fetch_assoc();
-		
+			
 		 	if (!empty($userData)) { // TODO password check
 		 		$user = new User($userData);
 		 		$user->regenerateCookieHash();
 		 		Util::setCookie('userId', $user->getId());
 		 		$_SESSION['userObject'] = serialize($user);
 		 		
-		 	} else {
-		 		// TODO user feedback
-		 		return false;
+		 		header('Location: ' . Util::url('User'));
+		 		return true;
 		 	}
-		} else {
-			// TODO send login form
-			throw new NotFoundException('loginForm not implemented');
+		 	
+		 	Core::getTemplateEngine()->addVar('errorMessage', 'bad input');
+		 	Core::getTemplateEngine()->addVar('invalid', array('userName'));
 		}
-		return true;
+		return false;
 	}
 	
 	/**
 	 * TODO
 	 */
 	protected function logout() {
-		if (Core::getUser()->guest()) {
+		if (Core::getUser()->isGuest()) {
 			throw new PermissionDeniedException('already logged out');
 		}
 		setcookie('cc_userId', 0, 1, Util::cookiePath());
@@ -101,12 +97,23 @@ class UserController implements RequestController {
 		
 		$guest = new User();
 		$_SESSION['userObject'] = serialize($guest);
-		return true;
+		
+		header('Location: ' . Util::url('Index'));
 	}
 	
+	/**
+	 * Creates a new User from provided form data.
+	 * If creation failes due to incorrect user input
+	 * assigns template variables for form values.
+	 * @return boolean creation success
+	 */
+	protected function register() {
+		// TODO
+		return false;
+	}
+		
 	// TODO
 	protected function edit() {}
-	protected function register() {}
 	
 	/**
 	 * Prepares data for a user list to be
@@ -138,7 +145,7 @@ class UserController implements RequestController {
 	protected function prepareUserProfile($userId = 0) {
 		if ($userId == 0) {
 			// own profile
-			if (Core::getUser()->guest()) {
+			if (Core::getUser()->isGuest()) {
 				throw new NotFoundException('you are a guest');
 			} else {
 				$user = Core::getUser();

@@ -61,8 +61,9 @@ final class Language {
 	 * Returns the language variable in this language.
 	 * If $params array is specified, array keys will be searched
 	 * and replaced accordingly.
-	 * @param 	string 	$langVar
-	 * @return 	string
+	 * @param  string		$langVar
+	 * @param  array<mixed>	$params
+	 * @return string
 	 */
 	public function getLanguageItem($langVar, array $params = null) {
 		if (array_key_exists((string) $langVar,$this->langVars)) {

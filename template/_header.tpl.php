@@ -8,7 +8,7 @@
 			<nav id="panel">
 				<ul id="mainMenu">
 <?php
-$guest = Core::getUser()->guest();
+$guest = Core::getUser()->isGuest();
 $menuItems = array(
 	new Link('game.list', 'Game', true),
 	new Link('game.new', 'Game/new', !$guest),
@@ -25,12 +25,13 @@ foreach ($menuItems as $mi) {
 ?>
 				</ul>
 
-<?php if (QUICK_LOGIN && Core::getUser()->guest()) { ?>
+<?php if (QUICK_LOGIN
+          && Core::getUser()->isGuest()
+          && $this->page !== 'loginForm') { ?>
 				<form id="loginForm" method="post" action="<?php
 					echo Util::url('User/login');
 				?>">
 					<fieldset>
-						<input type="hidden" name="userId" value="3" />
 						<input 	type="text"
 								name="userName"
 								id="loginName"
