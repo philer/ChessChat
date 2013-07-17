@@ -80,18 +80,31 @@ class Util {
 	
 	/**
 	 * Compares two strings for equality.
-	 * This function is secure against timing attacks
-	 * @see TODO
-	 * @param 	string 	$str1
-	 * @param 	string 	$str1
-	 * @return 	boolean
+	 * This function is secured against timing attacks
+	 * @see  http://codahale.com/a-lesson-in-timing-attacks/
+	 * @see  http://crackstation.net/hashing-security.htm#slowequals
+	 * @param  string $str1
+	 * @param  string $str2
+	 * @return boolean
 	 */
 	public static function safeEquals($str1, $str2) {
-		// TODO 
-		return $str1 == $str2;
+		$str1l = strlen($str1);
+		$str2l = strlen($str2);
+		
+		$diff = $str1l ^ $str2l;
+		for ($i = 0 ; $i < $str1l & $i < $str2l ; $i++) {
+			$diff |= ord($str1[$i]) ^ ord($str2[$i]);
+		}
+		return $diff === 0;
 	}
 	
+	/**
+	 * Generates a random hash
+	 * TODO
+	 * @return string
+	 */
 	public static function getRandomHash() {
+		// TODO
 		return sha1(openssl_random_pseudo_bytes(24));
 	}
 	

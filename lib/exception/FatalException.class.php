@@ -12,7 +12,7 @@ class FatalException extends Exception {
 	 * title to be displayed for the error message
 	 * @var 	string
 	 */
-	protected $title = "Fatal Exception";
+	protected $title = 'Fatal Exception';
 	
 	/**
 	 * Creates a new FatalException.
@@ -21,7 +21,7 @@ class FatalException extends Exception {
 	 */
 	public function __construct($message = '') {
 		if(!empty($message)) $this->message = $message;
-		else $this->message = "Something went very horribly wrong.";
+		else $this->message = 'Something went very horribly wrong.';
 	}
 	
 	/**
@@ -85,32 +85,30 @@ class FatalException extends Exception {
 				<div id="exceptionMessage"><?php echo $this->message; ?></div>
 				<h2>Stracktrace:</h2>
 				<div id="stacktrace">
-					<?php
-					//debug_print_backtrace();
-					/**/
-					echo "<ol>";
-					$stacktrace = $this->getTrace();//debug_backtrace();
-					foreach ($stacktrace as $i) {
-						if (!(isset($i['function']) && $i['function'] == "errorHandler")) {
-							// ignore 	Core::errorHandler()
-							echo "<li><span class=\"file\">".$i['file']."</span>"
-								.":<span class=\"line\">".$i['line']."</span> ";
-							
-							if (isset($i['class']))
-								echo "<span class=\"class\">".$i['class'].$i['type']."</span>";
-							
-							if (isset($i['function'])) {
-								echo "<span class=\"function\">".$i['function']."(<span class=\"params\">"
-									.self::censoredFunctionParams($i)
-									."</span>)</span>";
-							}
-							echo "</li>";
-						}
-					}
-					echo "</ol>";
-					/**/
-					//var_dump($stacktrace);
-					?>
+					<ol>
+						<?php
+						
+$stacktrace = $this->getTrace();//debug_backtrace();
+foreach ($stacktrace as $i) {
+	if (!(isset($i['function']) && $i['function'] === 'errorHandler')) {
+		
+		echo "<li><span class=\"file\">{$i['file']}</span>"
+		   . ":<span class=\"line\">{$i['line']}</span> ";
+		
+		if (isset($i['class']))
+			echo "<span class=\"class\">{$i['class']}{$i['type']}</span>";
+		
+		if (isset($i['function'])) {
+			echo "<span class=\"function\">{$i['function']}(<span class=\"params\">"
+			   . self::censorArgs($i)
+			   . "</span>)</span>";
+		}
+		echo "</li>";
+	}
+}
+
+						?>
+					</ol>
 				</div>
 			</div><!-- #exceptionContent -->
 		</section><!-- #fatalException -->
@@ -125,16 +123,18 @@ class FatalException extends Exception {
 	 * @param 	array<string> 	a line from stacktrace
 	 * @return 	string 			processed function parameters
 	 */
-	public static function censoredFunctionParams($i) {
-		if (isset($i['class']) && (
-				   ($i['class'] == "Database" && $i['function'] == "__construct")
-				|| ($i['class'] == "mysqli"   && $i['function'] == "mysqli")
+	public static function censorArgs($i) {
+		if (isset($i['args'])) {
+			if (isset($i['class']) && (
+				   ($i['class'] === 'Database' && $i['function'] === '__construct')
+				|| ($i['class'] === 'mysqli'   && $i['function'] === 'mysqli')
 				)) {
-			return " … "; // censor database password
-		} else {
-			$params = " ";
-			foreach($i['args'] as $k) $params .= $k." ";
-			return $params;
+				return ' ... '; // censor database password
+			} else {
+				$params = ' ';
+				foreach($i['args'] as $k) $params .= $k.' ';
+				return $params;
+			}	
 		}
 	}
 }

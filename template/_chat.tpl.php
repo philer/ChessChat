@@ -7,9 +7,18 @@
 
 echo "\nsession\n";
 print_r($_SESSION);
+print_r(Core::getUser());
 
 echo "\ngame\n";
 print_r($this->var['game']);
+
+echo "\nsafeEquals\n";
+var_dump(Util::safeEquals('test', 'test')); // true
+var_dump(Util::safeEquals('test', 'testt')); // false
+var_dump(Util::safeEquals('test', 'asdfasdfasdfadsfadf')); // false
+var_dump(Util::safeEquals('testt', 'test')); // false
+var_dump(Util::safeEquals('asdfasdfasdfadsfadf', 'test')); // false
+
 						?></span>
 						</p>
 					</div><!-- #chatLog -->
