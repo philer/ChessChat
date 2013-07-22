@@ -81,15 +81,16 @@ final class Language {
 	}
 	
 	/**
-	 * Returns an array containing the names of all known
+	 * Returns an alphabetically sorted array containing the names of all known
 	 * languages in their respective languages.
 	 * @return 	string
 	 */
-	public function getLanguageNames() {
+	public static function getLanguages() {
 		$languageNames = array();
-		foreach(self::$languages as $lang) {
-			$languageNames[] = $lang['name'];
+		foreach(self::$languages as $code => $lang) {
+			$languageNames[$code] = $lang['name'];
 		}
+		asort($languageNames, SORT_STRING);
 		return $languageNames;
 	}
 	

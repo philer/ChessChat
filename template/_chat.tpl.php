@@ -32,7 +32,7 @@ var_dump(Util::safeEquals('asdfasdfasdfadsfadf', 'test')); // false
 									autocomplete="off"
 								/>
 						</div>
-						<button	type="submit" id="chatSubmit">
+						<button	type="submit" id="chatSubmit" class="button">
 							<?php echo $this->lang('chat.send') ?>
 						</button>
 					</fieldset>

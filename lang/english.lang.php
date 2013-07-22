@@ -10,11 +10,12 @@ $this->langVars = array(
 'opponent'				=> 'Opponent',
 
 'form.submit' 			=> 'Submit',
+'form.reset'			=> 'Reset',
 
 // GLOBAL
 'site.index' 			=> 'Home',
-'site.legalnotice'		=> 'Legal Notice',
-'site.contact'			=> 'Contact Information',
+'site.legalnotice'		=> 'Legal notice',
+'site.contact'			=> 'Contact information',
 'site.menu.settings'	=> 'Settings',
 
 'site.loggedinas' 		=> 'Logged in as',
@@ -22,21 +23,27 @@ $this->langVars = array(
 // SITES
 'legal.name'			=> 'Name',
 'legal.address'			=> 'Address',
-'legal.nameAndAddress' 	=> 'Name and Address',
-'legal.email' 			=> 'E-Mail Address',
+'legal.nameAndAddress' 	=> 'Name and address',
+'legal.email' 			=> 'E-mail address',
 'legal.phone'			=> 'Phone',
 'legal.fax'				=> 'Fax',
 'legal.representatives'	=> 'Representative',
 //'legal.taxID'			=> 'Tax ID',
 
-'user.name' 			=> 'User name',
+'user.name' 			=> 'Username',
 'user.password' 		=> 'Password',
+'user.password.confirm'	=> 'Repeat password',
+'user.email'			=> 'E-mail address',
+'user.email.confirm'	=> 'Repeat E-mail address',
 'user.login' 			=> 'Login',
 'user.logout' 			=> 'Logout',
 'user.register' 		=> 'Register',
 'user.profile'			=> 'Profile',
+'user.settings'			=> 'Settings',
+'user.settings.language'=> 'Language',
 'user.list' 			=> 'User list',
 
+'game.opponent'			=> 'Opponent',
 'game.whiteplayer' 		=> 'White player',
 'game.blackplayer' 		=> 'Black player',
 'game.status' 			=> 'Status',
@@ -46,6 +53,7 @@ $this->langVars = array(
 'game.list.gotogame' 	=> 'view',
 'game.new'				=> 'New Game',
 'game.new.against'		=> 'Play against %opponent',
+'game.settings'			=> 'Game settings',
 'game.lastupdate' 		=> 'last update',
 'game.status.nextturn' 	=> "It's %u's turn",
 'game.status.won' 		=> '%u won',

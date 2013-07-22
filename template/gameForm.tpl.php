@@ -1,4 +1,4 @@
-<section>
+<section id="gameForm" class="form">
 	<header>
 		<h1><?php echo $this->lang('game.new'); ?></h1>
 	</header>
@@ -11,13 +11,14 @@ if (!empty($this->var['invalid'])) {
 }
 
 ?>
-	<form id="gameForm" method="post" action="<?php
+	<form method="post" action="<?php
 		echo Util::url('Game/new');
 	?>">
 		<fieldset>
+			<legend><?php echo $this->lang('game.settings'); ?></legend>
 			<dl class="form">
 				<dt>
-					<label for="opponent">Opponent</label>
+					<label for="opponent"><?php echo $this->lang('game.opponent'); ?></label>
 				</dt>
 				<dd>
 					<input 	type="text"
@@ -35,7 +36,7 @@ if (isset($_GET['opponent'])) {
 					?> />
 				</dd>
 				<dt>
-					<label for="password">White Player</label>
+					<label for="password"><?php echo $this->lang('game.whiteplayer'); ?></label>
 				</dt>
 				<dd>
 					<label>
@@ -62,9 +63,12 @@ if (isset($_POST['whitePlayer']) && $_POST['whitePlayer'] === 'other') {
 					</label>
 				</dd>
 			</dl>
-			<button	type="submit" id="loginSubmit"><?php
-				echo $this->lang('form.submit');
-			?></button>
 		</fieldset>
+		<button	type="submit" class="button"><?php
+			echo $this->lang('form.submit');
+		?></button>
+		<button	type="reset" class="button"><?php
+			echo $this->lang('form.reset');
+		?></button>
 	</form>
 </section>

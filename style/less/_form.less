@@ -1,9 +1,13 @@
-input {
-	height: 2em;
-	padding: 0 5px;
+input, select {
 	border-radius: 4px;
 	color: inherit;
 	background-color: #f3f3f3;
+}
+input {
+	height: 2em;
+	padding: 0 5px;
+	width: 90%;
+	max-width: 35em;
 	box-shadow: inset 0 0 3px #aaa,
 	            inset 1px 1px 1px #999;
 	&.invalid, &:invalid {
@@ -12,9 +16,51 @@ input {
 	                inset 1px 1px 1px #999;
 	}
 }
+select {
+	border: 1px solid #aaa;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
 button {
 	background-color: transparent;
 	border: 0 transparent none;
 	color: inherit;
 	cursor: pointer;
+}
+.button {
+	color: #777;
+	text-shadow: 1px 1px 0 #e5e5e5;
+	.vertical-gradient (#d8d8d8, #b8b8b8);
+	border-radius: 4px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #bbb #aaa #9d9d9d #bbb;
+	box-shadow: 1px 1px 2px rgba(0,0,0,.1),
+				0 0 4px rgba(0,0,0,.1);
+	
+	&:hover {
+		color: #555;
+	}
+	&:active {
+	.vertical-gradient (#b8b8b8, #d8d8d8);
+	}
+}
+
+section.form form {
+	text-align: center;
+	fieldset {
+		padding: 1em;
+		margin-bottom: 1em;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		
+		> legend {
+			padding: 0 2px;
+			color: #555;
+		}
+	}
+	button {
+		margin: 0 .33em;
+		padding: .25em .75em;
+	}
 }

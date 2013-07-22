@@ -1,4 +1,4 @@
-			<section>
+			<section id="legalNotice">
 				<header>
 					<h1><?php echo $this->lang('site.legalnotice'); ?></h1>
 				</header>

@@ -1,4 +1,4 @@
-<section>
+<section id="loginForm" class="form">
 	<header>
 		<h1><?php echo $this->lang('user.login'); ?></h1>
 	</header>
@@ -11,10 +11,11 @@ if (!empty($this->var['invalid'])) {
 }
 
 ?>
-	<form id="loginForm" method="post" action="<?php
+	<form method="post" action="<?php
 		echo Util::url('User/login');
 	?>">
 		<fieldset>
+			<legend><?php echo $this->lang('user.login'); ?></legend>
 			<dl class="form">
 				<dt>
 					<label for="userName"><?php echo $this->lang('user.name'); ?></label>
@@ -22,7 +23,6 @@ if (!empty($this->var['invalid'])) {
 				<dd>
 					<input 	type="text"
 							name="userName"
-							id="loginName"
 							<?php
 if ($errors && in_array('userName', $this->var['invalid'])) {
 	echo ' class="invalid" ';
@@ -38,7 +38,6 @@ if (isset($_POST['userName'])) {
 				<dd>
 					<input 	type="password"
 							name="password"
-							id="loginPassword"
 							<?php
 if ($errors && in_array('password', $this->var['invalid'])) {
 	echo ' class="invalid" ';
@@ -49,9 +48,12 @@ if (isset($_POST['password'])) {
 						?> />
 				</dd>
 			</dl>
-			<button	type="submit" id="loginSubmit"><?php
-				echo $this->lang('user.login');
-			?></button>
 		</fieldset>
+		<button	type="submit" class="button"><?php
+			echo $this->lang('user.login');
+		?></button>
+		<button	type="reset" class="button"><?php
+			echo $this->lang('form.reset');
+		?></button>
 	</form>
 </section>
