@@ -4,9 +4,11 @@
 	</header>
 <?php
 
-$errors = false; // send form in correction mode
-if (!empty($this->var['invalid'])) {
-	$errors = true;
+// wrap invalid array
+if (empty($this->var['invalid'])) {
+	$invalid = array();
+} else {
+	$invalid = $this->var['invalid'];
 	$this->show('_error');
 }
 
@@ -24,13 +26,14 @@ if (!empty($this->var['invalid'])) {
 					<input 	type="text"
 							name="userName"
 							<?php
-if ($errors && in_array('userName', $this->var['invalid'])) {
-	echo ' class="invalid" ';
-}
-if (isset($_POST['userName'])) {
-	echo " value=\"{$_POST['userName']}\"";
-}
-						?> />
+echo (isset($_POST['userName']) ? " value=\"{$_POST['userName']}\"" : '');
+if (array_key_exists('userName', $invalid)) {
+	echo ' class="invalid" /><small class="invalidReason">'
+	   . $this->lang($invalid['userName'])
+	   . '</small>';
+} else {
+	echo '/>';
+}						?>
 				</dd>
 				<dt>
 					<label for="password"><?php echo $this->lang('user.password'); ?></label>
@@ -39,13 +42,14 @@ if (isset($_POST['userName'])) {
 					<input 	type="password"
 							name="password"
 							<?php
-if ($errors && in_array('password', $this->var['invalid'])) {
-	echo ' class="invalid" ';
-}
-if (isset($_POST['password'])) {
-	echo " value=\"{$_POST['password']}\"";
-}
-						?> />
+echo (isset($_POST['password']) ? " value=\"{$_POST['password']}\"" : '');
+if (array_key_exists('password', $invalid)) {
+	echo ' class="invalid" /><small class="invalidReason">'
+	   . $this->lang($invalid['password'])
+	   . '</small>';
+} else {
+	echo '/>';
+}						?>
 				</dd>
 			</dl>
 		</fieldset>

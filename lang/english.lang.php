@@ -11,6 +11,21 @@ $this->langVars = array(
 
 'form.submit' 			=> 'Submit',
 'form.reset'			=> 'Reset',
+'form.invalid'			=> 'Please correct the errors noted below',
+'form.invalid.missing'			=> 'This field is obligatory',
+'form.invalid.userName'			=> 'Your username must be at least '
+								 . USERNAME_MIN_LENGTH
+								 . ' characters long',
+'form.invalid.userName.used'	=> 'This username is already taken',
+'form.invalid.userName.nonexistant'	=> 'Username doesn\'t exist',
+'form.invalid.email'			=> 'This is not a valid e-mail address',
+'form.invalid.email.used'		=> 'This e-mail address is already in use',
+'form.invalid.emailConfirm'		=> 'Please reconfirm your e-mail address',
+'form.invalid.password'			=> 'Wrong password!',
+'form.invalid.password.insecure'=> 'Your password must be at least '
+								 . PASSWORD_MIN_LENGTH
+								 . ' characters long',
+'form.invalid.passwordConfirm'	=> 'Please reconfirm your password',
 
 // GLOBAL
 'site.index' 			=> 'Home',

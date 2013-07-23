@@ -4,9 +4,11 @@
 	</header>
 <?php
 
-$errors = false; // send form in correction mode
-if (!empty($this->var['invalid'])) {
-	$errors = true;
+// wrap invalid array
+if (empty($this->var['invalid'])) {
+	$invalid = array();
+} else {
+	$invalid = $this->var['invalid'];
 	$this->show('_error');
 }
 
@@ -24,13 +26,14 @@ if (!empty($this->var['invalid'])) {
 					<input 	type="text"
 							name="userName"
 							<?php
-if ($errors && in_array('userName', $this->var['invalid'])) {
-	echo ' class="invalid" ';
-}
-if (isset($_POST['userName'])) {
-	echo " value=\"{$_POST['userName']}\"";
-}
-						?> />
+echo (isset($_POST['userName']) ? " value=\"{$_POST['userName']}\"" : '');
+if (array_key_exists('userName', $invalid)) {
+	echo ' class="invalid" /><small class="invalidReason">'
+	   . $this->lang($invalid['userName'])
+	   . '</small>';
+} else {
+	echo '/>';
+}						?>
 				</dd>
 			</dl>
 		</fieldset>
@@ -44,13 +47,14 @@ if (isset($_POST['userName'])) {
 					<input 	type="text"
 							name="email"
 							<?php
-if ($errors && in_array('email', $this->var['invalid'])) {
-	echo ' class="invalid" ';
-}
-if (isset($_POST['email'])) {
-	echo " value=\"{$_POST['email']}\"";
-}
-						?> />
+echo (isset($_POST['email']) ? " value=\"{$_POST['email']}\"" : '');
+if (array_key_exists('email', $invalid)) {
+	echo ' class="invalid" /><small class="invalidReason">'
+	   . $this->lang($invalid['email'])
+	   . '</small>';
+} else {
+	echo '/>';
+}						?>
 				</dd>
 				<dt>
 					<label for="emailConfirm"><?php echo $this->lang('user.email.confirm'); ?></label>
@@ -59,13 +63,14 @@ if (isset($_POST['email'])) {
 					<input 	type="text"
 							name="emailConfirm"
 							<?php
-if ($errors && in_array('emailConfirm', $this->var['invalid'])) {
-	echo ' class="invalid" ';
-}
-if (isset($_POST['emailConfirm'])) {
-	echo " value=\"{$_POST['emailConfirm']}\"";
-}
-						?> />
+echo (isset($_POST['emailConfirm']) ? " value=\"{$_POST['emailConfirm']}\"" : '');
+if (array_key_exists('emailConfirm', $invalid)) {
+	echo ' class="invalid" /><small class="invalidReason">'
+	   . $this->lang($invalid['emailConfirm'])
+	   . '</small>';
+} else {
+	echo '/>';
+}						?>
 				</dd>
 			</dl>
 		</fieldset>
@@ -79,13 +84,14 @@ if (isset($_POST['emailConfirm'])) {
 					<input 	type="password"
 							name="password"
 							<?php
-if ($errors && in_array('password', $this->var['invalid'])) {
-	echo ' class="invalid" ';
-}
-if (isset($_POST['password'])) {
-	echo " value=\"{$_POST['password']}\"";
-}
-						?> />
+echo (isset($_POST['password']) ? " value=\"{$_POST['password']}\"" : '');
+if (array_key_exists('password', $invalid)) {
+	echo ' class="invalid" /><small class="invalidReason">'
+	   . $this->lang($invalid['password'])
+	   . '</small>';
+} else {
+	echo '/>';
+}						?>
 				</dd>
 				<dt>
 					<label for="passwordConfirm"><?php echo $this->lang('user.password.confirm'); ?></label>
@@ -94,13 +100,14 @@ if (isset($_POST['password'])) {
 					<input 	type="password"
 							name="passwordConfirm"
 							<?php
-if ($errors && in_array('passwordConfirm', $this->var['invalid'])) {
-	echo ' class="invalid" ';
-}
-if (isset($_POST['passwordConfirm'])) {
-	echo " value=\"{$_POST['passwordConfirm']}\"";
-}
-						?> />
+echo (isset($_POST['passwordConfirm']) ? " value=\"{$_POST['passwordConfirm']}\"" : '');
+if (array_key_exists('passwordConfirm', $invalid)) {
+	echo ' class="invalid" /><small class="invalidReason">'
+	   . $this->lang($invalid['passwordConfirm'])
+	   . '</small>';
+} else {
+	echo '/>';
+}						?>
 				</dd>
 			</dl>
 		</fieldset>
@@ -113,7 +120,11 @@ if (isset($_POST['passwordConfirm'])) {
 				<dd>
 					<select name="language"><?php
 $langs = Language::getLanguages();
-$current = Core::getLanguage()->getLanguageCode();
+if (isset($_POST['language'])) {
+	$current = $_POST['language'];
+} else {
+	$current = Core::getLanguage()->getLanguageCode();
+}
 foreach ($langs as $code => $lang) {
 	echo "<option value=\"{$code}\""
 	   . ($code == $current ? ' selected' : '')

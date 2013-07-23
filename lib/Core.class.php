@@ -94,6 +94,8 @@ class Core {
 					self::$user = $user;
 					$_SESSION['userObject'] = serialize(self::$user);
 					return;
+				} else {
+					sleep(INVALID_LOGIN_WAIT);
 				}
 			}
 		}
@@ -192,7 +194,7 @@ class Core {
 			
 		}
 		self::getTemplateEngine()->registerDefaultScripts();
-		if (is_null($controller)) throw new NotFoundException();
+		if (!isset($controller)) throw new NotFoundException('no controller specified');
 		$controller->handleRequest($route);
 	}
 	
