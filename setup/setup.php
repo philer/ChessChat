@@ -3,18 +3,24 @@
  * This file creates the database layout used by chesschat.
  * It may be executed via browser or command line (e.g. git hooks).
  *
- * Browser: <site-url>/setup/setup.php[?testdata[&verbose|v]]
- * Command Line: php setup.php [testdata] [verbose|v]
- *
- * If the 'testdata' parameter is specified, queries from the
- * testdata file 'test.sql' will be included.
+ * Browser: <site-url>/setup/setup.php[?option1&option2...]
+ * Command Line: php setup.php [options...]
  * 
- * Use the 'verbose' or 'v' parameter for detailed output.
- *
+ * @param  verbose, v 	echo verbose output (including queries)
+ * @param  reset 		delete all tables and recreate (setup.sql)
+ * @param  testdata		include testdata (test.sql)
+ * @param  random 		include randomized testdata (random.php)
+ * 
+ * @author  Philipp Miller
  */
 
+// full error reporting
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 // server application programming interface or commandline interface?
 $sapi = !defined('STDIN');
+if ($sapi) $argv = array();
 $verbose = isset($_GET['verbose'])
 		|| isset($_GET['v'])
 		|| in_array('verbose', $argv)
@@ -25,7 +31,9 @@ if ($sapi) echo '<title>database setup</title><pre>';
 echo "=== DATABASE SETUP ===\n";
 
 
-// init
+//////////
+// INIT //
+//////////
 if (!defined('ROOT_DIR')) define('ROOT_DIR', dirname(__FILE__).'/../');
 if ($verbose) echo 'ROOT_DIR: ' . ROOT_DIR . "\n";
 
@@ -42,32 +50,61 @@ if (!isset($db)) {
 	}
 }
 
-
-// do something
+//////////////////
+// do something //
+//////////////////
 echo "=== preparing queries...\n";
-$useTestdata = isset($_GET['testdata'])
-		    || in_array('testdata', $argv);
+$queries = array();
 
+/////////////////////
+// reset database? //
+/////////////////////
+if (isset($_GET['reset']) || in_array('reset', $argv)) {
+	echo "=== resetting database...\n";
+	$sql = file_get_contents(ROOT_DIR . 'setup/setup.sql');
+	$queries = array_merge($queries, explode(';', $sql));
+}
 
-$sql = file_get_contents(ROOT_DIR . 'setup/setup.sql');
-$queries = explode(';', $sql);
-
-// include test data?
-if ($useTestdata) {
+////////////////////////
+// include test data? //
+////////////////////////
+if (isset($_GET['testdata']) || in_array('testdata', $argv)) {
 	echo "=== including testdata...\n";
 	$sql = file_get_contents(ROOT_DIR . 'setup/test.sql');
 	$queries = array_merge($queries, explode(';', $sql));
 }
 
-// go for it!
+///////////////////////////////////
+// include randomized test data? //
+///////////////////////////////////
+if (isset($_GET['random']) || in_array('random', $argv)) {
+	echo "=== including random testdata...\n";
+	include(ROOT_DIR . 'setup/random.php');
+}
+
+////////////////
+// go for it! //
+////////////////
 echo "=== sending queries...\n";
 if ($verbose) echo "\n";
-foreach ($queries as $q) {
-	$q = trim($q);
-	if (!empty($q)) {
-		if ($verbose) echo "=== sending query: \n" . $q;
+foreach ($queries as $q) query($q);
+
+echo "=== sent " . $db->getQueryCount() . " queries\n";
+echo "=== done\n";
+
+
+
+//////////
+// UTIL //
+//////////
+
+function query($query) {
+	global $verbose, $db;
+	$query = trim($query);
+	if (!empty($query)) {
+		if ($verbose) echo "=== sending query: \n" . $query;
 		try {
-			$db->sendQuery($q);
+			$db->sendQuery($query);
 		} catch (Exception $e) {
 			echo $e->getMessage();
 			exit;
@@ -76,5 +113,14 @@ foreach ($queries as $q) {
 	}
 }
 
-echo "=== sent " . $db->getQueryCount() . " queries\n";
-echo "=== done\n";
+function rstr($length, $numbers = true, $upperCase = true, $lowerCase = true) {
+	$char = '';
+	if ($upperCase) $char .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	if ($lowerCase) $char .= 'abcdefghijklmnopqrstuvwxyz';
+	if ($numbers)   $char .= '0123456789';
+	$rstr = '';
+	for ($c=0 ; $c < $length ; $c++) {
+		$rstr .= $char[rand(0, strlen($char)-1)];
+	}
+	return $rstr;
+}
