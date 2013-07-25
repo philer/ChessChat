@@ -1,4 +1,33 @@
 /**
+ * Variables
+ */
+@imgdir: "images/";
+
+@main-text-color: #444;
+@main-bg-color: #ececec;
+
+@frame-border-color: #d3d3d3;
+
+@panel-top-color: #f5f5f5;
+@panel-bottom-color: #e0e0e0;
+
+@error-text-color: #644;
+@error-bg-color: #edd;
+@error-gleam-color: #fee;
+@error-border-color: #caa;
+
+// @dataList-bg-color1: #ddd;
+// @dataList-bg-color2: #e5e5e5;
+// @dataList-bg-hover-color1: #d0d0d0;
+// @dataList-bg-hover-color2: #eee;
+@dataList-bg-color1: @main-bg-color;
+@dataList-bg-color2: @main-bg-color;
+@dataList-bg-hover-color1: darken(@dataList-bg-color1, 3%);
+@dataList-bg-hover-color2: darken(@dataList-bg-color2, 3%);
+
+
+
+/**
  * mixin for vertical gradient with two colors
  */
 .vertical-gradient (@top-color: red, @bottom-color: blue) {

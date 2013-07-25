@@ -1,5 +1,5 @@
 @import "_font.less";
-
+@import "_mixins.less";
 /*** GENERAL SETTINGS ***/
 html, body {
 	padding: 0;
@@ -7,7 +7,7 @@ html, body {
 	height: 100%;
 	position: relative;
 	text-align: center;
-	font-family: 'Ubuntu';
+	font-family: 'Ubuntu', sans;
 }
 *, input {
 	padding: 0;
@@ -50,6 +50,18 @@ footer#footer {
 	position: absolute;
 	left: 0;
 	right: 0;
+	color: @main-text-color;
+}
+
+header#header,
+footer#footer {
+	.vertical-gradient (@panel-top-color, @panel-bottom-color);
+	box-shadow: 0 0 4px rgba(0,0,0,.5);
+	text-shadow: 1px 1px 0 white;
+	a:hover {
+		text-shadow: 1px 1px 0 white,
+					 0 0 3px rgba(0,0,0,.2);
+	}
 }
 
 header#header {
@@ -77,6 +89,25 @@ header#header {
 			line-height: 3em;
 			font-size: 1em;
 		}
+		ul {
+			border-color:	red
+							rgba(255,255,255,.4)
+							red
+							rgba(0,0,0,.1);
+			border-width: 0 1px;
+			li a {
+				color: #666;
+				border-color:	red
+								rgba(0,0,0,.1)
+								red
+								rgba(255,255,255,.4);
+				border-width: 0 1px;
+				&:hover {
+					.vertical-gradient (@panel-bottom-color, @panel-top-color);
+					box-shadow: inset 0 0 10px rgba(0,0,0,.1);
+				}
+			}
+		}
 		ul li a,
 		#loginForm fieldset {
 			padding: 0 1.5em;
@@ -94,23 +125,45 @@ header#header {
 	}
 }
 
+
 div#main {
     top: 3em;
     bottom: 2em;
     z-index: 100;
     overflow: auto;
+	background-color: @main-bg-color;
+	background-image: url("@{imgdir}bg.png");
+	> section {
+		font-size: .85em;
+		a {
+			color: #777;
+			&:hover {
+				color: #999;
+			}
+		}
+		> header {
+			color: #666;
+			text-shadow: 1px 1px 0 white;
+			background-color: #f5f5f5;
+			box-shadow: 0 0 2px #999;
+		}
+	}
 }
+
+
 
 footer#footer {
 	bottom: 0;
 	height: 1em;
 	padding: .5em 1em;
 	z-index: 200;
-	
+	color: #888;
 	> * {
 		font-size: .75em;
 	}
-	
+	a:hover {
+		color: #555;
+	}
 	#footerMenu {
 		float: left;
 		&,
@@ -125,11 +178,8 @@ footer#footer {
 	}
 }
 
+
 /*** additional stuff ***/
-@error-text-color: #644;
-@error-bg-color: #edd;
-@error-gleam-color: #fee;
-@error-border-color: #caa;
 .error {
 	display: block;
 	width: 50%;
@@ -143,7 +193,7 @@ footer#footer {
 	color: @error-text-color;
 	text-shadow: 1px 1px 0 @error-gleam-color;
 	background-color: @error-bg-color;
-	box-shadow: 1px 1px 2px #ccc;
+	box-shadow: 1px 1px 2px rgba(0,0,0,.2);
 	&:before {
 		content: "!";
 		float: left;
@@ -179,11 +229,6 @@ footer#footer {
 /*** imports ***/
 @import "_page.less";
 @import "_dataList.less";
-@import "_user.less";
-
 @import "_form.less";
-
-@import "_globalColor.less";
-//@import "_globalDark.less";
 
 //@import "_overlay.less";

@@ -3,55 +3,81 @@ ul.dataList {
 	padding: 0;
 	text-align: left;
 	font-size: .9em;
-	border-radius: 4px;
+	line-height: 1.3em;
 	overflow: hidden;
-	border: 1px solid #ddd;
-	
+	color: lighten(@main-text-color, 10%);
+	border-radius: 4px;
+	border-width: 1px 0 0 1px;
+	border-style: solid;
+	border-color: @frame-border-color;
+	// box-shadow: 0 0 3px rgba(0,0,0,.2);
+	// background-color: @main-bg-color;
 	> li {
-		background-color: #e5e5e5;
-		&:hover {
-			background-color: #eee;
-		}
-		dl {
-			display: inline-block;
-		}		
-		
 		// data list multi-column layout
 		display: inline-block;
 		padding: 1em;
-		// min-width: 25em;
+		min-width: 25em;
 		.border-box-sizing;
+		border-width: 0 1px 1px 0;
+		border-style: solid;
+		border-color: @frame-border-color;
 		
 		width: 100%;
-		@media all and (min-width: 780px) and (max-width: 1159px) {
+		background-color: @dataList-bg-color1;
+		&:hover {
+			background-color: @dataList-bg-hover-color1;
+		}
+		dl {
+			display: inline-block;
+			dt, dd {
+				display: inline;
+			}
+			dt:after {
+				content: ":";
+			}
+			.heading {
+				font-weight: bold;
+				font-size: 1.15em;
+			}
+		}
+		@media all and (min-width: 950px) and (max-width: 1439px) {
 			width: 50%;
 			&:nth-child(4n), &:nth-child(4n+1) {
-				background-color: #ddd;
+				background-color: @dataList-bg-color2;
 				&:hover {
-					background-color: #d0d0d0;
+					background-color: @dataList-bg-hover-color2;
 				}
 			}
 		}
-		@media all and (min-width: 1160px) and (max-width: 1549px) {
+		@media all and (min-width: 1440px) and (max-width: 1879px) {
 			width: 33.3%;
 		}
-		@media all and (min-width: 1550px) {
+		@media all and (min-width: 1880px) {
 			width: 25%;
 			&:nth-child(8n), &:nth-child(8n+1), &:nth-child(8n+3), &:nth-child(8n+6) {
-				background-color: #ddd;
+				background-color: @dataList-bg-color2;
 				&:hover {
-					background-color: #d0d0d0;
+					background-color: @dataList-bg-hover-color2;
 				}
 			}
 		}
-		@media all and (max-width: 779px), (min-width: 1160px) and (max-width: 1549px) {
+		@media all and (max-width: 949px), (min-width: 1439px) and (max-width: 1879px) {
 			&:nth-child(odd) {
-				background-color: #ddd;
+				background-color: @dataList-bg-color2;
 				&:hover {
-					background-color: #d0d0d0;
+					background-color: @dataList-bg-hover-color2;
 				}
 			}
 		}
+	}
+}
+
+dl.userData {
+	> dt.userName {
+		display: none;
+	}
+	> dd.userName {
+		display: block;
 	}
 }
 
@@ -63,27 +89,23 @@ dl.gameData dd.whitePlayer:after {
 }
 
 dl.gameData {
-	dt {
-		&.whitePlayer, &.blackPlayer,
-		&.status {
-			display: none;
-		}
+	dt.whitePlayer,
+	dt.blackPlayer,
+	dt.status {
+		display: none;
 	}
-	dd {
-		&.whitePlayer, &.blackPlayer {
-			display: inline-block;
-			font-weight: bold;
-		}
-	}
-	.lastUpdate {
-		display: inline-block;
+	dt.lastUpdate:before,
+	dd.status:before {
+		content: "\A";
+		white-space: pre;
 	}
 }
 
 ul.gameList > li {
-	> a, > a:hover {
+	> a {
 		float: left;
-		color: inherit !important;
+		// color: inherit !important;
+		outline-width: 0;
 		span {
 			display: none;
 			&.icon {
@@ -92,12 +114,13 @@ ul.gameList > li {
 				vertical-align: middle;
 				padding: 0;
 				margin-right: .25em;
-				opacity: .5;
+				color: @main-text-color;
 				text-shadow: 1px 1px 2px #aaa;
-				&:hover {
-					opacity: 1;
-				}
 			}
 		}
+	}
+	> a:hover  span.icon,
+	> a:active span.icon {
+		color: lighten(@main-text-color, 15%);
 	}
 }

@@ -61,7 +61,7 @@
 				display: block;
 				margin-bottom: 5px;
 				
-				background-color: #ebebeb;
+				background-color: #eee;
 				border-radius: 3px;
 				border: 1px solid #f2f2f2;
 				box-shadow: 0 0 3px #bbb;
@@ -123,14 +123,15 @@
 		}
 		fieldset > div {
 			margin-right: 80px;
-		}
-		input#chatText {
-			resize: none;
-			width: 94%;
-			padding: 0 3%;
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-			color: inherit;
+			input#chatText {
+				resize: none;
+				width: 100%;
+				min-width: 100%;
+				max-width: 100%;
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 0;
+				color: inherit;
+			}
 		}
 		button#chatSubmit {
 			position: absolute;

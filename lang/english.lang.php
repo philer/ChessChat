@@ -6,6 +6,7 @@
 
 $this->langVars = array(
 // GENERAL
+'dateformat'			=> 'M jS Y',
 'me'					=> 'Me',
 'opponent'				=> 'Opponent',
 
@@ -46,6 +47,7 @@ $this->langVars = array(
 //'legal.taxID'			=> 'Tax ID',
 
 'user.name' 			=> 'Username',
+'user.gameCount'		=> 'Games',
 'user.password' 		=> 'Password',
 'user.password.confirm'	=> 'Repeat password',
 'user.email'			=> 'E-mail address',

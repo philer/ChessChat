@@ -219,9 +219,13 @@ class UserController implements RequestController {
 	protected function prepareUserList() {
 		$usersData = Core::getDB()->sendQuery(
 			'SELECT userId,
-			        userName
-			 FROM cc_user
-			 ORDER BY userName
+			        userName,
+			        (SELECT COUNT(*)
+			         FROM cc_game G
+			         WHERE U.userId = G.whitePlayerId
+			            OR U.userId = G.blackPlayerId) as gameCount
+			 FROM cc_user U
+			 ORDER BY gameCount DESC, userName ASC
 			 LIMIT 30'
 		);
 		
@@ -240,7 +244,7 @@ class UserController implements RequestController {
 	 * @param  integer $userId
 	 */
 	protected function prepareUserProfile($userId = 0) {
-		if ($userId == 0) {
+		if ($userId == 0 || $userId == Core::getUser()->getId()) {
 			// own profile
 			if (Core::getUser()->isGuest()) {
 				throw new NotFoundException('you are a guest');

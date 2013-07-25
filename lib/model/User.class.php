@@ -38,6 +38,12 @@ class User extends GenericModel {
 	protected $language = '';
 	
 	/**
+	 * Amount of games this user is part of
+	 * @var integer
+	 */
+	protected $gameCount = 0;
+	
+	/**
 	 * Creates a User object using provided data
 	 * or a Guest if none is provided.
 	 * @param 	array<mixed> $userData
@@ -83,9 +89,11 @@ class User extends GenericModel {
 	 * @return 	string
 	 */
 	public function getLanguage() {
-		// if (empty($this->language)) return false;
-		// else return $this->language;
 		return $this->language;
+	}
+	
+	public function getGameCount() {
+		return $this->gameCount;
 	}
 	
 	/**

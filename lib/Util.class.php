@@ -122,10 +122,12 @@ class Util {
 			return $minutes . ' minutes ago';
 		} elseif (24 >= $hours = (integer) ((NOW-$timestamp) / (60*24))) {
 			return $hours . ' hours ago';
-		} elseif (3600*24*2 >= NOW-$timestamp) {
+		// } elseif (3600*24*2 >= NOW-$timestamp) {
+		} elseif (date('Ymd', NOW-3600*24) === date('Ymd', $timestamp)) {
 			return 'yesterday';
 		} else {
-			return date('Y-m-d', $timestamp);
+			return date(Core::getLanguage()->getLanguageItem('dateformat'),
+				$timestamp);
 		}
 	}
 	
