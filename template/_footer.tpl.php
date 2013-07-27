@@ -1,4 +1,4 @@
-		</div><!-- #main -->
+		</main><!-- #main -->
 		<footer id="footer">
 			<nav id="footerMenu">
 				<ul>

@@ -23,6 +23,8 @@ if (!empty($this->var['invalid'])) {
 				<dd>
 					<input 	type="text"
 							name="opponent"
+							required="required"
+							autofocus="autofocus"
 							<?php
 if ($errors && in_array('opponent', $this->var['invalid'])) {
 	echo ' class="invalid" ';

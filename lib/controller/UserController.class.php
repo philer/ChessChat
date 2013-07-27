@@ -153,11 +153,15 @@ class UserController implements RequestController {
 			if (empty($_POST[$key])) {
 				$invalid[$key] = 'form.invalid.missing';
 			} else {
-				$data[$key] = trim($_POST[$key]);
+				if ($key != "password" && $key != "passwordConfirm") {
+					$data[$key] = trim($_POST[$key]);
+				} else {
+					$data[$key] = $_POST[$key];
+				}
 			}
 		}
 		if (empty($invalid['userName'])) {
-			if (!self::validUserName($data['userName'])) {
+			if (!User::validUserName($data['userName'])) {
 				$invalid['userName'] = 'form.invalid.userName';
 			} else {
 				$userCount = Core::getDB()->sendQuery(
@@ -170,7 +174,7 @@ class UserController implements RequestController {
 				}
 			}
 		}
-		if (empty($invalid['email']) && !self::validEmail($data['email'])) {
+		if (empty($invalid['email']) && !User::validEmail($data['email'])) {
 			$invalid['email'] = 'form.invalid.email';
 		} else {
 			$userCount = Core::getDB()->sendQuery(
@@ -187,7 +191,7 @@ class UserController implements RequestController {
 			$invalid['emailConfirm'] = 'form.invalid.emailConfirm';
 		}
 		
-		if (empty($invalid['password']) && !self::validPassword($data['password'])) {
+		if (empty($invalid['password']) && !User::validPassword($data['password'])) {
 			$invalid['password'] = 'form.invalid.password.insecure';
 		}
 		if (empty($invalid['password']) && empty($invalid['passwordConfirm'])
@@ -253,10 +257,10 @@ class UserController implements RequestController {
 			}
 		} else {
 			$userData = Core::getDB()->sendQuery(
-		 		'SELECT `userId`, `userName`, `email`
-		 		 FROM `cc_user`
-		 		 WHERE `userId` = ' . intval($userId)
-		 	)->fetch_assoc();
+				'SELECT userId, userName, email
+				 FROM cc_user
+				 WHERE userId = ' . intval($userId)
+			)->fetch_assoc();
 			if (empty($userData)) throw new NotFoundException('user does not exist');
 			
 			$user = new User($userData);
@@ -267,50 +271,4 @@ class UserController implements RequestController {
 		$gameController->prepareGameList($user->getId());
 	}
 	
-	/**
-	 * Checks if $userName meets the required userName regulations.
-	 * @param  string $userName
-	 * @return boolean
-	 */
-	public static function validUserName($userName) {
-		return strlen($userName) >= USERNAME_MIN_LENGTH
-		    && strlen($userName) <= USERNAME_MAX_LENGTH;
-	}
-	
-	/**
-	 * Checks if $str is a valid e-mail address.
-	 * TODO better pattern maybe
-	 * @param  string	$str
-	 * @return boolean
-	 */
-	public static function validEmail($email) {
-		$pattern = '#^\S+@[[:word:]0-9_.-]+\.[[:word:]]+$#';
-		return preg_match($pattern, $email) === 1;
-	}
-	
-	/**
-	 * Checks if $pw meets the required password criteria.
-	 * @param  string	$pw
-	 * @return boolean
-	 */
-	public static function validPassword($pw) {
-		return strlen($pw) >= PASSWORD_MIN_LENGTH;
-		// if (!( strlen($pw) >= PASSWORD_MIN_LENGTH
-		//     && strlen($pw) <= PASSWORD_MAX_LENGTH
-		//     && (!PASSWORD_REQUIRE_LOWERCASE || preg_match('#[a-z]+#', $pw))
-		//     && (!PASSWORD_REQUIRE_UPPERCASE || preg_match('#[A-Z]+#', $pw))
-		//     && (!PASSWORD_REQUIRE_NUMERIC   || preg_match('#[0-9]+#', $pw))
-		//    )) {
-		// 	return false;
-		// }
-		// if ('' !== $chars = PASSWORD_REQUIRE_SPECIALCHARS) {
-		// 	for ($i=0 ; $i<strlen($chars) ; $i++) {
-		// 		if (strpos($pw, $chars[$i]) !== false) {
-		// 			return true;
-		// 		}
-		// 	}
-		// 	return false;
-		// }
-		// return true;
-	}
 }

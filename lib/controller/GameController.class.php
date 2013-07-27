@@ -93,7 +93,7 @@ class GameController implements RequestController {
 		 		echo 'success';
 		 		return true;
 		 	}
-		 	Core::getTemplateEngine()->addVar('errorMessage', 'bad input');
+		 	Core::getTemplateEngine()->addVar('errorMessage', 'form.invalid');
 		 	Core::getTemplateEngine()->addVar('invalid', array('opponent'));
 		}
 		return false;

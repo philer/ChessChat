@@ -163,4 +163,81 @@ class User extends GenericModel {
 		}
 		return true;
 	}
+	
+	/**
+	 * Returns a pattern matching valid usernames
+	 * @param  string $delimiter defaults to '#'
+	 * @return string pattern
+	 */
+	public static function getUserNamePattern($delimiter = '#') {
+		return $delimiter . '^'
+		     . (USERNAME_FORCE_ASCII ? '[\x20-\x7E]' : '.')
+		     . '{' . USERNAME_MIN_LENGTH . ',' . USERNAME_MAX_LENGTH . '}$'
+		     . $delimiter;
+	}
+	
+	/**
+	 * Checks if $userName meets the required userName regulations.
+	 * @param  string $userName
+	 * @return boolean
+	 */
+	public static function validUserName($userName) {
+		// return strlen($userName) >= USERNAME_MIN_LENGTH
+		//     && strlen($userName) <= USERNAME_MAX_LENGTH;
+		return preg_match(self::getUserNamePattern(), $userName) === 1;
+	}
+	
+	/**
+	 * Returns a pattern matching valid email addresses
+	 * @param  string $delimiter defaults to '#'
+	 * @return string pattern
+	 */
+	public static function getEmailPattern($delimiter = '#') {
+		return $delimiter . '^\S+@[[:word:]0-9_.-]+\.[[:word:]]+$' . $delimiter;
+	}
+	
+	/**
+	 * Checks if $str is a valid email address.
+	 * TODO better pattern maybe
+	 * @param  string	$str
+	 * @return boolean
+	 */
+	public static function validEmail($email) {
+		return preg_match(self::getEmailPattern(), $email) === 1;
+	}
+	
+	/**
+	 * Returns a pattern matching valid password
+	 * @param  string $delimiter defaults to '#'
+	 * @return string pattern
+	 */
+	public static function getPasswordPattern($delimiter = '#') {
+		return $delimiter . '^.{' . PASSWORD_MIN_LENGTH . ',}$' . $delimiter;
+	}
+	
+	/**
+	 * Checks if $pw meets the required password criteria.
+	 * @param  string	$pw
+	 * @return boolean
+	 */
+	public static function validPassword($pw) {
+		return strlen($pw) >= PASSWORD_MIN_LENGTH;
+		// if (!( strlen($pw) >= PASSWORD_MIN_LENGTH
+		//     && strlen($pw) <= PASSWORD_MAX_LENGTH
+		//     && (!PASSWORD_REQUIRE_LOWERCASE || preg_match('#[a-z]+#', $pw))
+		//     && (!PASSWORD_REQUIRE_UPPERCASE || preg_match('#[A-Z]+#', $pw))
+		//     && (!PASSWORD_REQUIRE_NUMERIC   || preg_match('#[0-9]+#', $pw))
+		//    )) {
+		// 	return false;
+		// }
+		// if ('' !== $chars = PASSWORD_REQUIRE_SPECIALCHARS) {
+		// 	for ($i=0 ; $i<strlen($chars) ; $i++) {
+		// 		if (strpos($pw, $chars[$i]) !== false) {
+		// 			return true;
+		// 		}
+		// 	}
+		// 	return false;
+		// }
+		// return true;
+	}
 }

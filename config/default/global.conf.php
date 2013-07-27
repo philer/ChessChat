@@ -14,6 +14,7 @@ define('QUICK_LOGIN', true);
 
 define('USERNAME_MIN_LENGTH', 3);
 define('USERNAME_MAX_LENGTH', 16);
+define('USERNAME_FORCE_ASCII', false);
 
 define('GAME_SALT',''); // for game identification
 define('GAME_HASH_LENGTH', 6); //64^6 ~= 7e10

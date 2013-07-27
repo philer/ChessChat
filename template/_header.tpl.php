@@ -35,11 +35,13 @@ foreach ($menuItems as $mi) {
 						<input 	type="text"
 								name="userName"
 								id="loginName"
+								required="required"
 								placeholder="<?php echo $this->lang('user.name'); ?>"
 							/>
 						<input 	type="password"
 								name="password"
 								id="loginPassword"
+								required="required"
 								placeholder="<?php echo $this->lang('user.password'); ?>"
 							/>
 						<button	type="submit" id="loginSubmit"><?php
@@ -51,4 +53,4 @@ foreach ($menuItems as $mi) {
 
 			</nav>
 		</header>
-		<div id="main">
+		<main role="main" id="main">
