@@ -17,21 +17,32 @@ class Util {
 	}
 	
 	/**
+	 * Returns the absolute request path
+	 * e.g. this/path/ from http://example.com/this/path/index.php
+	 * @return 	string
+	 */
+	public static function getRequestPath() {
+		return dirname($_SERVER['SCRIPT_NAME']) . '/';
+	}
+	
+	/**
+	 * Returns the URL for the site including protocol
+	 * @return string
+	 */
+	public static function getBaseUrl() {
+		return 'http://' . HOST . self::getRequestPath();
+	}
+	
+	/**
 	 * Convenience function for easy use in templates etc,
 	 * returns an absolute url for a given route.
 	 * @param 	string 	$route
 	 * @return 	string
 	 */
 	public static function url($route) {
-		return HOST . 'index.php/' . $route;
-	}
-	
-	/**
-	 * TODO
-	 * @return 	string
-	 */
-	public static function cookiePath() {
-		return str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+		return self::getBaseUrl()
+		     . (SEO_URL ? '' : 'index.php/')
+		     . $route;
 	}
 	
 	/**
@@ -47,7 +58,7 @@ class Util {
 			COOKIE_PREFIX . $name,
 			$value,
 			is_null($expiration) ? COOKIE_DAYS*3600*24 + NOW : $expiration,
-		 	self::cookiePath()
+		 	self::getRequestPath()
 		);
 	}
 	
@@ -99,13 +110,46 @@ class Util {
 	}
 	
 	/**
-	 * Generates a random hash
-	 * TODO
+	 * Generates a random string containing
+	 * upper- and lowercase letters and digits.
+	 * Additional characters may be specified.
+	 * @param  integer $length          defaults to 16
+	 * @param  string  $additionalChars
 	 * @return string
 	 */
-	public static function getRandomHash() {
-		// TODO
-		return sha1(openssl_random_pseudo_bytes(24));
+	public static function getRandomString($length = 16, $additionalChars = '') {
+		$chars = 'abcdefghijklmnopqrstuvwxyz'
+		       . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+		       . '0123456789'
+		       . $additionalChars;
+		
+		$str = '';
+		for ($c=0 ; $c<$length ; $c++) {
+			$str .= $chars[ self::rand(0, strlen($chars)-1) ];
+		}
+		return $str;
+	}
+	
+	/**
+	 * Generates a cryptographicaly secure random integer between $min and $max
+	 * @see http://php.net/manual/en/function.openssl-random-pseudo-bytes.php#104322
+	 * 
+	 * @param  integer $min
+	 * @param  integer $max
+	 * @return integer
+	 */
+	public static function rand($min, $max) {
+		$range = $max - $min;
+		if ($range <= 0) return $min;
+		$log    = log($range, 2);
+		$bytes  = (int) ($log / 8)   + 1; // length in bytes
+		$bits   = (int)  $log        + 1; // length in bits
+		$filter = (int) (1 << $bits) - 1; // set all lower bits to 1
+		do {
+			$rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes, $s)));
+			$rnd = $rnd & $filter; // discard irrelevant bits
+		} while ($rnd >= $range);
+		return $min + $rnd;
 	}
 	
 	/**
@@ -122,7 +166,6 @@ class Util {
 			return $minutes . ' minutes ago';
 		} elseif (24 >= $hours = (integer) ((NOW-$timestamp) / (60*24))) {
 			return $hours . ' hours ago';
-		// } elseif (3600*24*2 >= NOW-$timestamp) {
 		} elseif (date('Ymd', NOW-3600*24) === date('Ymd', $timestamp)) {
 			return 'yesterday';
 		} else {

@@ -112,15 +112,3 @@ function query($query) {
 		if ($verbose) echo "\n\n";
 	}
 }
-
-function rstr($length, $numbers = true, $upperCase = true, $lowerCase = true) {
-	$char = '';
-	if ($upperCase) $char .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	if ($lowerCase) $char .= 'abcdefghijklmnopqrstuvwxyz';
-	if ($numbers)   $char .= '0123456789';
-	$rstr = '';
-	for ($c=0 ; $c < $length ; $c++) {
-		$rstr .= $char[rand(0, strlen($char)-1)];
-	}
-	return $rstr;
-}

@@ -4,7 +4,8 @@
 //////////////
 
 define('SITENAME', 'ChessChat');
-define('HOST', ''); // TODO $_SERVER[] -> HTTP_HOST, REQUEST_SCRIPTNAME
+define('HOST', $_SERVER['SERVER_NAME']);
+define('SEO_URL', false); // hide index.php for use with mod_rewrite
 
 /////////////
 // OPTIONS //

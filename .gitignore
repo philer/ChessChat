@@ -21,3 +21,6 @@ config/*.conf.php
 
 # styles are compiled from less
 style/*.css
+
+# ignore .htaccess, track *.htaccess instead
+.htaccess

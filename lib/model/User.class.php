@@ -138,7 +138,7 @@ class User extends GenericModel {
 	 * and sends it to client.
 	 */
 	public function regenerateCookieHash() {
-		$cookieHash = Util::getRandomHash();
+		$cookieHash = Util::getRandomString(32);
 		if (Core::getDB()->sendQuery(
 			"UPDATE `cc_user`
 			 SET `cookieHash` = '" . $cookieHash . "' 

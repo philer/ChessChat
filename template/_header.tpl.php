@@ -1,7 +1,7 @@
 	<body lang="<?php echo $this->language->getLanguageCode(); ?>">
 		<header id="header">
 			<h1>
-				<a href="index.php">
+				<a href="<?php echo Util::getBaseUrl(); ?>">
 					<span id="logo" class="icon">&#x265A;</span><?php echo SITENAME ?>
 				</a>
 			</h1>

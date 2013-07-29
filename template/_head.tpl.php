@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>&#x265A; <?php echo SITENAME // TODO pageTitle ?></title>
-		<base href="<?php echo HOST ?>" />
+		<base href="<?php echo Util::getBaseUrl() ?>" />
 		<?php //TODO<link rel="canonical" href="" />?>
 <?php
 	foreach ($this->getStylesheets() as $stylesheet) {

@@ -174,7 +174,7 @@ final class TemplateEngine {
 	 * @param 	string 	$script
 	 */
 	public function registerDynamicScript($script) {
-		$this->dynamicScripts[] = ROOT_DIR."lib/js/".$script.".js.php";
+		$this->dynamicScripts[] = ROOT_DIR . "lib/js/" . $script . ".js.php";
 	}
 	
 	
@@ -185,11 +185,10 @@ final class TemplateEngine {
 	 * @return 	string
 	 */
 	protected static function getScriptPath($script) {
-		//if (file_exists(ROOT_DIR."js/".$script.".min.js")) {return HOST."js/".$script.".min.js";} else
-		if (file_exists(ROOT_DIR."js/".$script.".js")) {
-			return HOST."js/".$script.".js";
-		} elseif (file_exists(ROOT_DIR."js/".$script)) {
-			return HOST."js/".$script.".js";
+		if (file_exists(ROOT_DIR . "js/" . $script . ".js")) {
+			return Util::getBaseUrl() . "js/" . $script . ".js";
+		} elseif (file_exists(ROOT_DIR . "js/" . $script)) {
+			return Util::getBaseUrl() . "js/" . $script;
 		}
 	}
 	
@@ -200,11 +199,10 @@ final class TemplateEngine {
 	 * @return 	string
 	 */
 	protected static function getStylesheetPath($stylesheet) {
-		//if (file_exists(ROOT_DIR."style/".$stylesheet.".min.css")) {return HOST."style/".$stylesheet.".min.css";} else
-		if (file_exists(ROOT_DIR."style/".$stylesheet.".css")) {
-			return HOST."style/".$stylesheet.".css";
-		} elseif (file_exists(ROOT_DIR."style/".$stylesheet)) {
-			return HOST."style/".$stylesheet.".css";
+		if (file_exists(ROOT_DIR . "style/" . $stylesheet . ".css")) {
+			return Util::getBaseUrl() . "style/" . $stylesheet . ".css";
+		} elseif (file_exists(ROOT_DIR . "style/" . $stylesheet)) {
+			return Util::getBaseUrl() . "style/" . $stylesheet;
 		}
 	}
 	

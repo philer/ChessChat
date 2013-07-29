@@ -68,7 +68,7 @@ class Core {
 	 */
 	protected function setUser() {
 		session_name(COOKIE_PREFIX . 'sid');
-		session_set_cookie_params(0, Util::cookiePath());
+		session_set_cookie_params(0, Util::getRequestPath());
 		session_start();
 		
 		// existing session

@@ -114,13 +114,10 @@ class UserController implements RequestController {
 		if (Core::getUser()->isGuest()) {
 			throw new PermissionDeniedException('already logged out');
 		}
-		setcookie('cc_userId', 0, 1, Util::cookiePath());
-		
-		setcookie('cc_cookieHash', '', 1, Util::cookiePath());
-		// unset($_SESSION['cookieHash']);
-		
 		$guest = new User();
 		$_SESSION['userObject'] = serialize($guest);
+		Util::deleteCookie('userId');
+		Util::deleteCookie('cookieHash');
 		
 		header('Location: ' . Util::url('Index'));
 	}
