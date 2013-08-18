@@ -1,6 +1,6 @@
 <?php
 
-class RequestException extends Exception {
+class RequestException extends Exception implements RequestController {
 	
 	protected $title = '';
 	protected $httpCode = 200;
@@ -26,7 +26,7 @@ class RequestException extends Exception {
 		} else {
 			Core::getTemplateEngine()->addVar('errorMessage', 'exception.' . $this->httpCode . '.msg');
 		}
-		Core::getTemplateEngine()->showPage('_error');
+		Core::getTemplateEngine()->showPage('_error', $this);
 	}
 	
 	/**
@@ -41,4 +41,13 @@ class RequestException extends Exception {
 		}
 	}
 	
+	public function getPageTitle() {
+		return $this->getTitle();
+	}
+	
+	public function getCanonicalRoute() {
+		return '';
+	}
+	
+	public function handleRequest(array $route) {}
 }

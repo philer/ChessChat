@@ -4,7 +4,7 @@
  * Chat mostly responds to ajax requests
  * @author Philipp Miller
  */
-class ChatController extends AjaxController {
+class ChatController implements AjaxController {
 	
 	/**
 	 * Every ChatController belongs to a GameController
@@ -100,7 +100,7 @@ class ChatController extends AjaxController {
 		// TODO mysql_escape, save
 		// queue reply
 		Core::getTemplateEngine()->addVar('msg',$msgObj);
-		self::queueReply('msg', Core::getTemplateEngine()->fetch('_chatMessage'));
+		AjaxUtil::queueReply('msg', Core::getTemplateEngine()->fetch('_chatMessage'));
 	}
 	
 	//TODO

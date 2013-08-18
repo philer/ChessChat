@@ -49,6 +49,12 @@ final class TemplateEngine {
 	protected $var = array();
 	
 	/**
+	 * Controller that handles the current request.
+	 * @var RequestController
+	 */
+	protected $controller = null;
+	
+	/**
 	 * Name of the (full page) template that was requested
 	 * @see TemplateEngine::showPage()
 	 * @var string
@@ -96,8 +102,9 @@ final class TemplateEngine {
 	 * a full page with header and footer.
 	 * @param 	string 	$template 	name of the template
 	 */
-	public function showPage($template) {
-		$this->page = $template;
+	public function showPage($template, $controller) {
+		$this->page       = $template;
+		$this->controller = $controller;
 		
 		$this->show("_head");
 		// we can send the header right away, so browsers may

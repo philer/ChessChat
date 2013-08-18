@@ -1,7 +1,3 @@
-<section id="gameForm" class="form">
-	<header>
-		<h1><?php echo $this->lang('game.new'); ?></h1>
-	</header>
 <?php
 
 $errors = false; // send form in correction mode
@@ -10,6 +6,7 @@ if (!empty($this->var['invalid'])) {
 	$this->show('_error');
 }
 
+$this->show('_mainSectionHeader');
 ?>
 	<form method="post" action="<?php
 		echo Util::url('Game/new');

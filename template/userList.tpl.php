@@ -1,8 +1,6 @@
-			<section id="userList">
-				<header>
-					<h1><?php echo $this->lang('user.list'); ?></h1>
-				</header>
-				<ul class="userList dataList"><?php
+<?php
+$this->show('_mainSectionHeader');
+?>				<ul class="userList dataList"><?php
 foreach ($this->var['users'] as $user) {
 					?><li>
 						<dl class="userData">

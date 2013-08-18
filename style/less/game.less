@@ -5,9 +5,6 @@ section#game {
 	right: 25%;
 	padding: 0;
 	text-align: center;
-	a:hover {
-		text-decoration: none;
-	}
 	
 	> header {
 		position: static; // undo positioning in global.less
@@ -50,6 +47,7 @@ section#game {
 					
 					&:hover {
 						color: #444;
+						text-decoration: none;
 						.vertical-shiny(#f8f8f8, #dddddd, #cccccc, #f8f8f8);
 						border-color: #eee #ccc transparent #eee;
 						box-shadow: inset 0 0 3px rgba(0,0,0,.2);

@@ -1,7 +1,3 @@
-<section id="registerForm" class="form">
-	<header>
-		<h1><?php echo $this->lang('user.register'); ?></h1>
-	</header>
 <?php
 
 // wrap invalid array
@@ -12,6 +8,8 @@ if (empty($this->var['invalid'])) {
 	$hasFocus = true;
 	$this->show('_error');
 }
+
+$this->show('_mainSectionHeader');
 ?>
 	<form method="post" action="<?php
 		echo Util::url('User/register');

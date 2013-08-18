@@ -2,9 +2,10 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>&#x265A; <?php echo SITENAME // TODO pageTitle ?></title>
+		<title><?php echo $this->controller->getPageTitle() . " - " . SITENAME; ?></title>
+		<link rel="icon" href="<?php echo Util::getBaseUrl() ?>style/images/favicon.ico" />
 		<base href="<?php echo Util::getBaseUrl() ?>" />
-		<?php //TODO<link rel="canonical" href="" />?>
+		<link rel="canonical" href="<?php echo Util::url($this->controller->getCanonicalRoute()) ?>" />
 <?php
 	foreach ($this->getStylesheets() as $stylesheet) {
 		echo "\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"{$stylesheet}\" />\n";

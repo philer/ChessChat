@@ -1,8 +1,6 @@
-			<section id="legalNotice">
-				<header>
-					<h1><?php echo $this->lang('site.legalnotice'); ?></h1>
-				</header>
-				<dl>
+<?php
+$this->show('_mainSectionHeader');
+?>				<dl>
 					<dt><?php echo $this->lang('legal.nameAndAddress') ?></dt>
 					<dd>
 						<?php echo $this->var['legal']['name'] ?>

@@ -4,7 +4,7 @@
  * The Game is important.
  * @author Philipp Miller
  */
-class GameController implements RequestController {
+class GameController extends AbstractRequestController {
 	
 	/**
 	 * We may need a ChatController.
@@ -18,6 +18,7 @@ class GameController implements RequestController {
 	 * @param 	ChatController 	$chatController
 	 */
 	public function __construct(ChatController $chatController = null) {
+		parent::__construct();
 		if (!is_null($chatController)) $this->chatController = $chatController;
 	}
 	
@@ -35,25 +36,28 @@ class GameController implements RequestController {
 	
 	/**
 	 * Does what needs to be done for this request.
+	 * @param array $route
 	 */
 	public function handleRequest(array $route) {
 		if (is_null($param = array_shift($route))) {
 			// show games list
 			$this->prepareGameList();
-			Core::getTemplateEngine()->showPage('gameList');
+			Core::getTemplateEngine()->showPage('gameList', $this);
 			return;
 		}
 		if (Game::hashPatternMatch($param)) {
 			// show specified game
 			$this->prepareGame($param);
-			Core::getTemplateEngine()->showPage('game');
+			Core::getTemplateEngine()->showPage('game', $this);
 			return;
 		}
+		
 		// method
+		$this->route .= $param;
 		switch ($param) {
 			case 'new':
 				if (!$this->create()) {
-					Core::getTemplateEngine()->showPage('gameForm');
+					Core::getTemplateEngine()->showPage('gameForm', $this);
 				}
 				break;
 			
@@ -96,6 +100,7 @@ class GameController implements RequestController {
 		 	Core::getTemplateEngine()->addVar('errorMessage', 'form.invalid');
 		 	Core::getTemplateEngine()->addVar('invalid', array('opponent'));
 		}
+		$this->pageTitle = Core::getLanguage()->getLanguageItem('game.new');
 		return false;
 	}
 	
@@ -124,8 +129,8 @@ class GameController implements RequestController {
 		$game->move($move);
 		
 		if ($move->valid) {
-			AjaxController::queueReply('move', $move->__toString());
-			AjaxController::queueReply('status', $game->getFormattedStatus());
+			AjaxUtil::queueReply('move', $move->__toString());
+			AjaxUtil::queueReply('status', $game->getFormattedStatus());
 			$this->getChatController()->post(
 				Core::getLanguage()->getLanguageItem(
 					'chess.moved',
@@ -141,13 +146,13 @@ class GameController implements RequestController {
 			);
 			
 		} else {
-			AjaxController::queueReply('invalidMove', $move->__toString());
+			AjaxUtil::queueReply('invalidMove', $move->__toString());
 			if (!empty($move->invalidReason)) {
 				$this->getChatController()->post(
 					$move->invalidReason,
 					$gameId,
 					Core::getUser()->getName()
-				);	
+				);
 			}
 		}
 	}
@@ -188,6 +193,7 @@ class GameController implements RequestController {
 		
 		Core::getTemplateEngine()->addVar('games', $games);
 		Core::getTemplateEngine()->registerStylesheet('game');
+		$this->pageTitle = Core::getLanguage()->getLanguageItem('game.list');
 	}
 	
 	/**
@@ -197,7 +203,8 @@ class GameController implements RequestController {
 	public function prepareGame($gameHash) {
 		$gameData = Core::getDB()->sendQuery(
 		 	"SELECT gameId,
-		 			W.userId   as whitePlayerId,
+			        gameHash,
+			        W.userId   as whitePlayerId,
 			        W.userName as whitePlayerName,
 			        B.userId   as blackPlayerId,
 			        B.userName as blackPlayerName,
@@ -220,5 +227,9 @@ class GameController implements RequestController {
 		Core::getTemplateEngine()->addVar('game', $game);
 		Core::getTemplateEngine()->registerAsyncScript('game');
 		Core::getTemplateEngine()->registerStylesheet('game');
+		$this->pageTitle = $game->getWhitePlayer()
+		                 . ' vs '
+		                 . $game->getBlackPlayer();
+		$this->route     = $game->getRoute();
 	}
 }

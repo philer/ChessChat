@@ -1,7 +1,3 @@
-<section id="loginForm" class="form">
-	<header>
-		<h1><?php echo $this->lang('user.login'); ?></h1>
-	</header>
 <?php
 
 // wrap invalid array
@@ -13,6 +9,7 @@ if (empty($this->var['invalid'])) {
 	$this->show('_error');
 }
 
+$this->show('_mainSectionHeader');
 ?>
 	<form method="post" action="<?php
 		echo Util::url('User/login');
