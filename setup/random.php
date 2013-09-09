@@ -22,7 +22,7 @@ for ($u=0 ; $u < $userN ; $u++) {
 	            . "'" . $name . "@"
 	                  . Util::getRandomString(5) . "."
 	                  . Util::getRandomString(2)
-	            . "', 'password', "
+	            . "', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', "
 	            . "'" . $langs[mt_rand(0, count($langs)-1)] ."'),";
 }
 $userQuery = rtrim($userQuery, ', ');

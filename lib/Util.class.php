@@ -110,6 +110,37 @@ class Util {
 	}
 	
 	/**
+	 * Generate the encrypted string using blowfish.
+	 * Blowfishtype 2y is compatible with PHP 5.3.7+
+	 * @param  string $password
+	 * @param  string $salt
+	 * @return string           blowfish hash
+	 */
+	public static function encrypt($password) {
+		return crypt(
+			$password,
+			'$2y$08$' . self::getRandomString(21, './') . '$'
+		);
+	}
+	
+	/**
+	 * Checks a cleartext password against a full length
+	 * blowfish hash.
+	 * @param  string $password
+	 * @param  string $blowfish
+	 * @return boolean
+	 */
+	public static function checkPassword($password, $blowfish) {
+		return self::safeEquals(
+			substr(crypt(
+					$password,
+					substr($blowfish, 0, 28) . '$'
+				), 28),
+			substr($blowfish, 28)
+		);
+	}
+	
+	/**
 	 * Generates a random string containing
 	 * upper- and lowercase letters and digits.
 	 * Additional characters may be specified.

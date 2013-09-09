@@ -84,8 +84,7 @@ class UserController extends AbstractRequestController {
 
 				if (empty($userData)) {
 					$invalid['userName'] = 'form.invalid.userName.nonexistant';
-				} elseif (!Util::safeEquals($_POST['password'], $userData['password'])) {
-					// TODO use password encryption
+				} elseif (!Util::checkPassword($_POST['password'],$userData['password'])) {
 					$invalid['password'] = 'form.invalid.password';
 				} else {
 					$user = new User($userData);
@@ -198,7 +197,7 @@ class UserController extends AbstractRequestController {
 					INSERT INTO cc_user (userName, email, password, language)
 					VALUES ('" . Util::esc($data['userName']) . "',
 					        '" . Util::esc($data['email'])    . "',
-					        '" . Util::esc($data['password']) . "',
+					        '" . Util::encrypt($data['password']) . "',
 					        '" . Util::esc($data['language']) . "')
 					");
 				return true;
