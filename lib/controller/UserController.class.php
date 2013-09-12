@@ -192,7 +192,6 @@ class UserController extends AbstractRequestController {
 			
 			if (empty($invalid)) {
 				// save
-				// TODO encrypt password!
 				Core::getDB()->sendQuery("
 					INSERT INTO cc_user (userName, email, password, language)
 					VALUES ('" . Util::esc($data['userName']) . "',

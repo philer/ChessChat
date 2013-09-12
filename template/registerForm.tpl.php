@@ -9,7 +9,7 @@ if (empty($this->var['invalid'])) {
 	$this->show('_error');
 }
 
-$this->show('_mainSectionHeader');
+$this->headers('_mainSectionHeader');
 ?>
 	<form method="post" action="<?php
 		echo Util::url('User/register');

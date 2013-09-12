@@ -16,6 +16,22 @@ $(function() {
 	});
 });
 
+var cc = {
+	
+	post : function(controller, action, data) {
+		$.ajax({  
+			type: 'POST',
+			url: 'index.php/ajax',
+			data: 'controller=' + controller
+				+ '&action=' + action
+				+ '&gameId=' + gameData.id
+				+ (data === undefined ? '' : '&' + data),
+			dataType: 'json',
+			success: [chat.handleReply, chess.handleReply]
+		});
+	}
+}
+
 ////// CHAT //////
 var chat = {
 	
@@ -23,7 +39,8 @@ var chat = {
 	chatLogFrame : null,
 	chatText     : null,
 	chatSubmit   : null,
-
+	
+	lastId   : 0,
 	
 	init : function() {
 		chat.chatLog      = $('#chatLog');
@@ -34,6 +51,13 @@ var chat = {
 		chat.chatSubmit.click(chat.sendMessage);
 		
 		chat.scrollToBottom();
+		
+		chat.lastId = chatData.lastId;
+		setInterval(chat.getUpdate, chatData.updateInterval);
+	},
+	
+	getUpdate : function() {
+		cc.post('Chat', 'getUpdate', 'lastId=' + chat.lastId );
 	},
 	
 	sendMessage : function(msg) {
@@ -42,17 +66,7 @@ var chat = {
 			chat.chatText.val('');
 		}
 		if (msg) {
-			msgData = 'controller=Chat'
-					+ '&gameId=' + '1'
-					+ '&msg=' + msg;
-			
-			$.ajax({  
-				type: 'POST',
-				url: 'index.php/ajax',
-				data: msgData,
-				dataType: 'json',
-				success: [chat.handleReply, chess.handleReply]
-		    });
+			cc.post('Chat', 'msg','msg=' + msg);
 		}
 		chat.chatText.focus();
 		return false;
@@ -62,6 +76,9 @@ var chat = {
 		if (reply.msg) {
 			chat.chatLog.append(reply.msg);
 			chat.scrollToBottom();
+		}
+		if (reply.lastId) {
+			chat.lastId = reply.lastId;
 		}
 	},
 
@@ -85,36 +102,41 @@ var chess = {
 	
 	init : function() {
 		
-		chess.chesspieces = $('table#chessboardTable span.chesspiece.' + game.ownColor);
 		chess.squares     = $('td.square');
 		chess.whitePrison = $('#whitePrison');
 		chess.blackPrison = $('#blackPrison');
 		chess.statusField = $('#status');
 		
-		chess.chesspieces.click(chess.select);
-		chess.squares.click(chess.moveTo);
-		
-		chess.chesspieces.draggable({
-			containment   : 'table#chessboardTable',
-			stack         : 'table#chessboardTable span.chesspiece',
-			snap          : 'td.square > div',
-			snapMode      : 'inner',
-			snapTolerance : '10',
-			revert        : 'invalid',
-			start         : function(event, ui) {
-			                	if (chess.selected !== null) {
-			                		chess.selected.removeClass('selected');
-								}
-								chess.selected = $(this).addClass('selected noClick');
-			                }
-		});
-		
-		chess.squares.droppable({
-			accept : chess.chesspieces,
-			drop   : chess.handleMove
-		});
+		if (gameData.ownColor) {
+			chess.chesspieces = $('table#chessboardTable span.chesspiece.' + gameData.ownColor);
+			chess.chesspieces.click(chess.select);
+			chess.squares.click(chess.moveTo);
+			
+			chess.chesspieces.draggable({
+				containment   : 'table#chessboardTable',
+				stack         : 'table#chessboardTable span.chesspiece',
+				snap          : 'td.square > div',
+				snapMode      : 'inner',
+				snapTolerance : '10',
+				revert        : 'invalid',
+				start         : function(event, ui) {
+				                	if (chess.selected !== null) {
+				                		chess.selected.removeClass('selected');
+									}
+									chess.selected = $(this).addClass('selected noClick');
+				                }
+			});
+			
+			chess.squares.droppable({
+				accept : chess.chesspieces,
+				drop   : chess.handleMove
+			});
+		}
 	},
 	
+	/**
+	 * Marks a chesspiece as 'selected'
+	 */
 	select : function(event) {
 		if (chess.selected !== null) {
 			chess.selected.removeClass('selected');
@@ -126,30 +148,42 @@ var chess = {
 		chess.selected = $(this).addClass('selected');
 	},
 	
+	/**
+	 * Moves a selected chesspiece to the appropriate spot
+	 */
 	moveTo : function(event) {
 		if (chess.selected !== null
 			&& chess.selected.getField() !== $(this).getField() ) {
-			chat.sendMessage(
-				chess.selected.getField()
-				+ '-'
-				+ $(this).getField()
-			);
+			
+			move = chess.selected.getField()
+				 + '-'
+				 + $(this).getField();
+			cc.post('Chat', 'move', 'move=' + move);
+			
 			chess.selected.removeClass('selected');
 			chess.selected = null;
 		}
 	},
 	
+	/**
+	 * Handles move via drag & drop
+	 */
 	handleMove : function(event, ui) {
 		// ui.draggable.draggable( 'option', 'revert', false );
 		var move = ui.draggable.getField() + '-' + $(this).getField();
 		if (ui.draggable.getField() !== $(this).getField()) {
-			chat.sendMessage(move);
+			cc.post('Chat', 'move', 'move=' + move);
+			// chat.sendMessage(move);
 		} else {
 			chess.resetMove(move);
 		}
 		ui.draggable.removeClass('selected');
 	},
 	
+	/**
+	 * Reacts to an ajax response
+	 * @param  {json} reply
+	 */
 	handleReply : function(reply) {
 		if (reply.move) {
 			chess.executeMove(reply.move)
@@ -160,8 +194,11 @@ var chess = {
 		}
 	},
 	
+	/**
+	 * Actually moves chesspiece to new html parent.
+	 * @param  {string} move "E3-"E4"
+	 */
 	executeMove : function(move) {
-		// expecting move to look like "E3-E4"
 		var from = move.substr(0,2);
 		var to   = move.substr(3,2);
 		
@@ -182,12 +219,20 @@ var chess = {
 		          .attr('id', 'chesspiece-' + to);
 	},
 	
+	/**
+	 * Returns a chesspiece to its original position, e.g.
+	 * when a move was invalid.
+	 * This only works if executeMove has not been called yet.
+	 * @param  {string} move "E3-E4"
+	 */
 	resetMove : function(move) {
-		// expecting move to look like "E3-E4"
 		from = move.substr(0,2);
 		$('#chesspiece-' + from).css({top: '0px', left: '0px'});
 	},
 	
+	/**
+	 * Layout helper
+	 */
 	setBoardSize : function() {
 		var gh = $('#game').height() - $("#game header").height() - $("#game footer").height();
 		var gw = $("#game").innerWidth();

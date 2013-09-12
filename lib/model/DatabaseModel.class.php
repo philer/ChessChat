@@ -4,7 +4,7 @@
  * Models are created by passing a data array
  * @author Philipp Miller
  */
-abstract class GenericModel {
+abstract class DatabaseModel {
 	
 	/**
 	 * Constructor expects an array containing data.

@@ -26,7 +26,7 @@ foreach ($menuItems as $mi) {
 				</ul>
 
 <?php if (QUICK_LOGIN
-          && Core::getUser()->isGuest()
+          && $guest
           && $this->page !== 'loginForm') { ?>
 				<form id="loginForm" method="post" action="<?php
 					echo Util::url('User/login');

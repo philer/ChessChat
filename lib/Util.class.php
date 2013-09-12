@@ -1,17 +1,26 @@
 <?php
 
 /**
- * TODO
+ * Collection of static utility functions
+ * @author  Philipp Miller
  */
 class Util {
 	
 	/**
 	 * Creates route array from PATH_INFO.
+	 * @see  routes.conf.php
 	 * @return 	array<string>
 	 */
 	public static function getRoute() {
 		if (isset($_SERVER['PATH_INFO'])) {
-			$route = explode('/',trim($_SERVER['PATH_INFO'],'/ '));
+			$pathInfo = trim($_SERVER['PATH_INFO'], '/ ');
+		
+			require_once(ROOT_DIR . 'config/routes.conf.php');
+			if (array_key_exists($pathInfo, $routes)) {
+				$route = explode('/', $routes[$pathInfo]);
+			} else {
+				$route = explode('/', $pathInfo);
+			}
 		}
 		return (isset($route) && $route[0] !== '') ? $route : array();
 	}
@@ -198,7 +207,7 @@ class Util {
 		} elseif (24 >= $hours = (integer) ((NOW-$timestamp) / (60*24))) {
 			return $hours . ' hours ago';
 		} elseif (date('Ymd', NOW-3600*24) === date('Ymd', $timestamp)) {
-			return 'yesterday';
+			return Core::getLanguage()->getLanguageItem('yesterday');
 		} else {
 			return date(Core::getLanguage()->getLanguageItem('dateformat'),
 				$timestamp);

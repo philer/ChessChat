@@ -1,3 +1,4 @@
+-- test passwords are all 'password'
 INSERT INTO cc_user (userName, email, password, cookieHash, language) VALUES
 	('phil', 'phil@mill.er', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', ''),
 	('larissa', 'larissa@hamm.er', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', 'de'),

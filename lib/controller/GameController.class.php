@@ -27,7 +27,7 @@ class GameController extends AbstractRequestController {
 	 * a new one if none exists.
 	 * @return 	ChatController
 	 */
-	protected function getChatController() {
+	public function getChatController() {
 		if (is_null($this->chatController)) {
 			$this->chatController = new ChatController($this);
 		}
@@ -108,7 +108,6 @@ class GameController extends AbstractRequestController {
 	 * TODO
 	 */
 	public function move($moveString, $gameId) {
-		// TODO construct correct game
 		$gameData = Core::getDB()->sendQuery(
 			'SELECT gameId,
 			        W.userId   as whitePlayerId,
@@ -124,12 +123,17 @@ class GameController extends AbstractRequestController {
 		if (empty($gameData)) throw new NotFoundException('game doesn\'t exist');
 		
 		$game = new Game($gameData);
-		
 		$move = new Move($moveString);
-		$game->move($move);
+		
+		if (Core::getUser()->getId() === $game->getCurrentPlayer()->getId()) {
+			$game->move($move);
+		} else {
+			$move->valid = false;
+			$move->invalidReason = 'not your turn';
+		}
 		
 		if ($move->valid) {
-			AjaxUtil::queueReply('move', $move->__toString());
+			AjaxUtil::queueReply('move', (string) $move); // TODO use ajaxData()
 			AjaxUtil::queueReply('status', $game->getFormattedStatus());
 			$this->getChatController()->post(
 				Core::getLanguage()->getLanguageItem(
@@ -146,12 +150,14 @@ class GameController extends AbstractRequestController {
 			);
 			
 		} else {
-			AjaxUtil::queueReply('invalidMove', $move->__toString());
+			// TODO make this useful
+			AjaxUtil::queueReply('invalidMove', (string) $move);
 			if (!empty($move->invalidReason)) {
 				$this->getChatController()->post(
 					$move->invalidReason,
 					$gameId,
-					Core::getUser()->getName()
+					Core::getUser()->getName(),
+					false
 				);
 			}
 		}
@@ -220,10 +226,7 @@ class GameController extends AbstractRequestController {
 		
 		$game = new Game($gameData);
 		
-		if (!is_null($game->isWhitePlayer())) {
-			// script for user interaction
-			Core::getTemplateEngine()->registerDynamicScript('game-data');
-		}
+		Core::getTemplateEngine()->registerDynamicScript('game-data');
 		Core::getTemplateEngine()->addVar('game', $game);
 		Core::getTemplateEngine()->registerAsyncScript('game');
 		Core::getTemplateEngine()->registerStylesheet('game');

@@ -1,5 +1,5 @@
 <?php
-$this->show('_mainSectionHeader');
+$this->headers('_mainSectionHeader');
 
 if (!$this->var['user']->isSelf()) {
 	echo '<a href="'

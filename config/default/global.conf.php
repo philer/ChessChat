@@ -43,3 +43,6 @@ define('DEBUG_MODE', false);
 define('COOKIE_PREFIX', 'cc_');
 // Regular cookies expire after COOKIE_DAYS days.
 define('COOKIE_DAYS', '100');
+
+// Default update interval for ajax chat in seconds
+define('CHAT_UPDATE_INTERVAL', 3);

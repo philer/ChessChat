@@ -1,5 +1,12 @@
-				<section id="chatLogFrame">
+				<section id="chatLogFrame"<?php 
+if (!is_null($game->isWhitePlayer())) echo 'class="canMsg"';
+				?>">
 					<div id="chatLog">
+<?php
+foreach ($this->var['chatMsgs'] as $this->var['msg']) {
+	$this->show('_chatMessage');
+}
+?>
 						<p>
 							<span class="msgTime">21:15</span>
 							<span class="msgAuthor">Debug</span>
@@ -14,8 +21,10 @@ print_r($this->var['game']);
 
 						?></span>
 						</p>
-					</div><!-- #chatLog -->
+				</div><!-- #chatLog -->
 				</section><!-- #chatLogFrame -->
+
+<?php if (!is_null($game->isWhitePlayer())) { ?>
 				<form id="chatForm">
 					<fieldset>
 						<div>
@@ -30,3 +39,4 @@ print_r($this->var['game']);
 						</button>
 					</fieldset>
 				</form>
+<?php } ?>

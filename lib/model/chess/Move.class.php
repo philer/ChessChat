@@ -79,6 +79,23 @@ class Move {
 	}
 	
 	/**
+	 * Returns a json encoded (string) representation of this Move's relevant
+	 * information for use in ajax response
+	 * @return string json
+	 */
+	public function ajaxData() {
+		$ajaxData = array(
+				'from'  => $this->from,
+				'to'    => $this->to,
+				'valid' => $this->valid,
+			);
+		if (!$this->valid) {
+			$ajaxData['invalidReason'] = Core::getLanguage()->getLanguageItem($this->invalidReason);
+		}
+		return $ajaxData;
+	}
+	
+	/**
 	 * Checks if given string may be a move
 	 * pattern supported by this system.
 	 * DOES NOT validate or execute the move.

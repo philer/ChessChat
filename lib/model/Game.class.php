@@ -4,7 +4,7 @@
  * Represents a Game
  * @author Philipp Miller
  */
-class Game extends GenericModel {
+class Game extends DatabaseModel {
 	
 	/**
 	 * Unique game id

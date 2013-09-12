@@ -1,5 +1,5 @@
 <?php
-$this->show('_mainSectionHeader');
+$this->headers('_mainSectionHeader');
 ?>				<ul class="userList dataList"><?php
 foreach ($this->var['users'] as $user) {
 					?><li>

@@ -1,6 +1,10 @@
 <?php
 // shortcut
 $game = $this->var['game'];
+
+$this->var['chatMsgs'] = $this->controller->getChatController()->getAllMessages($game->getId());
+
+$this->headers();
 ?>
 			<section id="game">
 				<header>

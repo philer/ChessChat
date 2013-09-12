@@ -5,7 +5,7 @@
  * A user may be a Guest, a Player, a Spectator...
  * @author Philipp Miller
  */
-class User extends GenericModel {
+class User extends DatabaseModel {
 	
 	/**
 	 * Unique UserID

@@ -1,5 +1,5 @@
 <?php
-$this->show('_mainSectionHeader');
+$this->headers('_mainSectionHeader');
 ?>				<dl>
 					<dt><?php echo $this->lang('legal.nameAndAddress') ?></dt>
 					<dd>

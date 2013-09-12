@@ -94,7 +94,7 @@ final class TemplateEngine {
 	 * @param 	string 	$template 	name of the template
 	 */
 	public function show($template) {
-		include(ROOT_DIR."template/".$template.".tpl.php");
+		include(ROOT_DIR . 'template/' . $template . '.tpl.php');
 	}
 	
 	/**
@@ -106,13 +106,8 @@ final class TemplateEngine {
 		$this->page       = $template;
 		$this->controller = $controller;
 		
-		$this->show("_head");
-		// we can send the header right away, so browsers may
-		// start requesting other scripts right away
-		flush();
-		$this->show("_header");
 		$this->show($template);
-		$this->show("_footer");
+		$this->show('_footer');
 		// make sure everything gets there as quickly as possible
 		flush();
 	}
@@ -131,13 +126,21 @@ final class TemplateEngine {
 	}
 	
 	/**
-	 * Includes a Template and adds relevant variables first.
-	 * @param 	string 	$template 	name of the template
-	 * @param 	array 	$vars 		variables to be added
+	 * Sends html head and header. Uses flushing.
+	 * Specify comma separated list of additional templates
+	 * to be included in that order _after_ the initial headers.
+	 * @param  string $additionalHeaders
 	 */
-	protected function includeTemplate($template, array $vars = array()) {
-		$this->var = array_merge($this->var, $vars);
-		$this->show($template, false);
+	public function headers($additionalHeaders = '') {
+		$this->show('_head');
+		flush();
+		$this->show('_header');
+		if ($additionalHeaders != '') {
+			$additionalHeaders = explode(',', $additionalHeaders);
+			foreach ($additionalHeaders as $header) {
+				$this->show(trim($header));
+			}
+		}
 	}
 	
 	/**
@@ -146,7 +149,7 @@ final class TemplateEngine {
 	public function registerDefaultScripts() {
 		$this->registerScript('jquery-2.0.0.min');
 		$this->registerScript('jquery-ui-1.10.3.custom.min');
-		$this->registerDynamicScript('user-data');
+		// $this->registerDynamicScript('user-data');
 		$this->registerStylesheet('global');
 	}
 			

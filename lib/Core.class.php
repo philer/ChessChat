@@ -49,7 +49,7 @@ class Core {
 	 */
 	protected function setDB() {
 		$dbHost = $dbUser = $dbPass = $dbName = '';
-		require_once(ROOT_DIR."config/db.conf.php");
+		require_once(ROOT_DIR . 'config/db.conf.php');
 		self::$db = new Database($dbHost, $dbUser, $dbPass, $dbName);
 	}
 	

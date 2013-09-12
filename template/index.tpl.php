@@ -1,4 +1,6 @@
-			<section id="index" style="text-align: center;">
+<?php
+$this->headers();
+?>			<section id="index" style="text-align: center;">
 				<span id="logo" class="icon" style="font-size:55px;">&#x265A;</span>
 				<h1 style="margin-top:0;">Hi!</h1>
 				<p>Welcome at ChessChat, <br /> where you can play chess and chat!</p>

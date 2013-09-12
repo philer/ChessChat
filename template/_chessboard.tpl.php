@@ -21,7 +21,7 @@ $board['blackCastled'] = false;
 
 
 
-$whitePlayer = $game->isWhitePlayer(); //TODO replace this with something like $thisPlayer->white
+$whitePlayer = $game->isWhitePlayer() || !$game->isPlayer();
 
 ?>
 <div id="chessboard">
@@ -55,7 +55,7 @@ $whitePlayer = $game->isWhitePlayer(); //TODO replace this with something like $
 <?php // actual board starts here
 $light = true;  // altering squares color
 for ($i=1; $i<=8; $i++,$light=!$light) {
-	$r = $whitePlayer ? 9-$i : $i;  // turn board upside down for black //TODO $whitePlayer
+	$r = $whitePlayer ? 9-$i : $i;  // turn board upside down for black
 	echo "<tr id=\"rank{$r}\" class=\"rank\">\n"
 		."\t<th>{$r}</th>";
 	for ($c='A'; $c<='H'; $c++,$light=!$light) {
