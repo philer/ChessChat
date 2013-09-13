@@ -1,5 +1,5 @@
 				<section id="chatLogFrame"<?php 
-if (!is_null($game->isWhitePlayer())) echo 'class="canMsg"';
+if ($game->isPlayer()) echo 'class="canMsg"';
 				?>">
 					<div id="chatLog">
 <?php
@@ -24,7 +24,7 @@ print_r($this->var['game']);
 				</div><!-- #chatLog -->
 				</section><!-- #chatLogFrame -->
 
-<?php if (!is_null($game->isWhitePlayer())) { ?>
+<?php if ($game->isPlayer()) { ?>
 				<form id="chatForm">
 					<fieldset>
 						<div>

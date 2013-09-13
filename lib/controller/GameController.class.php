@@ -83,20 +83,39 @@ class GameController extends AbstractRequestController {
 			throw new PermissionDeniedException('need to be logged in');
 		}
 		if (isset($_POST['opponent']) && isset($_POST['whitePlayer'])) {
-			$opponent    = trim($_POST['opponent']);
-			$whitePlayer = $_POST['whitePlayer'] === 'self';
 			
-			$userData = Core::getDB()->sendQuery(
-		 		"SELECT userId
-		 		 FROM cc_user
-		 		 WHERE userName = '" . Util::esc($opponent) . "'"
-		 	)->fetch_assoc();
-			
-		 	if (!empty($userData)) { // TODO password check
-		 		// TODO create a game
-		 		echo 'success';
+			$opponentData = Core::getDB()->sendQuery(
+					"SELECT userId
+					 FROM cc_user
+					 WHERE userName = '" . Util::esc(trim($_POST['opponent'])) . "'"
+				)->fetch_assoc();
+		 	
+			if (!empty($opponentData)) {
+				
+				if ($_POST['whitePlayer'] === 'self') {
+					$whitePlayerId = Core::getUser()->getId();
+					$blackPlayerId = $opponentData['userId'];
+				} else {
+					$whitePlayerId = $opponentData['userId'];
+					$blackPlayerId = Core::getUser()->getId();
+				}
+				$hash = Util::urlHash(
+						"{$whitePlayerId}/{$blackPlayerId}/" . NOW . '/' . GAME_SALT,
+						GAME_HASH_LENGTH
+					);
+				
+				// save
+				Core::getDB()->sendQuery("
+					INSERT INTO cc_game (gameHash, whitePlayerId, blackPlayerId, board, status)
+					VALUES ('" . $hash . "',
+					        '" . $whitePlayerId . "',
+					        '" . $blackPlayerId . "',
+					        '" . Game::DEFAULT_BOARD_STRING . "',
+					        '" . Game::STATUS_WHITES_TURN . "')
+					");
+				header('Location: ' . Util::url('Game/' . $hash));
 		 		return true;
-		 	}
+			}
 		 	Core::getTemplateEngine()->addVar('errorMessage', 'form.invalid');
 		 	Core::getTemplateEngine()->addVar('invalid', array('opponent'));
 		}

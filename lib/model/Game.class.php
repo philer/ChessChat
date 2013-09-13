@@ -167,16 +167,7 @@ class Game extends DatabaseModel {
 		}
 		// don't need this anymore
 		unset($gameData['whitePlayerId'], $gameData['whitePlayerName'], $gameData['blackPlayerId'], $gameData['blackPlayerName']);
-		
-		if (empty($gameData)) {
-			// TODO create database entry, get gameId
-			$this->gameHash = $this->generateHash();
-			$this->boardString = self::DEFAULT_BOARD_STRING;
-			// $this->board = $this->boardFromString($this->boardString);
-			$this->status = self::STATUS_WHITES_TURN;
-		} else {
-			parent::__construct($gameData);
-		}
+		parent::__construct($gameData);
 	}
 	
 	/**
@@ -185,30 +176,6 @@ class Game extends DatabaseModel {
 	 */
 	public function getId() {
 		return $this->gameId;
-	}
-	
-	/**
-	 * Creates a hopefully unique hash for game identification.
-	 * It containes digits and case sensitive letters
-	 */
-	protected function generateHash() {
-		// put anything useful in the gamehash.
-		// it doesn't have to be cryptographically safe,
-		// just don't stumble over it.
-		$hashString = $this->gameId
-					. NOW
-					. GAME_SALT
-					. $this->whitePlayer
-					. $this->blackPlayer;
-		// generate hash:
-		// generate md5, base64 it,
-		// remove bad characters, then take only first few characters
-		$this->hash = substr(
-						str_replace(
-							array('/','+','='), '',
-							base64_encode(
-								md5($hashString))),
-						0, GAME_HASH_LENGTH);
 	}
 	
 	/**
@@ -359,19 +326,32 @@ class Game extends DatabaseModel {
 	 * @return 	boolean
 	 */
 	public function whitesTurn() {
-		return (boolean) ($this->status % 2);
+		return ! (boolean) ($this->status % 2);
+	}
+	
+	/**
+	 * Checks if the given user is a player in this game
+	 * @param  User    $user	optional
+	 * @return boolean
+	 */
+	public function isPlayer(User $user = null) {
+		if (is_null($user)) $user = Core::getUser();
+		return $this->whitePlayer->getId() === $user->getId()
+		    || $this->blackPlayer->getId() === $user->getId();
 	}
 	
 	/**
 	 * Checks if the user is white,
 	 * returns null if he is not a player in this game.
-	 * @return 	boolean
+	 * @param  User    $user	optional
+	 * @return 	boolean|null
 	 */
-	public function isWhitePlayer() {
-		if (Core::getUser()->getId() == $this->whitePlayer->getId()) {
+	public function isWhitePlayer(User $user = null) {
+		if (is_null($user)) $user = Core::getUser();
+		if ($this->whitePlayer->getId() === $user->getId()) {
 			return true;
 		}
-		if (Core::getUser()->getId() == $this->blackPlayer->getId()) {
+		if ($this->blackPlayer->getId() === $user->getId()) {
 			return false;
 		}
 		return null;

@@ -27,7 +27,7 @@ $this->headers();
 					</dl>
 				</header>
 <?php include("_chessboard.tpl.php"); ?>
-<?php if (!is_null($game->isWhitePlayer())) { ?>
+<?php if ($game->isPlayer()) { ?>
 				<footer>
 					<nav id="gameMenu">
 						<ul>

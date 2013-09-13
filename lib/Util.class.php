@@ -171,6 +171,25 @@ class Util {
 	}
 	
 	/**
+	 * Generates a hash for identification use in URLs
+	 * (like youtube or pastbin.com)
+	 * @param  string $string string to be hashed
+	 * @param  integer $length length of the desired hash
+	 * @return string
+	 */
+	public static function urlHash($string, $length) {
+		return substr(
+				str_replace(
+						array('/','+','='),
+						'',
+						base64_encode( md5($string) )
+					),
+				0,
+				$length
+			);
+	}
+	
+	/**
 	 * Generates a cryptographicaly secure random integer between $min and $max
 	 * @see http://php.net/manual/en/function.openssl-random-pseudo-bytes.php#104322
 	 * 
