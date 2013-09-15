@@ -11,12 +11,12 @@ if (empty($this->var['invalid'])) {
 
 $this->headers('_mainSectionHeader');
 ?>
-	<form method="post" action="<?php
+	<form class="form" method="post" action="<?php
 		echo Util::url('User/login');
 	?>">
 		<fieldset>
 			<legend><?php echo $this->lang('user.login'); ?></legend>
-			<dl class="form">
+			<dl class="tableList">
 				<dt>
 					<label for="userName"><?php echo $this->lang('user.name'); ?></label>
 				</dt>

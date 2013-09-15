@@ -11,12 +11,12 @@ if (empty($this->var['invalid'])) {
 
 $this->headers('_mainSectionHeader');
 ?>
-	<form method="post" action="<?php
+	<form class="form" method="post" action="<?php
 		echo Util::url('User/register');
 	?>">
 		<fieldset>
 			<legend><?php echo $this->lang('user.name'); ?></legend>
-			<dl>
+			<dl class="tableList">
 				<dt>
 					<label for="userName"><?php echo $this->lang('user.name'); ?></label>
 				</dt>
@@ -42,7 +42,7 @@ if (empty($invalid)) {
 		</fieldset>
 		<fieldset>
 			<legend><?php echo $this->lang('user.email'); ?></legend>
-			<dl>
+			<dl class="tableList">
 				<dt>
 					<label for="email"><?php echo $this->lang('user.email'); ?></label>
 				</dt>
@@ -91,7 +91,7 @@ if (array_key_exists('emailConfirm', $invalid)) {
 		</fieldset>
 		<fieldset>
 			<legend><?php echo $this->lang('user.password'); ?></legend>
-			<dl>
+			<dl class="tableList">
 				<dt>
 					<label for="password"><?php echo $this->lang('user.password'); ?></label>
 				</dt>
@@ -141,7 +141,7 @@ if (array_key_exists('passwordConfirm', $invalid)) {
 		</fieldset>
 		<fieldset>
 			<legend><?php echo $this->lang('user.settings'); ?></legend>
-			<dl>
+			<dl class="tableList">
 				<dt>
 					<label for="language"><?php echo $this->lang('user.settings.language'); ?></label>
 				</dt>

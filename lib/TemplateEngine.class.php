@@ -149,6 +149,7 @@ final class TemplateEngine {
 	public function registerDefaultScripts() {
 		$this->registerScript('jquery-2.0.0.min');
 		$this->registerScript('jquery-ui-1.10.3.custom.min');
+		$this->registerScript('overlay');
 		// $this->registerDynamicScript('user-data');
 		$this->registerStylesheet('global');
 	}

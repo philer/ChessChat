@@ -1,6 +1,6 @@
 <?php
 $this->headers('_mainSectionHeader');
-?>				<dl>
+?>				<dl class="tableList">
 					<dt><?php echo $this->lang('legal.nameAndAddress') ?></dt>
 					<dd>
 						<?php echo $this->var['legal']['name'] ?>

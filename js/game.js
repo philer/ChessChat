@@ -9,9 +9,11 @@ $(function() {
 	}
 	
 	$('#resign').click(function(){
+		overlay.show('Resign', 'resign is not implemented');
 		return chat.sendMessage('/resign');
 	});
 	$('#offerDraw').click(function(){
+		overlay.show('Draw', 'draw is not implemented');
 		return chat.sendMessage('/offerDraw');
 	});
 });

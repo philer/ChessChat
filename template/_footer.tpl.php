@@ -15,6 +15,6 @@
 			</div>
 			<div id="copyright"><?php echo $this->lang('site.copyrightby') ?>Phil &amp; Larissa</div>
 		</footer>
-<?php //include("overlay.tpl.php"); ?>
+<?php include("_overlay.tpl.php"); ?>
 	</body>
 </html>

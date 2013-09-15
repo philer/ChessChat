@@ -50,7 +50,6 @@ foreach ($menuItems as $mi) {
 					</fieldset>
 				</form>
 <?php } ?>
-
 			</nav>
 		</header>
 		<main role="main" id="main">

@@ -1,5 +1,6 @@
 @import "_font.less";
 @import "_mixins.less";
+
 /*** GENERAL SETTINGS ***/
 html, body {
 	padding: 0;
@@ -33,13 +34,21 @@ a.jsAnchor {
 ul, ol, li {
 	list-style-type: none;
 }
-span.icon {
+.icon {
 	font-family: Georgia, serif;
 	display: inline-block !important;
 	padding: 0 .2em;
 	font-weight: normal;
 	font-size: 1.333em;
 	line-height: .75em;
+}
+@keyframes spin {
+	from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+.spin {
+	animation: 2s linear 0s normal none infinite spin;
+	display: inline-block;
 }
 
 /*** PAGE LAYOUT ***/
@@ -238,4 +247,4 @@ footer#footer {
 @import "_dataList.less";
 @import "_form.less";
 
-//@import "_overlay.less";
+@import "_overlay.less";

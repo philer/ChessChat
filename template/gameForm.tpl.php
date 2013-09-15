@@ -8,12 +8,12 @@ if (!empty($this->var['invalid'])) {
 
 $this->headers('_mainSectionHeader');
 ?>
-	<form method="post" action="<?php
+	<form class="form" method="post" action="<?php
 		echo Util::url('Game/new');
 	?>">
 		<fieldset>
 			<legend><?php echo $this->lang('game.settings'); ?></legend>
-			<dl class="form">
+			<dl class="tableList">
 				<dt>
 					<label for="opponent"><?php echo $this->lang('game.opponent'); ?></label>
 				</dt>
