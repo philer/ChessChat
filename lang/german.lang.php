@@ -6,9 +6,16 @@
 
 $this->langVars = array(
 // GENERAL
-'dateformat'			=> 'j. M, Y',
-'yesterday'				=> 'Gestern',
 'me'					=> 'Ich',
+
+'time.dateformat'		=> 'j. M Y',
+'time.now'				=> 'gerade eben',
+'time.oneminuteago'		=> 'vor einer Minute',
+'time.xminutesago'		=> 'vor %x Minuten',
+'time.onehourago'		=> 'vor einer Stunde',
+'time.xhoursago'		=> 'vor %x Stunden',
+'time.yesterday'		=> 'gestern',
+'time.yesterdayat'		=> 'gestern um ',
 
 'form.submit' 			=> 'Abschicken',
 'form.reset'			=> 'Zurücksetzen',

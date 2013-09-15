@@ -26,7 +26,7 @@ class RequestException extends Exception implements RequestController {
 		} else {
 			Core::getTemplateEngine()->addVar('errorMessage', 'exception.' . $this->httpCode . '.msg');
 		}
-		Core::getTemplateEngine()->showPage('_error', $this);
+		Core::getTemplateEngine()->showPage('errorPage', $this);
 	}
 	
 	/**

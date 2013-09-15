@@ -9,5 +9,5 @@ self::$globalLangVars = array(
 'site.name'			=> SITENAME,
 'site.copyrightby'	=> 'Copyright &copy; by ',
 
-'dateformat'		=> 'Y-m-d',
+'time.dateformat'		=> 'Y-m-d',
 );

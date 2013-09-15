@@ -214,23 +214,30 @@ class Util {
 	/**
 	 * Takes a timestamp and returns a user friendly
 	 * string representation like '5 minutes ago'.
-	 * TODO dynamic lang variables
 	 * @param 	integer 	UNIX timestamp
 	 * @return 	string
 	 */
 	public static function formatTime($timestamp) {
 		if (NOW-$timestamp <= 60) {
 			return 'now';
-		} elseif (60 >= $minutes = (integer) ((NOW-$timestamp) / 60)) {
-			return $minutes . ' minutes ago';
-		} elseif (24 >= $hours = (integer) ((NOW-$timestamp) / (60*24))) {
-			return $hours . ' hours ago';
-		} elseif (date('Ymd', NOW-3600*24) === date('Ymd', $timestamp)) {
-			return Core::getLanguage()->getLanguageItem('yesterday');
-		} else {
-			return date(Core::getLanguage()->getLanguageItem('dateformat'),
-				$timestamp);
 		}
+		if (60 >= $minutes = (integer) ((NOW-$timestamp) / 60)) {
+			if ($minutes == 1) {
+				return Core::getLanguage()->getLanguageItem('time.oneminuteago');
+			}
+			return Core::getLanguage()->getLanguageItem('time.xminutesago', array('x' => $minutes));
+		}
+		if (24 >= $hours = (integer) ((NOW-$timestamp) / (60*24))) {
+			if ($hours == 1) {
+				return Core::getLanguage()->getLanguageItem('tíme.onehourago');
+			}
+			return Core::getLanguage()->getLanguageItem('time.xhoursago', array('x' => $hours));
+		}
+		if (date('Ymd', NOW-3600*24) === date('Ymd', $timestamp)) {
+			return Core::getLanguage()->getLanguageItem('time.yesterday');
+		}
+		return date(Core::getLanguage()->getLanguageItem('time.dateformat'),
+				$timestamp);
 	}
 	
 }

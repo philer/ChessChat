@@ -58,7 +58,7 @@ if (isset($_POST['whitePlayer']) && $_POST['whitePlayer'] === 'other') {
 	echo 'checked="checked"';
 }
 							?> />
-						<?php echo $this->lang('opponent'); ?>
+						<?php echo $this->lang('game.opponent'); ?>
 					</label>
 				</dd>
 			</dl>
