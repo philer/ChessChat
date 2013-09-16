@@ -7,6 +7,7 @@
 $this->langVars = array(
 // GENERAL
 'me'					=> 'Ich',
+'close'					=> 'Schließen',
 
 'time.dateformat'		=> 'j. M Y',
 'time.now'				=> 'gerade eben',

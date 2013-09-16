@@ -1,18 +1,22 @@
-<?php
-$this->headers('_mainSectionHeader');
-?>				<dl class="tableList">
-					<dt><?php echo $this->lang('legal.nameAndAddress') ?></dt>
-					<dd>
-						<?php echo $this->var['legal']['name'] ?>
-						<br />
-						<?php echo $this->var['legal']['addr'] ?>
-					</dd>
-					<dt><?php echo $this->lang("legal.email") ?></dt>
-					<dd>
-						<a href="mailto:<?php echo $this->var['legal']['email'] ?>">
-							<?php echo $this->var['legal']['email'] ?>
-						</a>
-					</dd>
+<section>
+	<header>
+		<h1>
+			<?php echo new Link('site.legalnotice', 'LegalNotice'); ?>
+		</h1>
+	</header>
+	<dl class="tableList">
+		<dt><?php echo $this->lang('legal.nameAndAddress') ?></dt>
+		<dd>
+			<?php echo $this->var['legal']['name'] ?>
+			<br />
+			<?php echo $this->var['legal']['addr'] ?>
+		</dd>
+		<dt><?php echo $this->lang("legal.email") ?></dt>
+		<dd>
+			<a href="mailto:<?php echo $this->var['legal']['email'] ?>">
+				<?php echo $this->var['legal']['email'] ?>
+			</a>
+		</dd>
 <?php
 	if (!empty($this->var['legal']['phone'])) {
 		echo "<dt>{$this->lang('legal.phone')}</dt>"
@@ -30,6 +34,5 @@ $this->headers('_mainSectionHeader');
 		echo "<dt>{$this->lang('legal.taxID')}</dt>"
 			."<dd>{$this->var['legal']['taxID']}</dd>\n";
 	}*/
-?>
-				</dl>
-			</section>
+?>	</dl>
+</section>

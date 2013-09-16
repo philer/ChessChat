@@ -245,8 +245,10 @@ class GameController extends AbstractRequestController {
 		
 		$game = new Game($gameData);
 		
-		Core::getTemplateEngine()->registerDynamicScript('game-data');
 		Core::getTemplateEngine()->addVar('game', $game);
+		Core::getTemplateEngine()->addVar('chatMsgs', $this->getChatController()->getAllMessages($game->getId()));
+		
+		Core::getTemplateEngine()->registerDynamicScript('game-data');
 		Core::getTemplateEngine()->registerAsyncScript('game');
 		Core::getTemplateEngine()->registerStylesheet('game');
 		$this->pageTitle = $game->getWhitePlayer()

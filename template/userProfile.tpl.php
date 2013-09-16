@@ -1,6 +1,10 @@
+<section>
+	<header>
+		<h1>
+<?php echo new Link($this->controller->getPageTitle(), $this->controller->getCanonicalRoute()); ?>
+		</h1>
+	</header>
 <?php
-$this->headers('_mainSectionHeader');
-
 if (!$this->var['user']->isSelf()) {
 	echo '<a href="'
 	   . Util::url('Game/new/?opponent=' . urlencode($this->var['user']))
@@ -10,4 +14,5 @@ if (!$this->var['user']->isSelf()) {
 }
 
 $this->show('_gameList');
-?>			</section>
+?>
+</section>

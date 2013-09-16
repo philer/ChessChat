@@ -21,7 +21,8 @@ $board['blackCastled'] = false;
 
 
 
-$whitePlayer = $game->isWhitePlayer() || !$game->isPlayer();
+$whitePlayer = $this->var['game']->isWhitePlayer()
+			|| !$this->var['game']->isPlayer();
 
 ?>
 <div id="chessboard">

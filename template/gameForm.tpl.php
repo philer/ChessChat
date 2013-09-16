@@ -1,3 +1,9 @@
+<section>
+	<header>
+		<h1>
+			<?php echo new Link('game.new', 'Game/new'); ?>
+		</h1>
+	</header>
 <?php
 
 $errors = false; // send form in correction mode
@@ -6,7 +12,6 @@ if (!empty($this->var['invalid'])) {
 	$this->show('_error');
 }
 
-$this->headers('_mainSectionHeader');
 ?>
 	<form class="form" method="post" action="<?php
 		echo Util::url('Game/new');

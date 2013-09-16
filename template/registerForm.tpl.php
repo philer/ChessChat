@@ -1,3 +1,9 @@
+<section>
+	<header>
+		<h1>
+			<?php echo new Link('user.register', 'register'); ?>
+		</h1>
+	</header>
 <?php
 
 // wrap invalid array
@@ -9,7 +15,6 @@ if (empty($this->var['invalid'])) {
 	$this->show('_error');
 }
 
-$this->headers('_mainSectionHeader');
 ?>
 	<form class="form" method="post" action="<?php
 		echo Util::url('User/register');

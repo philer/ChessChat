@@ -163,14 +163,18 @@ class Core {
 		} elseif ($route[0] === "ajax") {
 			// ajax request route
 			try {
-				$controllerClass = $_POST['controller'] . 'Controller';
-				if (class_exists($controllerClass)
+				$controllerClass = $_POST['controller'];
+				if ($controllerClass == 'TemplateEngine') {
+					AjaxUtil::queueReply('tpl',
+							self::$templateEngine->fetch($_POST['tpl'])
+						);
+				} elseif (class_exists($controllerClass)
 						&& is_subclass_of($controllerClass, 'AjaxController')) {
 					$controller = new $controllerClass();
+					$controller->handleAjaxRequest();
 				} else {
 					throw new RequestException("'" . $controllerClass . "' is not an AjaxController");
 				}
-				$controller->handleAjaxRequest();
 				AjaxUtil::sendReply();
 				return;
 			} catch (RequestException $re) {
@@ -178,7 +182,7 @@ class Core {
 				if (DEBUG_MODE) throw $re;
 				exit;
 			}
-				
+			
 		} else {
 			// regular request route
 			$controllerClass = $route[0] . 'Controller';

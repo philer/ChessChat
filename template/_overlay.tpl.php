@@ -1,10 +1,8 @@
 <div class="overlay" id="overlay">
-	<section class="overlayContainer">
-		<header>
-			<h3 class="overlayTitle"></h3>
-			<a class="close">&#x2716;</a>
-		</header>
+	<div class="overlayContainer">
+		<a class="close" title="<?php
+			echo Core::getLanguage()->getLanguageItem('close');
+		?>">&#x2716;</a>
 		<div class="overlayContent"></div>
-		<footer></footer>
-	</section>
+	</div>
 </div>

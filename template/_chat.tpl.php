@@ -1,5 +1,5 @@
 				<section id="chatLogFrame"<?php 
-if ($game->isPlayer()) echo 'class="canMsg"';
+if ($this->var['game']->isPlayer()) echo 'class="canMsg"';
 				?>">
 					<div id="chatLog">
 <?php
@@ -24,7 +24,7 @@ print_r($this->var['game']);
 				</div><!-- #chatLog -->
 				</section><!-- #chatLogFrame -->
 
-<?php if ($game->isPlayer()) { ?>
+<?php if ($this->var['game']->isPlayer()) { ?>
 				<form id="chatForm">
 					<fieldset>
 						<div>

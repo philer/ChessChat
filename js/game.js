@@ -18,22 +18,6 @@ $(function() {
 	});
 });
 
-var cc = {
-	
-	post : function(controller, action, data) {
-		$.ajax({  
-			type: 'POST',
-			url: 'index.php/ajax',
-			data: 'controller=' + controller
-				+ '&action=' + action
-				+ '&gameId=' + gameData.id
-				+ (data === undefined ? '' : '&' + data),
-			dataType: 'json',
-			success: [chat.handleReply, chess.handleReply]
-		});
-	}
-}
-
 ////// CHAT //////
 var chat = {
 	
@@ -59,7 +43,12 @@ var chat = {
 	},
 	
 	getUpdate : function() {
-		cc.post('Chat', 'getUpdate', 'lastId=' + chat.lastId );
+		cc.post(
+			'ChatController',
+			'getUpdate',
+			'gameId=' + gameData.id + '&lastId=' + chat.lastId,
+			chat.handleReply
+			);
 	},
 	
 	sendMessage : function(msg) {
@@ -68,7 +57,12 @@ var chat = {
 			chat.chatText.val('');
 		}
 		if (msg) {
-			cc.post('Chat', 'msg','msg=' + msg);
+			cc.post(
+				'ChatController',
+				'msg',
+				'gameId=' + gameData.id + '&msg=' + msg,
+				[chat.handleReply, chess.handleReply]
+				);
 		}
 		chat.chatText.focus();
 		return false;
@@ -160,7 +154,12 @@ var chess = {
 			move = chess.selected.getField()
 				 + '-'
 				 + $(this).getField();
-			cc.post('Chat', 'move', 'move=' + move);
+			cc.post(
+				'ChatController',
+				'move', 
+				'gameId=' + gameData.id + '&move=' + move,
+				[chat.handleReply, chess.handleReply]
+				);
 			
 			chess.selected.removeClass('selected');
 			chess.selected = null;
@@ -174,7 +173,12 @@ var chess = {
 		// ui.draggable.draggable( 'option', 'revert', false );
 		var move = ui.draggable.getField() + '-' + $(this).getField();
 		if (ui.draggable.getField() !== $(this).getField()) {
-			cc.post('Chat', 'move', 'move=' + move);
+			cc.post(
+				'ChatController',
+				'move', 
+				'gameId=' + gameData.id + '&move=' + move,
+				[chat.handleReply, chess.handleReply]
+				);
 			// chat.sendMessage(move);
 		} else {
 			chess.resetMove(move);

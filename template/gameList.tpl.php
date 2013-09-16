@@ -1,4 +1,8 @@
-<?php
-$this->headers('_mainSectionHeader');
-$this->show('_gameList');
-?>			</section><!-- #gameList -->
+<section>
+	<header>
+		<h1>
+			<?php echo new Link('game.list', 'Game'); ?>
+		</h1>
+	</header>
+<?php $this->show('_gameList'); ?>
+</section>

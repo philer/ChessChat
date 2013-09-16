@@ -106,6 +106,10 @@ final class TemplateEngine {
 		$this->page       = $template;
 		$this->controller = $controller;
 		
+		$this->show('_head');
+		flush();
+		$this->show('_header');
+		
 		$this->show($template);
 		$this->show('_footer');
 		// make sure everything gets there as quickly as possible
@@ -126,30 +130,12 @@ final class TemplateEngine {
 	}
 	
 	/**
-	 * Sends html head and header. Uses flushing.
-	 * Specify comma separated list of additional templates
-	 * to be included in that order _after_ the initial headers.
-	 * @param  string $additionalHeaders
-	 */
-	public function headers($additionalHeaders = '') {
-		$this->show('_head');
-		flush();
-		$this->show('_header');
-		if ($additionalHeaders != '') {
-			$additionalHeaders = explode(',', $additionalHeaders);
-			foreach ($additionalHeaders as $header) {
-				$this->show(trim($header));
-			}
-		}
-	}
-	
-	/**
 	 * Registered scripts and stylesheets that are globally accessible
 	 */
 	public function registerDefaultScripts() {
 		$this->registerScript('jquery-2.0.0.min');
 		$this->registerScript('jquery-ui-1.10.3.custom.min');
-		$this->registerScript('overlay');
+		$this->registerScript('chesschat');
 		// $this->registerDynamicScript('user-data');
 		$this->registerStylesheet('global');
 	}
