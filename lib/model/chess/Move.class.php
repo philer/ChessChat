@@ -2,7 +2,7 @@
 
 /**
  * Represents a chess move
- * @author Philipp Miller
+ * @author Philipp Miller, Larissa Hammerstein
  */
 class Move {
 	
@@ -31,7 +31,7 @@ class Move {
 	public $from = '';
 	
 	/**
-	 * From where did we move?
+	 * Where did we move?
 	 * @var string
 	 */
 	public $to = '';
@@ -79,23 +79,6 @@ class Move {
 	}
 	
 	/**
-	 * Returns a json encoded (string) representation of this Move's relevant
-	 * information for use in ajax response
-	 * @return string json
-	 */
-	public function ajaxData() {
-		$ajaxData = array(
-				'from'  => $this->from,
-				'to'    => $this->to,
-				'valid' => $this->valid,
-			);
-		if (!$this->valid) {
-			$ajaxData['invalidReason'] = Core::getLanguage()->getLanguageItem($this->invalidReason);
-		}
-		return $ajaxData;
-	}
-	
-	/**
 	 * Checks if given string may be a move
 	 * pattern supported by this system.
 	 * DOES NOT validate or execute the move.
@@ -119,11 +102,105 @@ class Move {
 	 * @return 	string
 	 */
 	public static function formatMoveString($moveString) {
-		// TODO larissa
+		// OPTIONAL add support for algebraic notation
 		// put letters in first place (3A -> A3)
 		// replace possible seperators with -
+		
+		$moveString = trim($moveString); 
+		
+		$tmpMoveString = "XX-XX";
+		
+
+		
+		if(strtoupper($moveString[0])=='A'
+		|| strtoupper($moveString[0])=='B'
+		|| strtoupper($moveString[0])=='C'
+		|| strtoupper($moveString[0])=='D'
+		|| strtoupper($moveString[0])=='E'
+		|| strtoupper($moveString[0])=='F')	{
+			$tmpMoveString[0]=strtoupper($moveString[0])
+		}
+		elseif($moveString[0]=='1'
+		|| $moveString[0]=='2'
+		|| $moveString[0]=='3'
+		|| $moveString[0]=='4'
+		|| $moveString[0]=='5'
+		|| s$moveString[0]=='6')	{
+			$tmpMoveString[0]=strtoupper($moveString[1])
+		}	
+	
+		
+		if(strtoupper($moveString[1])=='A'
+		|| strtoupper($moveString[1])=='B'
+		|| strtoupper($moveString[1])=='C'
+		|| strtoupper($moveString[1])=='D'
+		|| strtoupper($moveString[1])=='E'
+		|| strtoupper($moveString[1])=='F')	{
+			$tmpMoveString[0]=strtoupper($moveString[0])
+		}
+		elseif($moveString[1]=='1'
+		|| $moveString[1]=='2'
+		|| $moveString[1]=='3'
+		|| $moveString[1]=='4'
+		|| $moveString[1]=='5'
+		|| s$moveString[1]=='6')	{
+			$tmpMoveString[1]=strtoupper($moveString[1])
+		}	
+			
+		if(strtoupper($moveString[strlen($moveString)-2])=='A'
+		|| strtoupper($moveString[strlen($moveString)-2]])=='B'
+		|| strtoupper($moveString[strlen($moveString)-2]])=='C'
+		|| strtoupper($moveString[strlen($moveString)-2]])=='D'
+		|| strtoupper($moveString[strlen($moveString)-2]])=='E'
+		|| strtoupper($moveString[strlen($moveString)-2]])=='F')	{
+			$tmpMoveString[3]=strtoupper($moveString[strlen($moveString)-2]])
+		}
+		elseif($moveString[strlen($moveString)-2]]=='1'
+		|| $moveString[strlen($moveString)-2]]=='2'
+		|| $moveString[strlen($moveString)-2]]=='3'
+		|| $moveString[strlen($moveString)-2]]=='4'
+		|| $moveString[strlen($moveString)-2]]=='5'
+		|| s$moveString[strlen($moveString)-2]]=='6')	{
+			$tmpMoveString[4]=strtoupper($moveString[strlen($moveString)-2]])
+		}		
+		
+		if(strtoupper($moveString[strlen($moveString)-1])=='A'
+		|| strtoupper($moveString[strlen($moveString)-1]])=='B'
+		|| strtoupper($moveString[strlen($moveString)-1]])=='C'
+		|| strtoupper($moveString[strlen($moveString)-1]])=='D'
+		|| strtoupper($moveString[strlen($moveString)-1]])=='E'
+		|| strtoupper($moveString[strlen($moveString)-1]])=='F')	{
+			$tmpMoveString[3]=strtoupper($moveString[strlen($moveString)-2]])
+		}
+		elseif($moveString[strlen($moveString)-1]]=='1'
+		|| $moveString[strlen($moveString)-1]]=='2'
+		|| $moveString[strlen($moveString)-1]]=='3'
+		|| $moveString[strlen($moveString)-1]]=='4'
+		|| $moveString[strlen($moveString)-1]]=='5'
+		|| s$moveString[strlen($moveString)-1]]=='6')	{
+			$tmpMoveString[4]=strtoupper($moveString[strlen($moveString)-1]])
+		}	
+
+		if(strpos($tmpMoveString, 'X') === false){
+			$moveString = $tmpMoveString;
+			}
+		else{
+			$moveString = "Non formatable";
+			}
+		//TODO Fehlermeldung
 		return strtoupper($moveString);
-		// OPTIONAL add support for algebraic notation
+		
 	}
+	/**
+	 * Returns boardarray index for file represantion letter
+	 */
+	 
+	public  letterToIndex($letter) = array('A'=> 0, 'B' => 1, 'C' => 2, 'D' => 3, 'E' => 4, 'F' => 5);
+	
+	/**
+	 * Returns boardarray index for rank represantion number
+	 */
+	 
+	public  numberToIndex($number) = array(1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5);
 	
 }

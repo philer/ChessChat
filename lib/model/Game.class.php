@@ -2,7 +2,7 @@
 
 /**
  * Represents a Game
- * @author Philipp Miller
+ * @author Philipp Miller, Larissa Hammerstein
  */
 class Game extends DatabaseModel {
 	
@@ -167,7 +167,16 @@ class Game extends DatabaseModel {
 		}
 		// don't need this anymore
 		unset($gameData['whitePlayerId'], $gameData['whitePlayerName'], $gameData['blackPlayerId'], $gameData['blackPlayerName']);
-		parent::__construct($gameData);
+		
+		if (empty($gameData)) {
+			// TODO create database entry, get gameId
+			$this->gameHash = $this->generateHash();
+			$this->boardString = self::DEFAULT_BOARD_STRING;
+			// $this->board = $this->boardFromString($this->boardString);
+			$this->status = self::STATUS_WHITES_TURN;
+		} else {
+			parent::__construct($gameData);
+		}
 	}
 	
 	/**
@@ -176,6 +185,30 @@ class Game extends DatabaseModel {
 	 */
 	public function getId() {
 		return $this->gameId;
+	}
+	
+	/**
+	 * Creates a hopefully unique hash for game identification.
+	 * It containes digits and case sensitive letters
+	 */
+	protected function generateHash() {
+		// put anything useful in the gamehash.
+		// it doesn't have to be cryptographically safe,
+		// just don't stumble over it.
+		$hashString = $this->gameId
+					. NOW
+					. GAME_SALT
+					. $this->whitePlayer
+					. $this->blackPlayer;
+		// generate hash:
+		// generate md5, base64 it,
+		// remove bad characters, then take only first few characters
+		$this->hash = substr(
+						str_replace(
+							array('/','+','='), '',
+							base64_encode(
+								md5($hashString))),
+						0, GAME_HASH_LENGTH);
 	}
 	
 	/**
@@ -224,10 +257,168 @@ class Game extends DatabaseModel {
 	}
 	// TODO larissa
 	public static function boardFromString($boardStr) {
-		return array();
+		$board = array(
+			'a' => array(null, null, null, null, null, null, null, null),
+			'b' => array(null, null, null, null, null, null, null, null),
+			'c' => array(null, null, null, null, null, null, null, null),
+			'd' => array(null, null, null, null, null, null, null, null),
+			'e' => array(null, null, null, null, null, null, null, null),
+			'f' => array(null, null, null, null, null, null, null, null),
+			'g' => array(null, null, null, null, null, null, null, null),
+			'h' => array(null, null, null, null, null, null, null, null),
+		);
+		// prisons
+		$board['blackPrison'] = array();
+		$board['whitePrison'] = array();
+		// have they performed a castling yet?
+		$board['whiteCastled'] = false;
+		$board['blackCastled'] = false;
+		
+		$pieces = str_split($boardString,3);
+		foreach ($pieces as $piece) {
+			//True for capital letter is white, false is black
+			$colour = (strtolower($piece[0]) != $piece[0]);		
+			$file = strtolower(piece[1]);
+			$rank = piece[2];
+			
+			switch (strtolower($piece[0])) {
+				case "b" : 
+					$chessPiece = new Bishop($colour);
+					break;
+				case "k" : 
+					$chessPiece = new King($colour);
+					if(piece[1] == $file){
+						if(colour == True ){
+							board['whiteCastled'] = True;
+						}
+						if(colour == False){
+							board['blackCastled'] = False;
+						}
+					}
+					break;
+				case "n" :
+					$chessPiece = new Knight($colour);
+					break;
+				case "p" :
+					$chessPiece = new Pawn($colour);
+					break;
+				case "q" :
+					$chessPiece = new Queen($colour);
+					break;
+				case "r" :
+					$chessPiece = new Rook($colour);
+					break;
+				default:
+					throw new NotFoundException('piece doesn\'t exist');
+			}
+			
+			//filling up the prison
+			if($file == x){board['whitePrison'][] = $chessPiece;}
+			elseif($file == y){board['blackPrison'][] = $chessPiece;}
+			//filling up the chessboard
+			else {board [$file] [$rank] = chessPiece;}
+		}
+		unset $piece;
+		return $board;
 	}
 	public static function boardToString($board) {
-		return self::DEFAULT_BOARD_STRING;
+		$boardStr = "";
+		foreach($board as $key => $boardFile){
+			for($i = 1; $i <= 8; $i++){
+				$square = $board[$key][i];
+				switch($square){
+					case Bishop(true) : 
+						$boardStr .= 'B'.$key.(string)$i;
+						break;
+					case Bishop(false) : 
+						$boardStr .= 'b'.$key.(string)$i;
+						break;
+					case Knight(true) : 
+						$boardStr .= 'N'.$key.(string)$i;
+						break;
+					case Knight(false) : 
+						$boardStr .= 'n'.$key.(string)$i;
+						break;
+					case Pawn(true) : 
+						$boardStr .= 'P'.$key.(string)$i;
+						break;
+					case Pawn(false) : 
+						$boardStr .= 'p'.$key.(string)$i;
+						break;
+					case Queen(true) : 
+						$boardStr .= 'Q'.$key.(string)$i;
+						break;
+					case Queen(false) : 
+						$boardStr .= 'q'.$key.(string)$i;
+						break;
+					case Rook(true) : 
+						$boardStr .= 'R'.$key.(string)$i;
+						break;
+					case Rook(false) : 
+						$boardStr .= 'r'.$key.(string)$i;
+						break;
+					case King(true) :
+						if ($board['whiteCastled'] == true){
+							$boardStr .= 'K'.$key.(string)$i;
+						}
+						else{
+							$boardStr .= 'K'.strtoupper($key).(string)$i;
+						}	
+					case King(false) :
+						if ($board['blackCastled'] == true){
+							$boardStr .= 'k'.$key.(string)$i;
+						}
+						else{
+							$boardStr .= 'k'.strtoupper($key).(string)$i;
+						}																														
+		}
+		unset $key;
+		unset $boardFile;
+		foreach ($board['blackPrison'] as $deadBlackPiece){
+			switch($deadBlackPiece){
+				case Bishop(false):
+					$boardStr .='b'.'xx';
+					break;
+				case King(false):
+					$boardStr .='k'.'xx';
+					break;
+				case Knight(false):
+					$boardStr .='n'.'xx';
+					break;
+				case Pawn(false):
+					$boardStr .='p'.'xx';
+					break;
+				case Queen(false):
+					$boardStr .='q'.'xx';
+					break;
+				case Rook(false):
+					$boardStr .='r'.'xx';
+					break;
+			}
+		}
+		foreach ($board['whitePrison'] as $deadWhitePiece){
+			switch($deadWhitePiece){
+				case Bishop(true):
+					$boardStr .='B'.'yy';
+					break;
+				case King(true):
+					$boardStr .='K'.'yy';
+					break;
+				case Knight(true):
+					$boardStr .='N'.'yy';
+					break;
+				case Pawn(true):
+					$boardStr .='P'.'yy';
+					break;
+				case Queen(true):
+					$boardStr .='Q'.'yy';
+					break;
+				case Rook(true):
+					$boardStr .='R'.'yy';
+					break;
+			}
+		}
+		return $boardStr;
 	}
 	
 	/**
@@ -326,32 +517,19 @@ class Game extends DatabaseModel {
 	 * @return 	boolean
 	 */
 	public function whitesTurn() {
-		return ! (boolean) ($this->status % 2);
-	}
-	
-	/**
-	 * Checks if the given user is a player in this game
-	 * @param  User    $user	optional
-	 * @return boolean
-	 */
-	public function isPlayer(User $user = null) {
-		if (is_null($user)) $user = Core::getUser();
-		return $this->whitePlayer->getId() === $user->getId()
-		    || $this->blackPlayer->getId() === $user->getId();
+		return (boolean) ($this->status % 2);
 	}
 	
 	/**
 	 * Checks if the user is white,
 	 * returns null if he is not a player in this game.
-	 * @param  User    $user	optional
-	 * @return 	boolean|null
+	 * @return 	boolean
 	 */
-	public function isWhitePlayer(User $user = null) {
-		if (is_null($user)) $user = Core::getUser();
-		if ($this->whitePlayer->getId() === $user->getId()) {
+	public function isWhitePlayer() {
+		if (Core::getUser()->getId() == $this->whitePlayer->getId()) {
 			return true;
 		}
-		if ($this->blackPlayer->getId() === $user->getId()) {
+		if (Core::getUser()->getId() == $this->blackPlayer->getId()) {
 			return false;
 		}
 		return null;
