@@ -40,7 +40,7 @@ if ($runningGames && $game->getStatus() >= Game::STATUS_RESIGNED) {
 							?></dd>
 						</dl>
 						<a href="<?php echo Util::url($game->getRoute()) ?>">
-							<span class="icon"><?php
+							<span class="icon chesspiece"><?php
 								if ($game->isDraw()) {
 									echo new Pawn(false);
 								} else {
