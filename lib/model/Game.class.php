@@ -255,14 +255,6 @@ class Game extends DatabaseModel {
 	}
 	
 	/**
-	 * For use in URLs
-	 * @return 	string
-	 */
-	public function getRoute() {
-		return 'Game/' . $this->gameHash;
-	}
-	
-	/**
 	 * Returns this games current status.
 	 * @see 	Game constants
 	 * @return 	integer
@@ -355,5 +347,14 @@ class Game extends DatabaseModel {
 			return false;
 		}
 		return null;
+	}
+	
+	/**
+	 * For use in URLs
+	 * @return 	string
+	 */
+	public function getRoute() {
+		// return 'Game/' . $this->gameHash;
+		return $this->gameHash;
 	}
 }

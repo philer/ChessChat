@@ -185,7 +185,7 @@ class Core {
 			
 		} else {
 			// regular request route
-			$controllerClass = $route[0] . 'Controller';
+			$controllerClass = ucfirst($route[0] . 'Controller');
 			if (class_exists($controllerClass)
 					&& is_subclass_of($controllerClass, 'RequestController')) {
 				array_shift($route);
