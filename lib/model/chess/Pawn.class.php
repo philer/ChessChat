@@ -7,6 +7,12 @@
 class Pawn extends ChessPiece {
 	
 	/**
+	 * Pawn's may sometimes move 'en passant'
+	 * @var boolean
+	 */
+	protected $canEnPassant = false;
+
+	/**
 	 * HTML's UTF-8 entitie for chess character
 	 * white Pawn
 	 * @var 	string
@@ -21,6 +27,25 @@ class Pawn extends ChessPiece {
 	const UTF8_BLACK = '&#x265F;';
 	
 	/**
+	 * Chess notation letter for this chess piece (english)
+	 * White is upper case.
+	 * @var string
+	 */
+	const LETTER_WHITE = 'P';
+	
+	/**
+	 * Chess notation letter for this chess piece (english)
+	 * black is lower case.
+	 * @var string
+	 */
+	const LETTER_BLACK = 'p';
+	
+	public function __construct($white, $canEnPassant = false) {
+		parent::__construct($white);
+		$this->canEnPassant = $canEnPassant;
+	}
+	
+	/**
 	 * Check if $move is a valid move for a Pawn
 	 * and sets $move->valid and $move->invalidMessage accordingly.
 	 * @param 	Move 	$move
@@ -32,54 +57,40 @@ class Pawn extends ChessPiece {
 	 * A pawn captures diagonally, one square forward and to the left or right. 
 	 */
 	public function validateMove(Move &$move) {
-		$move->valid = false;
-		// the Pawn is white
-		if($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Pawn(true)){
-			// the first time a pawn is moved, it has the option of advancing two squares
-			if($move[1] == 2 && $move[0] == $move[3] && move[4] == 4 && $array[$letterToIndex($move[0])][2] == null && $array[$letterToIndex($move[0])][3] == null){
-				$move->valid = true;
-				}
-			// 	normally advancing a single square
-			if($move[0] == $move[3] && $move[1] + 1 = $move[4] && $array[$letterToIndex($move[3])][$numberToIndex($move[4])] == null){
-				$move->valid = true;}
+		if (abs($move->getRankOffset()) != 0 && abs($move->getFileOffset()) > 2) {
+			$move->setInvalid('chess.invalidmove.pawn');
+			return;
+		}
+		if($move->chesspiece->isWhite()){
+			if($move->getFileOffset()<0){
+				$move->setInvalid('chess.invalidmove.pawn');
+				return;
 			}
-			// capturing
-			if($move[1] + 1 = $move[4] && (abs($letterToIndex($move[0])-$letterToIndex($move[3]))  == 1)){
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(false)){
-					$move->valid = true;
+			//only valid for first move
+			if($move->getFileOffset() == 2){
+				if($move->fromFile != 2){
+					$move->setInvalid('chess.invalidmove.pawn.notfirst');
+				}
+				if($game->board[$move->fromRank][2] != null){
+					$move->setInvalid('chess.invalidmove.blocked');
 				}
 			}
-		
-		
-		// the Pawn is black
-		elseif($array[$letterToIndex($move[1])][$numberToIndex($move[1])] == Pawn(false)){
-			// the first time a pawn is moved, it has the option of advancing two squares
-			if($move[1] == 7 && $move[0] == $move[3] && move[4] == 5 && $array[$letterToIndex($move[0])][5] == null && $array[$letterToIndex($move[0])][4] == null){
-				$move->valid = true;
+		}
+		else{
+			if($move->getFileOffset()>0){
+				$move->setInvalid('chess.invalidmove.pawn');
+				return;
 			}
-			// 	normally advancing a single square
-			if($move[0] == $move[3] && $move[1] - 1 = $move[4] && $array[$letterToIndex($move[3])][$numberToIndex($move[4])] == null){
-				$move->valid = true;
+						//only valid for first move
+			if($move->getFileOffset() == 2){
+				if($move->fromFile != 7){
+					$move->setInvalid('chess.invalidmove.pawn.notfirst');
+				}
+				if($game->board[$move->fromRank][5] != null){
+					$move->setInvalid('chess.invalidmove.blocked');
 				}
 			}
-			//capturing
-			if($move[1] - 1 = $move[4] && (abs($letterToIndex($move[0])-$letterToIndex($move[3]))  == 1)){
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(true)){
-					$move->valid = true;
-					}
-				}
-			}
-
-		 $move->invalidReason = 'A Pawn cannot make a move like this';
+		}
 	}
+	
 }

@@ -9,16 +9,30 @@ class Bishop extends ChessPiece {
 	/**
 	 * HTML's UTF-8 entitie for chess character
 	 * white Bishop
-	 * @var 	string
+	 * @var string
 	 */
 	const UTF8_WHITE = '&#x2657;';
 	
 	/**
 	 * HTML's UTF-8 entitie for chess character
 	 * black Bishop
-	 * @var 	string
+	 * @var string
 	 */
 	const UTF8_BLACK = '&#x265D;';
+	
+	/**
+	 * Chess notation letter for this chess piece (english)
+	 * White is upper case.
+	 * @var string
+	 */
+	const LETTER_WHITE = 'B';
+	
+	/**
+	 * Chess notation letter for this chess piece (english)
+	 * black is lower case.
+	 * @var string
+	 */
+	const LETTER_BLACK = 'b';
 	
 	/**
 	 * Check if $move is a valid move for a Bishop
@@ -29,159 +43,18 @@ class Bishop extends ChessPiece {
 	 * no limits in distance
 	 * cannot jump over other pieces
 	 */
-	public function validateMove(Move &$move) {
-		$move->valid = false;
-		if(abs($letterToIndex($move[0])-$letterToIndex($move[3])) - abs($numberToIndex($move[1])-$numberToIndex($move[4])==0){
-			if($letterToIndex($move[0])>$letterToIndex($move[3]) && $letterToIndex($move[1])>$letterToIndex($move[4])){
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == null ){
-					$move->$valid = true;
-				}
-				
-			elseif($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Bishop(true) )	{
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(false))
-				{
-					$move->$valid = true;
-					}
-				}
-				
-			elseif($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Bishop(false) )	{
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(true))
-				{
-					$move->$valid = true;
-					}
-				}
-				
-				for($i = $letterToIndex($move[3])+1 ; $i < $letterToIndex($move[0]) ; i++){
-					for($j = $letterToIndex($move[4])+1; $j < $letterToIndex($move[1] ; j++)){
-						if($array[$letterToIndex($move[i])][$numberToIndex($move[j])] != null ){
-							$move->valid = false;
-							}
-						}
-					}
-				}
-	
-				
-			elseif($letterToIndex($move[0])>$letterToIndex($move[3]) && $letterToIndex($move[1])<$letterToIndex($move[4])){
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == null ){
-				$move->$valid = true;
-				}
-			elseif($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Bishop(true) )	{
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(false))
-				{
-					$move->$valid = true;
-					}
-				}
-			elseif($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Bishop(false) )	{
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(true))
-				{
-					$move->$valid = true;
-					}
-				}
-				
-				for($i = $letterToIndex($move[3])+1 ; $i < $letterToIndex($move[0]) ; i++){
-					for($j = $letterToIndex($move[1])+1; $j < $letterToIndex($move[4] ; j++)){
-						if($array[$letterToIndex($move[i])][$numberToIndex($move[j])] != null ){
-							$move->valid = false;
-							}
-						}
-					}
-				}
-			
-				
-		elseif($letterToIndex($move[0])<$letterToIndex($move[3]) && $letterToIndex($move[1])>$letterToIndex($move[4])){
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == null ){
-				$move->$valid = true;
-				}
-			elseif($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Bishop(true) )	{
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(false))
-				{
-					$move->$valid = true;
-					}
-				}
-			elseif($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Bishop(false) )	{
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(true))
-				{
-					$move->$valid = true;
-					}
-				}
-				
-				for($i = $letterToIndex($move[0])+1 ; $i < $letterToIndex($move[3]) ; i++){
-					for($j = $letterToIndex($move[4])+1; $j < $letterToIndex($move[1] ; j++)){
-						if($array[$letterToIndex($move[i])][$numberToIndex($move[j])] != null ){
-							$move->valid = false;
-							}
-						}
-					}
-				}
-				
-				
-		elseif($letterToIndex($move[0])<$letterToIndex($move[3]) && $letterToIndex($move[1])<$letterToIndex($move[4])){
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == null ){
-				$move->$valid = true;
-				}
-			elseif($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Bishop(true) )	{
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(false))
-				{
-					$move->$valid = true;
-					}
-				}
-			elseif($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Bishop(false) )	{
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(true))
-				{
-					$move->$valid = true;
-					}
-				}
-				
-				for($i = $letterToIndex($move[0])+1 ; $i < $letterToIndex($move[3]) ; i++){
-					for($j = $letterToIndex($move[1])+1; $j < $letterToIndex($move[4] ; j++)){
-						if($array[$letterToIndex($move[i])][$numberToIndex($move[j])] != null ){
-							$move->valid = false;
-							}
-						}
-					}
-				}
+	public function validateMove(Move $move, Game $game) {
+		
+		if (abs($move->getRankOffset()) != abs($move->getFileOffset())) {
+			$move->setInvalid('chess.invalidmove.bishop');
+			return;
 		}
 
-		 $move->invalidReason = 'A Bishop cannot make a move like this!';
+		for ( $i=0 ; $i<$move->getRankOffset()-1 ; $i++ ) {
+			if ($game->board[$i + $move->fromRank][$i + $move->fromFile] != null) {
+				$move->setInvalid('chess.invalidmove.blocked');
+				return;
+			}
+		}
 	}
 }

@@ -42,7 +42,7 @@ class Game extends DatabaseModel {
 	 * @see chessboard.tpl.php for an example
 	 * @var array<array>
 	 */
-	protected $board = array();
+	public $board = array();
 	
 	/**
 	 * Chessboard represented as a string for easy transmission and storage
@@ -54,8 +54,8 @@ class Game extends DatabaseModel {
 	 * 		+ capital for pawn means he just did a double step, which is
 	 * 		  relevant for en passant (update it after next move!)
 	 * - third character: rank (row)
-	 * - file 'x' for dead white pieces, file 'y' for dead black pieces
-	 * - first chesspiece indicates who's turn it is (redundant with status)
+	 * - files 'v' and 'w' for dead white pieces, files 'x' and 'y' for dead black pieces
+	 * TODO(- first chesspiece indicates who's turn it is (redundant with status))
 	 * @var string
 	 */
 	protected $boardString = '';
@@ -65,7 +65,7 @@ class Game extends DatabaseModel {
 	 * @var string
 	 */
 	const DEFAULT_BOARD_STRING =
-	'Ra1Nb1Bc1Qd1Kd1Bc1Nb1Ra1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7ra8nb8bc8qd8kd8bc8nb8ra8';
+	'RA1Nb1Bc1Qd1KD1Bc1Nb1RA1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7rA8nb8bc8qd8kD8bc8nb8rA8';
 	
 	/**
 	 * Game status as a short integer value
@@ -237,187 +237,92 @@ class Game extends DatabaseModel {
 	 * @param Move $move
 	 */
 	public function move(Move &$move) {
-		$this->validateMove($move);
 		if ($move->valid) {
 			// TODO execute/save move, update status
 		}
 	}
 	
 	/**
-	 * Checks wether the given move is allowed
-	 * for this player on this chessboard.
-	 * Sets $move's flag and reason appropriately.
-	 * @param 	Move 	$move;
+	 * Chessboard represented as a string for easy transmission and storage
+	 * @see  Game::$boardString
+	 * @see  Game::boardToString()
+	 * @param  string $boardStr
+	 * @return array<ChessPiece>
 	 */
-	public function validateMove(Move &$move) {
-		//TODO larissa
-		$move->valid = true;
-		// $move->valid = false;
-		// $move->invalidReason = 'You Suck';
-	}
-	// TODO larissa
-	public static function boardFromString($boardStr) {
-		$board = array(
-			'a' => array(null, null, null, null, null, null, null, null),
-			'b' => array(null, null, null, null, null, null, null, null),
-			'c' => array(null, null, null, null, null, null, null, null),
-			'd' => array(null, null, null, null, null, null, null, null),
-			'e' => array(null, null, null, null, null, null, null, null),
-			'f' => array(null, null, null, null, null, null, null, null),
-			'g' => array(null, null, null, null, null, null, null, null),
-			'h' => array(null, null, null, null, null, null, null, null),
-		);
-		// prisons
-		$board['blackPrison'] = array();
-		$board['whitePrison'] = array();
-		// have they performed a castling yet?
-		$board['whiteCastled'] = false;
-		$board['blackCastled'] = false;
-		
-		$pieces = str_split($boardString,3);
-		foreach ($pieces as $piece) {
-			//True for capital letter is white, false is black
-			$colour = (strtolower($piece[0]) != $piece[0]);		
-			$file = strtolower(piece[1]);
-			$rank = piece[2];
-			
-			switch (strtolower($piece[0])) {
-				case "b" : 
-					$chessPiece = new Bishop($colour);
-					break;
-				case "k" : 
-					$chessPiece = new King($colour);
-					if(piece[1] == $file){
-						if(colour == True ){
-							board['whiteCastled'] = True;
-						}
-						if(colour == False){
-							board['blackCastled'] = False;
-						}
-					}
-					break;
-				case "n" :
-					$chessPiece = new Knight($colour);
-					break;
-				case "p" :
-					$chessPiece = new Pawn($colour);
-					break;
-				case "q" :
-					$chessPiece = new Queen($colour);
-					break;
-				case "r" :
-					$chessPiece = new Rook($colour);
-					break;
-				default:
-					throw new NotFoundException('piece doesn\'t exist');
+	public static function boardFromString($boardStr) { 
+		$board = array();
+		for ( $file='a' ; $file<='h' ; $file++ ) {
+			$board[$file] = new Array()
+			for ( $rank=1; $rank<=8 ; $rank++ ) {
+				$board[$file][$rank] = null;
 			}
-			
-			//filling up the prison
-			if($file == x){board['whitePrison'][] = $chessPiece;}
-			elseif($file == y){board['blackPrison'][] = $chessPiece;}
-			//filling up the chessboard
-			else {board [$file] [$rank] = chessPiece;}
 		}
-		unset $piece;
+		for ( $prison='v' ; $prison<='y' ; $prison++) $board[$prison] = array();
+		
+		for ( $cp=0 ; $cp<32 ; $cp+=3 ) {
+			switch(strtolower($boardStr[$cp])) {
+				case Pawn::LETTER_BLACK : // en passant possible?
+					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
+						new Pawn(ctype_upper($boardStr[$cp]), ctype_upper($boardStr[$cp+1]));
+					break;
+				case Bishop::LETTER_BLACK :
+					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
+						new Bishop(ctype_upper($boardStr[$cp]));
+					break;
+				case Knight::LETTER_BLACK :
+					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
+						new Knight(ctype_upper($boardStr[$cp]));
+					break;
+				case Rook::LETTER_BLACK : // castling possible?
+					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
+						new Rook(ctype_upper($boardStr[$cp]), ctype_upper($boardStr[$cp+1]));
+					break;
+				case Queen::LETTER_BLACK :
+					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
+						new Queen(ctype_upper($boardStr[$cp]));
+					break;
+				case King::LETTER_BLACK : // castling possible?
+					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
+						new King(ctype_upper($boardStr[$cp]), ctype_upper($boardStr[$cp+1]));
+					break;
+			}
+		}
 		return $board;
 	}
+
+	/**
+	 * Renders a string representation of a given chess board (array)
+	 * @see  Game::$boardString
+	 * @see  Game::boardFromString()
+	 * @param  array $board
+	 * @return string
+	 */
 	public static function boardToString($board) {
-		$boardStr = "";
-		foreach($board as $key => $boardFile){
-			for($i = 1; $i <= 8; $i++){
-				$square = $board[$key][i];
-				switch($square){
-					case Bishop(true) : 
-						$boardStr .= 'B'.$key.(string)$i;
-						break;
-					case Bishop(false) : 
-						$boardStr .= 'b'.$key.(string)$i;
-						break;
-					case Knight(true) : 
-						$boardStr .= 'N'.$key.(string)$i;
-						break;
-					case Knight(false) : 
-						$boardStr .= 'n'.$key.(string)$i;
-						break;
-					case Pawn(true) : 
-						$boardStr .= 'P'.$key.(string)$i;
-						break;
-					case Pawn(false) : 
-						$boardStr .= 'p'.$key.(string)$i;
-						break;
-					case Queen(true) : 
-						$boardStr .= 'Q'.$key.(string)$i;
-						break;
-					case Queen(false) : 
-						$boardStr .= 'q'.$key.(string)$i;
-						break;
-					case Rook(true) : 
-						$boardStr .= 'R'.$key.(string)$i;
-						break;
-					case Rook(false) : 
-						$boardStr .= 'r'.$key.(string)$i;
-						break;
-					case King(true) :
-						if ($board['whiteCastled'] == true){
-							$boardStr .= 'K'.$key.(string)$i;
-						}
-						else{
-							$boardStr .= 'K'.strtoupper($key).(string)$i;
-						}	
-					case King(false) :
-						if ($board['blackCastled'] == true){
-							$boardStr .= 'k'.$key.(string)$i;
-						}
-						else{
-							$boardStr .= 'k'.strtoupper($key).(string)$i;
-						}																														
-		}
-		unset $key;
-		unset $boardFile;
-		foreach ($board['blackPrison'] as $deadBlackPiece){
-			switch($deadBlackPiece){
-				case Bishop(false):
-					$boardStr .='b'.'xx';
-					break;
-				case King(false):
-					$boardStr .='k'.'xx';
-					break;
-				case Knight(false):
-					$boardStr .='n'.'xx';
-					break;
-				case Pawn(false):
-					$boardStr .='p'.'xx';
-					break;
-				case Queen(false):
-					$boardStr .='q'.'xx';
-					break;
-				case Rook(false):
-					$boardStr .='r'.'xx';
-					break;
+		$boardStr = '';
+		for ( $file='a' ; $file<='h' ; $file++ ) {
+			for ( $rank=1; $rank<=8 ; $rank++ ) {
+				if ($cp = $board[$file][$rank]) {
+					$boardStr .= $cp;
+					switch ($cp->getClass()) {
+						case 'Pawn' :
+							$boardStr .= $cp->canEnPassant ? strtoupper($file) : $file;
+							break;
+						case 'King' :
+							$boardStr .= $cp->canCastle ? strtoupper($file) : $file;
+							break;
+						case 'Rook' :
+							$boardStr .= $cp->canCastle ? strtoupper($file) : $file;
+							break;
+						default :
+							$boardStr .= $file;
+							break;
+					}
+					$boardStr .= $rank;
+				}
 			}
 		}
-		foreach ($board['whitePrison'] as $deadWhitePiece){
-			switch($deadWhitePiece){
-				case Bishop(true):
-					$boardStr .='B'.'yy';
-					break;
-				case King(true):
-					$boardStr .='K'.'yy';
-					break;
-				case Knight(true):
-					$boardStr .='N'.'yy';
-					break;
-				case Pawn(true):
-					$boardStr .='P'.'yy';
-					break;
-				case Queen(true):
-					$boardStr .='Q'.'yy';
-					break;
-				case Rook(true):
-					$boardStr .='R'.'yy';
-					break;
-			}
-		}
+		foreach ($board['x'] as $i => $cp) $boardStr .= $cp . 'x' . dechex($i);
+		foreach ($board['y'] as $i => $cp) $boardStr .= $cp . 'y' . dechex($i);
 		return $boardStr;
 	}
 	

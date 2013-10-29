@@ -21,6 +21,20 @@ class Knight extends ChessPiece {
 	const UTF8_BLACK = '&#x265E;';
 	
 	/**
+	 * Chess notation letter for this chess piece (english)
+	 * White is upper case.
+	 * @var string
+	 */
+	const LETTER_WHITE = 'N';
+	
+	/**
+	 * Chess notation letter for this chess piece (english)
+	 * black is lower case.
+	 * @var string
+	 */
+	const LETTER_BLACK = 'n';
+	
+	/**
 	 * Check if $move is a valid move for a Knight
 	 * and sets $move->valid and $move->invalidMessage accordingly.
 	 * @param 	Move 	$move
@@ -30,39 +44,8 @@ class Knight extends ChessPiece {
 	 * can jump over other pieces
 	 */
 	public function validateMove(Move &$move) {
-		$move->valid = false;
-		if(abs($letterToIndex($move[0])-$letterToIndex($move[3])) == 1 && abs($numberToIndex($move[1])-$numberToIndex($move[4])) == 2
-		|| abs($letterToIndex($move[0])-$letterToIndex($move[3])) == 2 && abs($numberToIndex($move[1])-$numberToIndex($move[4])) == 1)
-		{
-			if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == null ){
-				$move->$valid = true;
-				}
-			elseif($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Knight(true) )	{
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(false)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(false))
-				{
-					$move->$valid = true;
-					}
-				}
-			elseif($array[$letterToIndex($move[0])][$numberToIndex($move[1])] == Knight(false) )	{
-				if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == King(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Knight(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Pawn(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Queen(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Rook(true)
-				|| if($array[$letterToIndex($move[3])][$numberToIndex($move[4])] == Bishop(true))
-				{
-					$move->$valid = true;
-					}
-				}
-			
-			}
-		
-
-		 $move->invalidReason = 'A Knight cannot make a move like this';
+		if ( !(abs($move->getRankOffset()) * abs($move->getFileOffset()) == 2)) {
+			$move->setInvalid('chess.invalidmove.knight');
+		}
 	}
 }

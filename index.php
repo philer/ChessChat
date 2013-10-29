@@ -22,4 +22,4 @@ set_exception_handler(array('Core', 'exceptionHandler'));
 set_error_handler(array('Core', 'errorHandler'));
 
 // start the system
-new Core(); 
+new Core();
