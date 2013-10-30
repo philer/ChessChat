@@ -34,7 +34,7 @@ for ($g=0 ; $g<$gameN ; $g++) {
 	$gameQuery .= "\n ('" . Util::getRandomString(6) . "', "
 	            . "'" . mt_rand(1, $userN) . "', "
 	            . "'" . mt_rand(1, $userN) . "', "
-	            . "'Ra1Nb1Bc1Qd1Kd1Bc1Nb1Ra1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7ra8nb8bc8qd8kd8bc8nb8ra8', "
+	            . "'RA1Nb1Bc1Qd1KE1Bf1Ng1RH1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7rA8nb8bc8qd8kE8bf8ng8rH8', "
 	            . "'" . mt_rand(0,15) . "'),";
 }
 $gameQuery = rtrim($gameQuery, ', ');

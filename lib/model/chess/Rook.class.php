@@ -53,26 +53,7 @@ class Rook extends ChessPiece {
 	 * The rook moves horizontally or vertically, 
 	 * through any number of unoccupied squares
 	 */
-	public function validateMove(Move &$move) {
-		if ($move->getRankOffset() * $move->getFileOffset() != 0) {
-			$move->setInvalid('chess.invalidmove.rook');
-			return;
-		}
-		if ($move->getRankOffset() == 0){
-			for ( $i=0 ; $i<$move->getFileOffset()-1 ; $i++ ){
-				if ($game->board[$move->fromRank][$i + $move->fromFile] != null) {
-					$move->setInvalid('chess.invalidmove.blocked');
-					return;
-				}
-			}
-		} else {
-			for ( $i=0 ; $i<$move->getRankOffset()-1 ; $i++ ){
-				if ($game->board[$i + $move->fromRank][$move->fromFile] != null) {
-					$move->setInvalid('chess.invalidmove.blocked');
-					return;
-				}
-			}
-		}
+	public function validateMove(Move $move, Game $game) {
 
 	}
 }

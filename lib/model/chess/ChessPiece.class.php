@@ -14,18 +14,6 @@ abstract class ChessPiece {
 	protected $white = true;
 	
 	/**
-	 * This ChessPiece's position: file (column)
-	 * @var 	string
-	 */
-	protected $file = '';
-	
-	/**
-	 * This ChessPiece's position: rank (row)
-	 * @var 	integer
-	 */
-	protected $rank = 0;
-	
-	/**
 	 * Creates a ChessPiece. Color is required.
 	 * @param 	boolean 	$white
 	 * @param 	string 		$square
@@ -41,6 +29,10 @@ abstract class ChessPiece {
 	 */
 	abstract public function validateMove(Move $move, Game $game);
 	
+	public function __toString() {
+		return $this->utf8();
+	}
+	
 	/**
 	 * Returns this ChessPiece's utf-8 html entity.
 	 * @return 	string
@@ -54,7 +46,7 @@ abstract class ChessPiece {
 	 * Capital letter represents white.
 	 * @return 	string
 	 */
-	public function __toString() {
+	public function letter() {
 		return $this->white ? static::LETTER_WHITE : static::LETTER_BLACK;
 	}
 	

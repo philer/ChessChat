@@ -10,7 +10,10 @@
 				</ul>
 			</nav>
 			<div id="benchmark" style="float:right;">
+				<span>logged in as <?php echo Core::getUser() ?></span>
+				|
 				<span>time: <?php echo round(microtime(true) - START_TIME, 4); ?></span>
+				|
 				<span>queries: <?php echo Core::getDB()->getQueryCount(); ?></span>
 			</div>
 			<div id="copyright"><?php echo $this->lang('site.copyrightby') ?>Phil &amp; Larissa</div>

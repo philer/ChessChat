@@ -151,13 +151,13 @@ var chess = {
 		if (chess.selected !== null
 			&& chess.selected.getField() !== $(this).getField() ) {
 			
-			move = chess.selected.getField()
-				 + '-'
-				 + $(this).getField();
+			moveStr = chess.selected.getField()
+				    + '-'
+				    + $(this).getField();
 			cc.post(
 				'ChatController',
 				'move', 
-				'gameId=' + gameData.id + '&move=' + move,
+				'gameId=' + gameData.id + '&move=' + moveStr,
 				[chat.handleReply, chess.handleReply]
 				);
 			
@@ -171,17 +171,21 @@ var chess = {
 	 */
 	handleMove : function(event, ui) {
 		// ui.draggable.draggable( 'option', 'revert', false );
-		var move = ui.draggable.getField() + '-' + $(this).getField();
+		// var moveStr = ui.draggable.getField() + '-' + $(this).getField();
 		if (ui.draggable.getField() !== $(this).getField()) {
 			cc.post(
 				'ChatController',
 				'move', 
-				'gameId=' + gameData.id + '&move=' + move,
+				'gameId='
+					+ gameData.id
+					+ '&move='
+					+ ui.draggable.getField()
+					+ '-'
+					+ $(this).getField(),
 				[chat.handleReply, chess.handleReply]
 				);
-			// chat.sendMessage(move);
 		} else {
-			chess.resetMove(move);
+			chess.resetMove(ui.draggable.getField());
 		}
 		ui.draggable.removeClass('selected');
 	},
@@ -192,11 +196,15 @@ var chess = {
 	 */
 	handleReply : function(reply) {
 		if (reply.move) {
-			chess.executeMove(reply.move)
-			     .statusField.html(reply.status);
+			if (reply.move.valid) {
+				chess.executeMove(reply.move)
+			} else {
+				// alert(reply.move.invalidReason);
+				chess.resetMove(reply.move.from);
+			}
 		}
-		if (reply.invalidMove) {
-			chess.resetMove(reply.invalidMove);
+		if (reply.status) {
+			chess.statusField.html(reply.status);
 		}
 	},
 	
@@ -205,11 +213,11 @@ var chess = {
 	 * @param  {string} move "E3-"E4"
 	 */
 	executeMove : function(move) {
-		var from = move.substr(0,2);
-		var to   = move.substr(3,2);
+		// var from = move.substr(0,2);
+		// var to   = move.substr(3,2);
 		
-		var chesspiece = $('#chesspiece-' + from);
-		var newsquare  = $('#square-' + to + ' > div');
+		var chesspiece = $('#chesspiece-' + move.from);
+		var newsquare  = $('#square-' + move.to + ' > div');
 		
 		var prisoner = newsquare.contents();
 		if (typeof prisoner.html() !== 'undefined') {
@@ -222,7 +230,7 @@ var chess = {
 		newsquare.empty();
 		chesspiece.appendTo(newsquare)
 		          .css({top: '0px', left: '0px'})
-		          .attr('id', 'chesspiece-' + to);
+		          .attr('id', 'chesspiece-' + move.to);
 	},
 	
 	/**
@@ -231,8 +239,8 @@ var chess = {
 	 * This only works if executeMove has not been called yet.
 	 * @param  {string} move "E3-E4"
 	 */
-	resetMove : function(move) {
-		from = move.substr(0,2);
+	resetMove : function(from) {
+		// from = move.substr(0,2);
 		$('#chesspiece-' + from).css({top: '0px', left: '0px'});
 	},
 	

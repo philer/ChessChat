@@ -45,12 +45,12 @@ class Bishop extends ChessPiece {
 	 */
 	public function validateMove(Move $move, Game $game) {
 		
-		if (abs($move->getRankOffset()) != abs($move->getFileOffset())) {
+		if (abs($move->rankOffset) != abs($move->fileOffset)) {
 			$move->setInvalid('chess.invalidmove.bishop');
 			return;
 		}
 
-		for ( $i=0 ; $i<$move->getRankOffset()-1 ; $i++ ) {
+		for ( $i=0 ; $i<$move->rankOffset-1 ; $i++ ) {
 			if ($game->board[$i + $move->fromRank][$i + $move->fromFile] != null) {
 				$move->setInvalid('chess.invalidmove.blocked');
 				return;

@@ -19,7 +19,7 @@ class GameController extends AbstractRequestController {
 	 */
 	public function __construct(ChatController $chatController = null) {
 		parent::__construct();
-		if (!is_null($chatController)) $this->chatController = $chatController;
+		$this->chatController = $chatController;
 	}
 	
 	/**
@@ -124,7 +124,9 @@ class GameController extends AbstractRequestController {
 	}
 	
 	/**
-	 * TODO
+	 * Validates and Executes a chess move
+	 * @param string $moveString user input (chess notation)
+	 * @param int    $gameId
 	 */
 	public function move($moveString, $gameId) {
 		$gameData = Core::getDB()->sendQuery(
@@ -133,7 +135,8 @@ class GameController extends AbstractRequestController {
 			        W.userName as whitePlayerName,
 			        B.userId   as blackPlayerId,
 			        B.userName as blackPlayerName,
-			        board as boardString
+			        board as boardString,
+			        status
 			 FROM cc_game
 				JOIN cc_user W ON cc_game.whitePlayerId = W.userId
 				JOIN cc_user B ON cc_game.blackPlayerId = B.userId
@@ -142,43 +145,33 @@ class GameController extends AbstractRequestController {
 		if (empty($gameData)) throw new NotFoundException('game doesn\'t exist');
 		
 		$game = new Game($gameData);
-		$move = new Move($moveString);
+		$move = new Move($moveString, $game);
+		AjaxUtil::queueReply('move', $move->ajaxData());
 		
-		if (Core::getUser()->getId() === $game->getCurrentPlayer()->getId()) {
+		if ($move->isValid()) {
 			$game->move($move);
-		} else {
-			$move->valid = false;
-			$move->invalidReason = 'not your turn';
-		}
-		
-		if ($move->valid) {
-			AjaxUtil::queueReply('move', (string) $move); // TODO use ajaxData()
 			AjaxUtil::queueReply('status', $game->getFormattedStatus());
 			$this->getChatController()->post(
 				Core::getLanguage()->getLanguageItem(
 					'chess.moved',
-					// TODO Move info
 					array(
 						'user'  => Core::getUser(),
-						'piece' => '[piece]',
-						'from'  => '[from]',
-						'to'    => '[to]')
-				) . ' (' . $move . ')', // TEST
+						'piece' => $move->getChesspiece()->utf8(),
+						'from'  => $move->from(),
+						'to'    => $move->to()
+					)
+				),
 				$gameId,
 				Core::getUser()->getName()
 			);
-			
 		} else {
-			// TODO make this useful
-			AjaxUtil::queueReply('invalidMove', (string) $move);
-			if (!empty($move->invalidReason)) {
-				$this->getChatController()->post(
-					$move->invalidReason,
-					$gameId,
-					Core::getUser()->getName(),
-					false
-				);
-			}
+			// also sent via ajax move object
+			$this->getChatController()->post(
+				$move->getInvalidReason(),
+				$gameId,
+				Core::getUser()->getName(),
+				false
+			);
 		}
 	}
 	

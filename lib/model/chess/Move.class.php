@@ -84,33 +84,36 @@ class Move {
 	 */
 	public function __construct($moveString, Game $game) {
 		if (!self::patternMatch($moveString)) throw new Exception('chess.invalidmove.format');
-		$moveString = strtoupper(preg_replace(Move::SEPERATOR_PATTERN, '', $moveString));
-
+		$moveString = strtoupper(preg_replace(
+			'@' . self::SEPERATOR_PATTERN . '@',
+			'',
+			$moveString
+		));
+		
 		if (is_numeric($moveString[0])) {
-			$this->fromRank = $moveString[0];
-			$this->fromFile = $moveString[1];
+			$this->fromRank = strtolower($moveString[0]);
+			$this->fromFile = strtolower($moveString[1]);
 		} else {
-			$this->fromRank = $moveString[1];
-			$this->fromFile = $moveString[0];
+			$this->fromRank = strtolower($moveString[1]);
+			$this->fromFile = strtolower($moveString[0]);
 		}
-		if (is_numeric($moveString[3])) {
-			$this->toRank = $moveString[3];
-			$this->toFile = $moveString[4];
+		if (is_numeric($moveString[2])) {
+			$this->toRank = strtolower($moveString[2]);
+			$this->toFile = strtolower($moveString[3]);
 		} else {
-			$this->toRank = $moveString[4];
-			$this->toFile = $moveString[3];
+			$this->toRank = strtolower($moveString[3]);
+			$this->toFile = strtolower($moveString[2]);
 		}
 		
-		$this->chesspiece = $game->board[$this->fromRank][$this->fromFile];
-		$this->target     = $game->board[$this->toRank  ][$this->toFile];
-		$this->fileOffset = $this->toFile - $this->fromFile;
-		$this->rankOffset = $this->toRank - $this->fromRank;
+		$this->chesspiece = $game->board[$this->fromFile][$this->fromRank];
+		$this->target     = $game->board[$this->toFile][$this->toRank];
 		
-
 		// validation
-		if ($this->chesspiece === $this->target) {
-			$this->setInvalid('chess.invalidmove.nomove');
-		} elseif ($this->chesspiece->isWhite() == $this->target->isWhite()) {
+		if (Core::getUser()->getId() != $game->getCurrentPlayer()->getId()) {
+			$this->setInvalid('chess.invalidmove.notyourturn');
+		} elseif ($this->chesspiece == null) {
+			$this->setInvalid('chess.invalidmove.nopiece');
+		} elseif ($this->target != null && $this->chesspiece->isWhite() == $this->target->isWhite()) {
 			$this->setInvalid('chess.invalidmove.owncolor');
 		} else {
 			$this->chesspiece->validateMove($this, $game);
@@ -123,7 +126,48 @@ class Move {
 	 * @return 	string
 	 */
 	public function __toString() {
-		return $this->fromFile . $this->fromRank . '-' . $this->toFile . $this->toRank;
+		return $this->from() . '-' . $this->to();
+	}
+	
+	/**
+	 * Where does this move start?
+	 * @return 	string
+	 */
+	public function from() {
+		return strtoupper($this->fromFile) . $this->fromRank;
+	}
+
+	/**
+	 * Where does this move go?
+	 * @return string
+	 */
+	public function to() {
+		return strtoupper($this->toFile) . $this->toRank;
+	}
+	
+	public function getChesspiece() {
+		return $this->chesspiece;
+	}
+	
+	public function getTarget() {
+		return $this->target;
+	}
+	
+	/**
+	 * Returns a json encoded (string) representation of this Move's relevant
+	 * information for use in ajax response
+	 * @return array
+	 */
+	public function ajaxData() {
+		$ajaxData = array(
+			'from'  => $this->from(),
+			'to'    => $this->to(),
+			'valid' => $this->valid,
+		);
+		if (!$this->valid) {
+			$ajaxData['invalidReason'] = Core::getLanguage()->getLanguageItem($this->invalidReason);
+		}
+		return $ajaxData;
 	}
 	
 	/**
@@ -151,16 +195,6 @@ class Move {
 	public function getInvalidReason() {
 		return $this->invalidReason;
 	}
-	
-	public funtion getRankOffset() {
-		return $this->rankOffset;
-	}
-	
-	public funtion getFileOffset() {
-		return $this->fileOffset;
-	}
-	
-	
 
 	/**
 	 * Checks if given string may be a move
@@ -172,7 +206,7 @@ class Move {
 	public static function patternMatch($str) {
 		return preg_match('@^'
 				. Move::COORDINATE_PATTERN
-				. Move::SEPERATOR_PATTERN
+				. Move::SEPERATOR_PATTERN . '?'
 				. Move::COORDINATE_PATTERN
 				. '$@'
 			, $str);
@@ -180,5 +214,4 @@ class Move {
 		// $piece = '[pkqnbrPKQNBR]'; // language support maybe?
 		// return preg_match('@^'.$square.$separator.$square.'|'.$piece.$square.'$@', $str);
 	}
-	
 }

@@ -45,15 +45,7 @@ class Queen extends ChessPiece {
 	 * or diagonally, 
 	 * thus combining the moves of the Rook and Bishop. 
 	 */
-	public function validateMove(Move &$move) {
+	public function validateMove(Move $move, Game $game) {
+
 	}
-
-
-
-
-				
-
-
-
-
 }

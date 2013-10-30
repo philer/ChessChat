@@ -43,9 +43,7 @@ class Knight extends ChessPiece {
 	 * or two squares vertically and one square horizontally
 	 * can jump over other pieces
 	 */
-	public function validateMove(Move &$move) {
-		if ( !(abs($move->getRankOffset()) * abs($move->getFileOffset()) == 2)) {
-			$move->setInvalid('chess.invalidmove.knight');
-		}
+	public function validateMove(Move $move, Game $game) {
+
 	}
 }

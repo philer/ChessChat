@@ -65,7 +65,7 @@ class Game extends DatabaseModel {
 	 * @var string
 	 */
 	const DEFAULT_BOARD_STRING =
-	'RA1Nb1Bc1Qd1KD1Bc1Nb1RA1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7rA8nb8bc8qd8kD8bc8nb8rA8';
+	'RA1Nb1Bc1Qd1KE1Bf1Ng1RH1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7rA8nb8bc8qd8kE8bf8ng8rH8';
 	
 	/**
 	 * Game status as a short integer value
@@ -176,7 +176,7 @@ class Game extends DatabaseModel {
 			$this->status = self::STATUS_WHITES_TURN;
 		} else {
 			parent::__construct($gameData);
-			$this->board = self::boardFromString($this->boardString);
+			if ($this->boardString != null) $this->board = self::boardFromString($this->boardString);
 		}
 	}
 	
@@ -238,9 +238,7 @@ class Game extends DatabaseModel {
 	 * @param Move $move
 	 */
 	public function move(Move $move) {
-		if ($move->valid) {
-			// TODO execute/save move, update status
-		}
+		// TODO execute/save move, update status
 	}
 	
 	/**
@@ -253,7 +251,7 @@ class Game extends DatabaseModel {
 	public static function boardFromString($boardStr) { 
 		$board = array();
 		for ( $file='a' ; $file<='h' ; $file++ ) {
-			$board[$file] = new Array()
+			$board[$file] = array();
 			for ( $rank=1; $rank<=8 ; $rank++ ) {
 				$board[$file][$rank] = null;
 			}
@@ -261,7 +259,7 @@ class Game extends DatabaseModel {
 		$board['x'] = array();
 		$board['y'] = array();
 		
-		for ( $cp=0 ; $cp<32 ; $cp+=3 ) {
+		for ( $cp=0 ; $cp<96 ; $cp+=3 ) {
 			switch(strtolower($boardStr[$cp])) {
 				case Pawn::LETTER_BLACK : // en passant possible?
 					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
@@ -291,7 +289,7 @@ class Game extends DatabaseModel {
 		}
 		return $board;
 	}
-
+	
 	/**
 	 * Renders a string representation of a given chess board (array)
 	 * @see  Game::$boardString
@@ -416,7 +414,18 @@ class Game extends DatabaseModel {
 	 * @return 	boolean
 	 */
 	public function whitesTurn() {
-		return (boolean) ($this->status % 2);
+		return ! (boolean) ($this->status % 2);
+	}
+	
+	/**
+	 * Checks if the given user is a player in this game
+	 * @param  User    $user	optional
+	 * @return boolean
+	 */
+	public function isPlayer(User $user = null) {
+		if (is_null($user)) $user = Core::getUser();
+		return $this->whitePlayer->getId() === $user->getId()
+		    || $this->blackPlayer->getId() === $user->getId();
 	}
 	
 	/**

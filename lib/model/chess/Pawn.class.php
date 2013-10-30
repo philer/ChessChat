@@ -56,41 +56,7 @@ class Pawn extends ChessPiece {
 	 * Pawns may not use the initial two-square advance to jump over an occupied square, or to capture.
 	 * A pawn captures diagonally, one square forward and to the left or right. 
 	 */
-	public function validateMove(Move &$move) {
-		if (abs($move->getRankOffset()) != 0 && abs($move->getFileOffset()) > 2) {
-			$move->setInvalid('chess.invalidmove.pawn');
-			return;
-		}
-		if($move->chesspiece->isWhite()){
-			if($move->getFileOffset()<0){
-				$move->setInvalid('chess.invalidmove.pawn');
-				return;
-			}
-			//only valid for first move
-			if($move->getFileOffset() == 2){
-				if($move->fromFile != 2){
-					$move->setInvalid('chess.invalidmove.pawn.notfirst');
-				}
-				if($game->board[$move->fromRank][2] != null){
-					$move->setInvalid('chess.invalidmove.blocked');
-				}
-			}
-		}
-		else{
-			if($move->getFileOffset()>0){
-				$move->setInvalid('chess.invalidmove.pawn');
-				return;
-			}
-						//only valid for first move
-			if($move->getFileOffset() == 2){
-				if($move->fromFile != 7){
-					$move->setInvalid('chess.invalidmove.pawn.notfirst');
-				}
-				if($game->board[$move->fromRank][5] != null){
-					$move->setInvalid('chess.invalidmove.blocked');
-				}
-			}
-		}
+	public function validateMove(Move $move, Game $game) {
+
 	}
-	
 }

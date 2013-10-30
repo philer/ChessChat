@@ -18,7 +18,7 @@ class ChatController implements AjaxController {
 	 * @param 	GameController 	$gameController
 	 */
 	public function __construct(GameController $gameController = null) {
-		if (!is_null($gameController)) $this->gameController = $gameController;
+		$this->gameController = $gameController;
 	}
 	
 	/**
