@@ -176,6 +176,7 @@ class Game extends DatabaseModel {
 			$this->status = self::STATUS_WHITES_TURN;
 		} else {
 			parent::__construct($gameData);
+			$this->board = self::boardFromString($this->boardString);
 		}
 	}
 	
@@ -236,7 +237,7 @@ class Game extends DatabaseModel {
 	 * Checks and executes a given Move.
 	 * @param Move $move
 	 */
-	public function move(Move &$move) {
+	public function move(Move $move) {
 		if ($move->valid) {
 			// TODO execute/save move, update status
 		}
@@ -257,7 +258,8 @@ class Game extends DatabaseModel {
 				$board[$file][$rank] = null;
 			}
 		}
-		for ( $prison='v' ; $prison<='y' ; $prison++) $board[$prison] = array();
+		$board['x'] = array();
+		$board['y'] = array();
 		
 		for ( $cp=0 ; $cp<32 ; $cp+=3 ) {
 			switch(strtolower($boardStr[$cp])) {
@@ -303,7 +305,7 @@ class Game extends DatabaseModel {
 			for ( $rank=1; $rank<=8 ; $rank++ ) {
 				if ($cp = $board[$file][$rank]) {
 					$boardStr .= $cp;
-					switch ($cp->getClass()) {
+					switch (get_class($cp)) {
 						case 'Pawn' :
 							$boardStr .= $cp->canEnPassant ? strtoupper($file) : $file;
 							break;
@@ -348,14 +350,6 @@ class Game extends DatabaseModel {
 	 */
 	public function getBlackPlayer() {
 		return $this->blackPlayer;
-	}
-	
-	/**
-	 * For use in URLs
-	 * @return 	string
-	 */
-	public function getRoute() {
-		return 'Game/' . $this->gameHash;
 	}
 	
 	/**
@@ -438,5 +432,13 @@ class Game extends DatabaseModel {
 			return false;
 		}
 		return null;
+	}
+
+	/**
+	 * For use in URLs
+	 * @return 	string
+	 */
+	public function getRoute() {
+		return 'Game/' . $this->gameHash;
 	}
 }
