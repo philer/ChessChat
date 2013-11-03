@@ -21,14 +21,14 @@ class Queen extends ChessPiece {
 	const UTF8_BLACK = '&#x265B;';
 	
 	/**
-	 * Chess notation letter for this chess piece (english)
+	 * Chess notation letter for this chess piece (English)
 	 * White is upper case.
 	 * @var string
 	 */
 	const LETTER_WHITE = 'Q';
 	
 	/**
-	 * Chess notation letter for this chess piece (english)
+	 * Chess notation letter for this chess piece (English)
 	 * black is lower case.
 	 * @var string
 	 */

@@ -27,14 +27,14 @@ class Rook extends ChessPiece {
 	const UTF8_BLACK = '&#x265C;';
 	
 	/**
-	 * Chess notation letter for this chess piece (english)
+	 * Chess notation letter for this chess piece (English)
 	 * White is upper case.
 	 * @var string
 	 */
 	const LETTER_WHITE = 'R';
 	
 	/**
-	 * Chess notation letter for this chess piece (english)
+	 * Chess notation letter for this chess piece (English)
 	 * black is lower case.
 	 * @var string
 	 */
@@ -54,6 +54,25 @@ class Rook extends ChessPiece {
 	 * through any number of unoccupied squares
 	 */
 	public function validateMove(Move $move, Game $game) {
+		if ($move->getRankOffset() * $move->getFileOffset() != 0) {
+			$move->setInvalid('chess.invalidmove.rook');
+			return;
+		}
+		if ($move->getRankOffset() == 0){
+			for ( $i=0 ; $i<$move->getFileOffset()-1 ; $i++ ){
+				if ($game->board[$move->fromRank][$i + $move->fromFile] != null) {
+					$move->setInvalid('chess.invalidmove.blocked');
+					return;
+				}
+			}
+		} else {
+			for ( $i=0 ; $i<$move->getRankOffset()-1 ; $i++ ){
+				if ($game->board[$i + $move->fromRank][$move->fromFile] != null) {
+					$move->setInvalid('chess.invalidmove.blocked');
+					return;
+				}
+			}
+		}
 
 	}
 }

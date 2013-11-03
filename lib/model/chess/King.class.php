@@ -53,6 +53,8 @@ class King extends ChessPiece {
 	 * A king can move one square in any direction
 	 */
 	public function validateMove(Move $move, Game $game) {
-
+		if (abs($move->getRankOffset()) > 1 || abs($move->getFileOffset()) > 1) {
+			$move->setInvalid('chess.invalidmove.king');
+		}
 	}
 }

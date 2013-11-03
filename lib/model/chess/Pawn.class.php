@@ -27,14 +27,14 @@ class Pawn extends ChessPiece {
 	const UTF8_BLACK = '&#x265F;';
 	
 	/**
-	 * Chess notation letter for this chess piece (english)
+	 * Chess notation letter for this chess piece (English)
 	 * White is upper case.
 	 * @var string
 	 */
 	const LETTER_WHITE = 'P';
 	
 	/**
-	 * Chess notation letter for this chess piece (english)
+	 * Chess notation letter for this chess piece (English)
 	 * black is lower case.
 	 * @var string
 	 */
@@ -57,6 +57,39 @@ class Pawn extends ChessPiece {
 	 * A pawn captures diagonally, one square forward and to the left or right. 
 	 */
 	public function validateMove(Move $move, Game $game) {
-
+		if (abs($move->getRankOffset()) != 0 && abs($move->getFileOffset()) > 2) {
+			$move->setInvalid('chess.invalidmove.pawn');
+			return;
+		}
+		if($move->chesspiece->isWhite()){
+			if($move->getFileOffset()<0){
+				$move->setInvalid('chess.invalidmove.pawn');
+				return;
+			}
+			//only valid for first move
+			if($move->getFileOffset() == 2){
+				if($move->fromFile != 2){
+					$move->setInvalid('chess.invalidmove.pawn.notfirst');
+				}
+				if($game->board[$move->fromRank][2] != null){
+					$move->setInvalid('chess.invalidmove.blocked');
+				}
+			}
+		}
+		else{
+			if($move->getFileOffset()>0){
+				$move->setInvalid('chess.invalidmove.pawn');
+				return;
+			}
+						//only valid for first move
+			if($move->getFileOffset() == 2){
+				if($move->fromFile != 7){
+					$move->setInvalid('chess.invalidmove.pawn.notfirst');
+				}
+				if($game->board[$move->fromRank][5] != null){
+					$move->setInvalid('chess.invalidmove.blocked');
+				}
+			}
+		}
 	}
 }
