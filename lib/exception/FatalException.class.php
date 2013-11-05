@@ -132,7 +132,13 @@ foreach ($stacktrace as $i) {
 				return ' ... '; // censor database password
 			} else {
 				$params = ' ';
-				foreach($i['args'] as $k) $params .= $k.' ';
+				foreach($i['args'] as $k) {
+					if (is_object($k)) {
+						$params .= '{' . get_class($k) . ' object} ';
+					} else {
+						$params .= $k.' ';
+					}
+				}
 				return $params;
 			}	
 		}
