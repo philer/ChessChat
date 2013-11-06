@@ -45,7 +45,7 @@ class Game extends DatabaseModel {
 	public $board = array();
 	
 	/**
-	 * Chessboard represented as a string for easy transmission and storage
+	 * Chessboard is represented as a string for easy transmission and storage.
 	 * Conventions:
 	 * - 3 characters per piece. (3*32 = 96 total)
 	 * - first character: piece type, capital for white
@@ -56,12 +56,7 @@ class Game extends DatabaseModel {
 	 * - third character: rank (row)
 	 * - files 'v' and 'w' for dead white pieces, files 'x' and 'y' for dead black pieces
 	 * TODO(- first chesspiece indicates who's turn it is (redundant with status))
-	 * @var string
-	 */
-	protected $boardString = '';
-	
-	/**
-	 * String representation of the board at the start of a game.
+	 * 
 	 * @var string
 	 */
 	const DEFAULT_BOARD_STRING =
@@ -153,33 +148,67 @@ class Game extends DatabaseModel {
 	 * @param 	array<mixed> $gameData
 	 */
 	public function __construct(array $gameData = array()) {
+		$whitePlayerData = array();
+		$blackPlayerData = array();
 		if (isset($gameData['whitePlayerId'])) {
-			// assume both white's and black's Id and name are set
-			$this->whitePlayer = new User(array(
-				'userId'   => $gameData['whitePlayerId'],
-				'userName' => $gameData['whitePlayerName']
-				));
-			$this->blackPlayer = new User(array(
-				'userId'   => $gameData['blackPlayerId'],
-				'userName' => $gameData['blackPlayerName']
-				));
-		
+			$whitePlayerData['userId'] = $gameData['whitePlayerId'];
 		}
-		// don't need this anymore
-		unset($gameData['whitePlayerId'], $gameData['whitePlayerName'], $gameData['blackPlayerId'], $gameData['blackPlayerName']);
-		
+		if (isset($gameData['whitePlayerName'])) {
+			$whitePlayerData['userName'] = $gameData['whitePlayerName'];
+		}
+		if (isset($gameData['blackPlayerId'])) {
+			$blackPlayerData['userId'] = $gameData['blackPlayerId'];
+		}
+		if (isset($gameData['blackPlayerName'])) {
+			$blackPlayerData['userName'] = $gameData['blackPlayerName'];
+		}
+		$this->whitePlayer($whitePlayerData);
+		$this->blackPlayer($blackPlayerData);
+		if (isset($gameData['boardString'])) {
+			$this->board = self::boardFromString($gameData['boardString']);
+		}
+		// delete unneeded data
+		unset($gameData['whitePlayerId'],
+			  $gameData['whitePlayerName'],
+			  $gameData['blackPlayerId'],
+			  $gameData['blackPlayerName'],
+			  $gameData['boardString']
+		);
 		if (empty($gameData)) {
-			// TODO create database entry, get gameId
 			$this->gameHash = $this->generateHash();
-			$this->boardString = self::DEFAULT_BOARD_STRING;
-			// $this->board = $this->boardFromString($this->boardString);
-			$this->status = self::STATUS_WHITES_TURN;
+			// $this->status = self::STATUS_WHITES_TURN;
 		} else {
 			parent::__construct($gameData);
-			if ($this->boardString != null) $this->board = self::boardFromString($this->boardString);
 		}
 	}
 	
+	/**
+	 * Save a Game (new db entry)
+	 */
+	public function save() {
+		Core::getDB()->sendQuery("
+			INSERT INTO cc_game (gameHash, whitePlayerId, blackPlayerId, board, status)
+			VALUES ('" . $this->gameHash . "',
+			        '" . $this->whitePlayer->getId() . "',
+			        '" . $this->blackPlayer->getId() . "',
+			        '" . self::DEFAULT_BOARD_STRING . "',
+			        '" . self::STATUS_WHITES_TURN . "')
+		");
+	}
+
+	/**
+	 * Save changed game (existing db entry)
+	 */
+	public function update() {
+		Core::getDB()->sendQuery("
+			UPDATE cc_game SET
+				board      = " . self::boardToString($this->board) . ",
+				status     = " . $this->status . ",
+				lastUpdate = " . NOW . "
+			WHERE gameId = " . $this->gameId
+		);
+	}
+
 	/**
 	 * Returns this game's gameId
 	 * @return 	integer
@@ -196,20 +225,13 @@ class Game extends DatabaseModel {
 		// put anything useful in the gamehash.
 		// it doesn't have to be cryptographically safe,
 		// just don't stumble over it.
-		$hashString = $this->gameId
-					. NOW
-					. GAME_SALT
-					. $this->whitePlayer
-					. $this->blackPlayer;
-		// generate hash:
-		// generate md5, base64 it,
-		// remove bad characters, then take only first few characters
-		$this->hash = substr(
-						str_replace(
-							array('/','+','='), '',
-							base64_encode(
-								md5($hashString))),
-						0, GAME_HASH_LENGTH);
+		return Util::urlHash(
+			$this->whitePlayer->getId()
+			. $this->blackPlayer->getId()
+			. microtime(true)
+			. GAME_SALT,
+			GAME_HASH_LENGTH
+		);
 	}
 	
 	/**

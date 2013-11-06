@@ -91,30 +91,18 @@ class GameController extends AbstractRequestController {
 				)->fetch_assoc();
 		 	
 			if (!empty($opponentData)) {
-				
+				$gameData = array();
 				if ($_POST['whitePlayer'] === 'self') {
-					$whitePlayerId = Core::getUser()->getId();
-					$blackPlayerId = $opponentData['userId'];
+					$gameData['whitePlayerId'] = Core::getUser()->getId();
+					$gameData['blackPlayerId'] = $opponentData['userId'];
 				} else {
-					$whitePlayerId = $opponentData['userId'];
-					$blackPlayerId = Core::getUser()->getId();
+					$gameData['whitePlayerId'] = $opponentData['userId'];
+					$gameData['blackPlayerId'] = Core::getUser()->getId();
 				}
-				$hash = Util::urlHash(
-						"{$whitePlayerId}/{$blackPlayerId}/" . NOW . '/' . GAME_SALT,
-						GAME_HASH_LENGTH
-					);
-				
-				// save
-				Core::getDB()->sendQuery("
-					INSERT INTO cc_game (gameHash, whitePlayerId, blackPlayerId, board, status)
-					VALUES ('" . $hash . "',
-					        '" . $whitePlayerId . "',
-					        '" . $blackPlayerId . "',
-					        '" . Game::DEFAULT_BOARD_STRING . "',
-					        '" . Game::STATUS_WHITES_TURN . "')
-					");
-				header('Location: ' . Util::url('Game/' . $hash));
-		 		return true;
+				$game = new Game($gameData);
+				$game->save();
+				header('Location: ' . Util::url('Game/' . $game->getHash()));
+				return true;
 			}
 		 	Core::getTemplateEngine()->addVar('errorMessage', 'form.invalid');
 		 	Core::getTemplateEngine()->addVar('invalid', array('opponent'));
@@ -150,6 +138,8 @@ class GameController extends AbstractRequestController {
 		
 		if ($move->isValid()) {
 			$game->move($move);
+			$game->update();
+			$move->save();
 			AjaxUtil::queueReply('status', $game->getFormattedStatus());
 			$this->getChatController()->post(
 				Core::getLanguage()->getLanguageItem(
