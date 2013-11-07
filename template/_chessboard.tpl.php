@@ -1,7 +1,8 @@
 <?php
 
 // default board
-$board = Game::boardFromString(Game::DEFAULT_BOARD_STRING);
+//$board = Game::boardFromString(Game::DEFAULT_BOARD_STRING);
+$board = $this->var['game']->board;
 
 $whitePlayer = $this->var['game']->isWhitePlayer()
 			|| !$this->var['game']->isPlayer();
