@@ -38,13 +38,13 @@ class Knight extends ChessPiece {
 	 * Check if $move is a valid move for a Knight
 	 * and sets $move->valid and $move->invalidMessage accordingly.
 	 * @param 	Move 	$move
-	 * Valid move for a Knight: 
-	 * move to a square that is two squares horizontally and one square vertically, 
-	 * or two squares vertically and one square horizontally
-	 * can jump over other pieces
 	 */
 	public function validateMove(Move $move, Game $game ) {
-		if ( !(abs($move->getRankOffset()) * abs($move->getFileOffset()) == 2)) {
+		// Valid move for a Knight: 
+		// move to a square that is two squares horizontally and one square vertically, 
+		// or two squares vertically and one square horizontally
+		// can jump over other pieces
+		if ( abs($move->getRankOffset() * $move->getFileOffset()) != 2 ) {
 			$move->setInvalid('chess.invalidmove.knight');
 		}
 	}

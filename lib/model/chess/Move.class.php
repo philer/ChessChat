@@ -31,18 +31,6 @@ class Move {
 	public $toRank = '';
 	
 	/**
-	 * File (vertical, column) offset caused by this move.
-	 * @var integer
-	 */
-	public $fileOffset = 0;
-	
-	/**
-	 * Rank (horizontal, row) offset caused by this move.
-	 * @var integer
-	 */
-	public $rankOffset = 0;
-	
-	/**
 	 * Chesspiece that was moved.
 	 * @var ChessPiece
 	 */
@@ -143,6 +131,14 @@ class Move {
 	 */
 	public function to() {
 		return strtoupper($this->toFile) . $this->toRank;
+	}
+	
+	public function getRankOffset() {
+		return $this->toRank - $this->fromRank;
+	}
+	
+	public function getFileOffset() {
+		return ord($this->toFile) - ord($this->fromFile);
 	}
 	
 	public function getChesspiece() {

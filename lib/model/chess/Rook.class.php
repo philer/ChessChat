@@ -27,14 +27,14 @@ class Rook extends ChessPiece {
 	const UTF8_BLACK = '&#x265C;';
 	
 	/**
-	 * Chess notation letter for this chess piece (English)
+	 * Chess notation letter for this chess piece (english)
 	 * White is upper case.
 	 * @var string
 	 */
 	const LETTER_WHITE = 'R';
 	
 	/**
-	 * Chess notation letter for this chess piece (English)
+	 * Chess notation letter for this chess piece (english)
 	 * black is lower case.
 	 * @var string
 	 */
@@ -49,30 +49,29 @@ class Rook extends ChessPiece {
 	 * Check if $move is a valid move for a Rook
 	 * and sets $move->valid and $move->invalidMessage accordingly.
 	 * @param 	Move 	$move
-	 * Valid move for a Rook:
-	 * The rook moves horizontally or vertically, 
-	 * through any number of unoccupied squares
 	 */
 	public function validateMove(Move $move, Game $game) {
+		 // Valid move for a Rook:
+		 // The rook moves horizontally or vertically, 
+		 // through any number of unoccupied squares
 		if ($move->getRankOffset() * $move->getFileOffset() != 0) {
 			$move->setInvalid('chess.invalidmove.rook');
 			return;
 		}
 		if ($move->getRankOffset() == 0){
 			for ( $i=0 ; $i<$move->getFileOffset()-1 ; $i++ ){
-				if ($game->board[$move->fromRank][$i + $move->fromFile] != null) {
+				if ($game->board[$move->fromFile][$i + $move->fromRank] != null) {
 					$move->setInvalid('chess.invalidmove.blocked');
 					return;
 				}
 			}
 		} else {
 			for ( $i=0 ; $i<$move->getRankOffset()-1 ; $i++ ){
-				if ($game->board[$i + $move->fromRank][$move->fromFile] != null) {
+				if ($game->board[chr(ord($move->fromFile) + $i)][$move->fromRank] != null) {
 					$move->setInvalid('chess.invalidmove.blocked');
 					return;
 				}
 			}
 		}
-
 	}
 }

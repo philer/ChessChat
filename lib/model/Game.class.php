@@ -238,7 +238,7 @@ class Game extends DatabaseModel {
 	 * @param Move $move
 	 */
 	public function move(Move $move) {
-		// TODO execute/save move, update status
+		// TODO update board array
 	}
 	
 	/**

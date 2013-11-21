@@ -21,14 +21,14 @@ class Bishop extends ChessPiece {
 	const UTF8_BLACK = '&#x265D;';
 	
 	/**
-	 * Chess notation letter for this chess piece (English)
+	 * Chess notation letter for this chess piece (english)
 	 * White is upper case.
 	 * @var string
 	 */
 	const LETTER_WHITE = 'B';
 	
 	/**
-	 * Chess notation letter for this chess piece (English)
+	 * Chess notation letter for this chess piece (english)
 	 * black is lower case.
 	 * @var string
 	 */
@@ -38,21 +38,18 @@ class Bishop extends ChessPiece {
 	 * Check if $move is a valid move for a Bishop
 	 * and sets $move->valid and $move->invalidMessage accordingly
 	 * @param 	Move 	$move
-	 * Valid move for a Bishop:
-	 * diagonal movement
-	 * no limits in distance
-	 * cannot jump over other pieces
 	 */
-	 
 	public function validateMove(Move $move, Game $game) {
-		
+		// Valid move for a Bishop:
+		// diagonal movement
+		// no limits in distance
+		// cannot jump over other pieces
 		if (abs($move->getRankOffset()) != abs($move->getFileOffset())) {
 			$move->setInvalid('chess.invalidmove.bishop');
 			return;
 		}
-
 		for ( $i=0 ; $i<$move->getRankOffset()-1 ; $i++ ) {
-			if ($game->board[$i + $move->fromRank][$i + $move->fromFile] != null) {
+			if ($game->board[chr(ord($move->fromFile) + $i)][$move->fromRank] != null) {
 				$move->setInvalid('chess.invalidmove.blocked');
 				return;
 			}

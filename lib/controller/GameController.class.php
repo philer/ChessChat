@@ -150,6 +150,8 @@ class GameController extends AbstractRequestController {
 		
 		if ($move->isValid()) {
 			$game->move($move);
+			//TODO $game->update();
+			//TODO $move->save();
 			AjaxUtil::queueReply('status', $game->getFormattedStatus());
 			$this->getChatController()->post(
 				Core::getLanguage()->getLanguageItem(

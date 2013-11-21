@@ -49,8 +49,6 @@ class King extends ChessPiece {
 	 * Check if $move is a valid move for a King
 	 * and sets $move->valid and $move->invalidMessage accordingly.
 	 * @param 	Move 	$move
-	 * Valid move for a king:
-	 * A king can move one square in any direction
 	 */
 	public function validateMove(Move $move, Game $game) {
 		if (abs($move->getRankOffset()) > 1 || abs($move->getFileOffset()) > 1) {
