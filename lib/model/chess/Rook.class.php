@@ -10,7 +10,7 @@ class Rook extends ChessPiece {
 	 * King may only perform castling if the Rook hasn't been moved before.
 	 * @var boolean
 	 */
-	protected $canCastle = false;
+	public $canCastle = false;
 	
 	/**
 	 * HTML's UTF-8 entitie for chess character

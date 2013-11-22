@@ -149,6 +149,11 @@ class Move {
 		return $this->target;
 	}
 	
+	public function save() {
+		// TODO larissa
+		// see Game::save()
+	}
+	
 	/**
 	 * Returns a json encoded (string) representation of this Move's relevant
 	 * information for use in ajax response

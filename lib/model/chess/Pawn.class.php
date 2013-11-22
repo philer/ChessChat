@@ -10,7 +10,7 @@ class Pawn extends ChessPiece {
 	 * Pawn's may sometimes move 'en passant'
 	 * @var boolean
 	 */
-	protected $canEnPassant = false;
+	public $canEnPassant = false;
 
 	/**
 	 * HTML's UTF-8 entitie for chess character
@@ -68,10 +68,10 @@ class Pawn extends ChessPiece {
 			}
 			// only valid for first move
 			if($move->getRankOffset() == 2){
-				if($move->fromFile != 2){
-					$move->setInvalid('chess.invalidmove.pawn.notfirst');
+				if($move->fromRank != 2){
+					$move->setInvalid('chess.invalidmove.pawn.notfirstmove');
 				}
-				if($game->board[$move->fromFile][2] != null){
+				if($game->board[$move->fromFile][3] != null){
 					$move->setInvalid('chess.invalidmove.blocked');
 				}
 			}
@@ -83,10 +83,10 @@ class Pawn extends ChessPiece {
 			}
 			// only valid for first move
 			if($move->getRankOffset() == -2){
-				if($move->fromFile != 7){
-					$move->setInvalid('chess.invalidmove.pawn.notfirst');
+				if($move->fromRank != 7){
+					$move->setInvalid('chess.invalidmove.pawn.notfirstmove');
 				}
-				if($game->board[$move->fromFile][5] != null){
+				if($game->board[$move->fromFile][6] != null){
 					$move->setInvalid('chess.invalidmove.blocked');
 				}
 			}

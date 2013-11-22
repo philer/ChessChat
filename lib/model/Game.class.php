@@ -189,10 +189,10 @@ class Game extends DatabaseModel {
 		Core::getDB()->sendQuery("
 			INSERT INTO cc_game (gameHash, whitePlayerId, blackPlayerId, board, status)
 			VALUES ('" . $this->gameHash . "',
-			        '" . $this->whitePlayer->getId() . "',
-			        '" . $this->blackPlayer->getId() . "',
+			        " . $this->whitePlayer->getId() . ",
+			        " . $this->blackPlayer->getId() . ",
 			        '" . self::DEFAULT_BOARD_STRING . "',
-			        '" . self::STATUS_WHITES_TURN . "')
+			        " . self::STATUS_WHITES_TURN . ")
 		");
 	}
 
@@ -202,7 +202,7 @@ class Game extends DatabaseModel {
 	public function update() {
 		Core::getDB()->sendQuery("
 			UPDATE cc_game SET
-				board      = " . self::boardToString($this->board) . ",
+				board      = '" . self::boardToString($this->board) . "',
 				status     = " . $this->status . ",
 				lastUpdate = " . NOW . "
 			WHERE gameId = " . $this->gameId
@@ -260,7 +260,9 @@ class Game extends DatabaseModel {
 	 * @param Move $move
 	 */
 	public function move(Move $move) {
-		// TODO update board array
+		$this->board[$move->toFile][$move->toRank] = $this->board[$move->fromFile][$move->fromRank];
+		$this->board[$move->fromFile][$move->fromRank] = null;
+		// TODO update status
 	}
 	
 	/**
@@ -324,7 +326,7 @@ class Game extends DatabaseModel {
 		for ( $file='a' ; $file<='h' ; $file++ ) {
 			for ( $rank=1; $rank<=8 ; $rank++ ) {
 				if ($cp = $board[$file][$rank]) {
-					$boardStr .= $cp;
+					$boardStr .= $cp->letter();
 					switch (get_class($cp)) {
 						case 'Pawn' :
 							$boardStr .= $cp->canEnPassant ? strtoupper($file) : $file;
@@ -343,8 +345,8 @@ class Game extends DatabaseModel {
 				}
 			}
 		}
-		foreach ($board['x'] as $i => $cp) $boardStr .= $cp . 'x' . dechex($i);
-		foreach ($board['y'] as $i => $cp) $boardStr .= $cp . 'y' . dechex($i);
+		foreach ($board['x'] as $i => $cp) $boardStr .= $cp->letter() . 'x' . dechex($i);
+		foreach ($board['y'] as $i => $cp) $boardStr .= $cp->letter() . 'y' . dechex($i);
 		return $boardStr;
 	}
 	
