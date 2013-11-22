@@ -1,8 +1,3 @@
-$(function() {
-	cc.init();
-	overlay.init();
-});
-
 ///// chesschat core class /////
 var cc = {
 	
@@ -85,3 +80,8 @@ var overlay = {
 	},
 	
 }
+
+$(function() {
+	cc.init();
+	overlay.init();
+});

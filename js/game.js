@@ -1,23 +1,3 @@
-$(function() {
-	
-	chess.setBoardSize();
-	$(window).resize(chess.setBoardSize);
-	
-	chat.init();
-	if (game !== 'undefined') {
-		chess.init();
-	}
-	
-	$('#resign').click(function(){
-		overlay.show('Resign', 'resign is not implemented');
-		return chat.sendMessage('/resign');
-	});
-	$('#offerDraw').click(function(){
-		overlay.show('Draw', 'draw is not implemented');
-		return chat.sendMessage('/offerDraw');
-	});
-});
-
 ////// CHAT //////
 var chat = {
 	
@@ -265,3 +245,23 @@ jQuery.fn.getField = function() {
 	id = $(this[0]).attr('id');
 	return id.substr( id.indexOf('-')+1 );
 };
+
+$(function() {
+	
+	chess.setBoardSize();
+	$(window).resize(chess.setBoardSize);
+	
+	chat.init();
+	if (game !== 'undefined') {
+		chess.init();
+	}
+	
+	$('#resign').click(function(){
+		overlay.show('Resign', 'resign is not implemented');
+		return chat.sendMessage('/resign');
+	});
+	$('#offerDraw').click(function(){
+		overlay.show('Draw', 'draw is not implemented');
+		return chat.sendMessage('/offerDraw');
+	});
+});

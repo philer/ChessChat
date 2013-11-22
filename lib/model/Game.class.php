@@ -162,8 +162,8 @@ class Game extends DatabaseModel {
 		if (isset($gameData['blackPlayerName'])) {
 			$blackPlayerData['userName'] = $gameData['blackPlayerName'];
 		}
-		$this->whitePlayer($whitePlayerData);
-		$this->blackPlayer($blackPlayerData);
+		$this->whitePlayer = new User($whitePlayerData);
+		$this->blackPlayer = new User($blackPlayerData);
 		if (isset($gameData['boardString'])) {
 			$this->board = self::boardFromString($gameData['boardString']);
 		}
