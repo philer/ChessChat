@@ -217,6 +217,8 @@ class Game extends DatabaseModel {
 		return $this->gameId;
 	}
 	
+
+	
 	/**
 	 * Creates a hopefully unique hash for game identification.
 	 * It containes digits and case sensitive letters

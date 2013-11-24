@@ -54,6 +54,13 @@ class Move {
 	 * @var string
 	 */
 	protected $invalidReason = '';
+	
+	/**
+	 * Current game
+	 * @var Game
+	 */
+	 
+	 protected $curGame = null;
 
 	/**
 	 * Coordinates may be written like this
@@ -106,6 +113,8 @@ class Move {
 		} else {
 			$this->chesspiece->validateMove($this, $game);
 		}
+		
+		$this->curGame = $game;
 	}
 	
 	/**
@@ -149,9 +158,34 @@ class Move {
 		return $this->target;
 	}
 	
+	public function getGame() {
+		return $this->curGame;
+	}
+	
 	public function save() {
-		// TODO larissa
-		// see Game::save()
+		$gameId = $this->getGame()->getId();
+		$playerId = $this->getChesspiece()->isWhite() ? $this->getGame()->getWhitePlayer()->getId() : $this->getGame()->getBlackPlayer()->getId();
+		$chessPiece = $this->getChesspiece()->__toString();
+		$fromSquare = $this->fromRank.$this->fromFile;
+		$toSquare = $this->toRank.$this->toFile;
+		
+/*		$dbh = Core::getDB();
+		
+		if($stmt = $dbh->prepare("INSERT INTO cc_move(gameId,playerId,chessPiece,fromSquare,toSquare) VALUES (? , ? , ? , ? , ?)")){
+			$stmt = bind_param("iiiss" , $gameId , $playerId , $chessPiece , $fromSquare , $toSquare);
+			$stmt = execute();
+			$stmt = close();
+			}
+		}
+		*/
+		Core::getDB()->sendQuery("
+			INSERT INTO cc_move (gameId,playerId,chessPiece,fromSquare,toSquare)
+			VALUES (" . $gameId . ",
+					" . $playerId . ",
+			        '" . $chessPiece . "',
+			        '" . $fromSquare . "',
+			        '" . $toSquare . "')
+		");
 	}
 	
 	/**
