@@ -20,4 +20,5 @@ abstract class DatabaseModel {
 		}
 	}
 	
+	// abstract public function save();
 }

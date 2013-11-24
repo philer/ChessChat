@@ -26,7 +26,7 @@ CREATE TABLE cc_game (
 	board         CHAR(96)    NOT NULL DEFAULT '', -- fixed length
 	-- status BIT(4) NOT NULL DEFAULT 0,   -- status is 0 trough 15
 	status        TINYINT(2)  NOT NULL DEFAULT 0,
-	lastUpdate    TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	lastUpdate    TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (gameId),
 	UNIQUE KEY (gameHash),
 	KEY (whitePlayerId),
@@ -41,18 +41,18 @@ CREATE TABLE cc_move (
 	chessPiece VARCHAR(6) NOT NULL,
 	fromSquare CHAR(2)    NOT NULL,
 	toSquare   CHAR(2)    NOT NULL,
-	time       INT(10)    NOT NULL DEFAULT 0,
+	time       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (moveId),
 	KEY (gameId)
 );
 
 CREATE TABLE cc_chatMessage (
-	messageId   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-	gameId 	    INT(10) UNSIGNED NOT NULL,
-	authorId    INT(10) UNSIGNED NOT NULL,
-	messageText TEXT    NOT NULL,
-	time        INT(10) NOT NULL DEFAULT 0,
-	isBotMsg    BIT(1)  NOT NULL DEFAULT b'0',
+	messageId   INT(10)   UNSIGNED NOT NULL AUTO_INCREMENT,
+	gameId 	    INT(10)   UNSIGNED NOT NULL,
+	authorId    INT(10)   UNSIGNED NOT NULL,
+	messageText TEXT      NOT NULL,
+	isBotMsg    BIT(1)    NOT NULL DEFAULT b'0',
+	time        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (messageId),
 	KEY (gameId),
 	KEY (gameId, time)

@@ -7,20 +7,6 @@ foreach ($this->var['chatMsgs'] as $this->var['msg']) {
 	$this->show('_chatMessage');
 }
 ?>
-						<p>
-							<span class="msgTime">21:15</span>
-							<span class="msgAuthor">Debug</span>
-							<span class="msgText" style="white-space:pre;font-family:mono;color:grey"><?php
-
-// echo "\nsession\n";
-// print_r($_SESSION);
-// print_r(Core::getUser());
-
-echo "\ngame\n";
-print_r($this->var['game']);
-
-						?></span>
-						</p>
 				</div><!-- #chatLog -->
 				</section><!-- #chatLogFrame -->
 

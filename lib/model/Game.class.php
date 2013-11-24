@@ -203,8 +203,7 @@ class Game extends DatabaseModel {
 		Core::getDB()->sendQuery("
 			UPDATE cc_game SET
 				board      = '" . self::boardToString($this->board) . "',
-				status     = " . $this->status . ",
-				lastUpdate = " . NOW . "
+				status     = " . $this->status . "
 			WHERE gameId = " . $this->gameId
 		);
 	}

@@ -59,8 +59,7 @@ class Move {
 	 * Current game
 	 * @var Game
 	 */
-	 
-	 protected $curGame = null;
+	 protected $game = null;
 
 	/**
 	 * Coordinates may be written like this
@@ -78,7 +77,9 @@ class Move {
 	 * @param Game   $game       game in which this move was made
 	 */
 	public function __construct($moveString, Game $game) {
-		if (!self::patternMatch($moveString)) throw new Exception('chess.invalidmove.format');
+        $this->game = $game;
+		
+        if (!self::patternMatch($moveString)) throw new Exception('chess.invalidmove.format');
 		$moveString = strtoupper(preg_replace(
 			'@' . self::SEPERATOR_PATTERN . '@',
 			'',
@@ -100,23 +101,32 @@ class Move {
 			$this->toFile = strtolower($moveString[2]);
 		}
 		
-		$this->chesspiece = $game->board[$this->fromFile][$this->fromRank];
-		$this->target     = $game->board[$this->toFile][$this->toRank];
+		$this->chesspiece = $this->game->board[$this->fromFile][$this->fromRank];
+		$this->target     = $this->game->board[$this->toFile][$this->toRank];
 		
 		// validation
-		if (Core::getUser()->getId() != $game->getCurrentPlayer()->getId()) {
+		if (Core::getUser()->getId() != $this->game->getCurrentPlayer()->getId()) {
 			$this->setInvalid('chess.invalidmove.notyourturn');
 		} elseif ($this->chesspiece == null) {
 			$this->setInvalid('chess.invalidmove.nopiece');
 		} elseif ($this->target != null && $this->chesspiece->isWhite() == $this->target->isWhite()) {
 			$this->setInvalid('chess.invalidmove.owncolor');
 		} else {
-			$this->chesspiece->validateMove($this, $game);
+			$this->chesspiece->validateMove($this, $this->game);
 		}
-		
-		$this->curGame = $game;
 	}
 	
+    public function save() {
+        Core::getDB()->sendQuery("
+            INSERT INTO cc_move (gameId, playerId, chessPiece, fromSquare, toSquare)
+            VALUES (" . $this->game->getId() . ",
+                    " . Core::getUser()->getId() . ",
+                    '" . $this->chesspiece->letter() . "',
+                    '" . $this->from() . "',
+                    '" . $this->to() . "')
+        ");
+    }
+    
 	/**
 	 * When treated as string a Move object will
 	 * return it's formatted string representation
@@ -159,33 +169,7 @@ class Move {
 	}
 	
 	public function getGame() {
-		return $this->curGame;
-	}
-	
-	public function save() {
-		$gameId = $this->getGame()->getId();
-		$playerId = $this->getChesspiece()->isWhite() ? $this->getGame()->getWhitePlayer()->getId() : $this->getGame()->getBlackPlayer()->getId();
-		$chessPiece = $this->getChesspiece()->__toString();
-		$fromSquare = $this->fromRank.$this->fromFile;
-		$toSquare = $this->toRank.$this->toFile;
-		
-/*		$dbh = Core::getDB();
-		
-		if($stmt = $dbh->prepare("INSERT INTO cc_move(gameId,playerId,chessPiece,fromSquare,toSquare) VALUES (? , ? , ? , ? , ?)")){
-			$stmt = bind_param("iiiss" , $gameId , $playerId , $chessPiece , $fromSquare , $toSquare);
-			$stmt = execute();
-			$stmt = close();
-			}
-		}
-		*/
-		Core::getDB()->sendQuery("
-			INSERT INTO cc_move (gameId,playerId,chessPiece,fromSquare,toSquare)
-			VALUES (" . $gameId . ",
-					" . $playerId . ",
-			        '" . $chessPiece . "',
-			        '" . $fromSquare . "',
-			        '" . $toSquare . "')
-		");
+		return $this->game;
 	}
 	
 	/**

@@ -156,8 +156,8 @@ class ChatController implements AjaxController {
 			        authorId,
 			        userName as authorName,
 			        messageText,
-			        time,
-			        isBotMsg
+			        isBotMsg,
+			        UNIX_TIMESTAMP(time) as time
 			 FROM   cc_chatMessage, cc_user
 			 WHERE  messageId > ' . intval($lastId) . '
 			    AND gameId = '    . intval($gameId) . '
@@ -184,8 +184,8 @@ class ChatController implements AjaxController {
 			        authorId,
 			        userName as authorName,
 			        messageText,
-			        time,
-			        isBotMsg
+			        isBotMsg,
+			        UNIX_TIMESTAMP(time) as time
 			 FROM   cc_chatMessage, cc_user
 			 WHERE  gameId = '    . intval($gameId) . '
 			    AND userId = authorId

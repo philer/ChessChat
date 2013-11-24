@@ -23,12 +23,12 @@ INSERT INTO cc_game (gameHash, whitePlayerId, blackPlayerId, board, status) VALU
 	('test10', 3, 1, 'RA1Nb1Bc1Qd1KE1Bf1Ng1RH1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7rA8nb8bc8qd8kE8bf8ng8rH8', 9),
 	('test11', 4, 2, 'RA1Nb1Bc1Qd1KE1Bf1Ng1RH1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7rA8nb8bc8qd8kE8bf8ng8rH8', 15);
 
-INSERT INTO cc_chatMessage (gameId, authorId, messageText, time, isBotMsg) VALUES
-	(1, 1, 'testmessage', '12345678', 0),
-	(1, 2, 'testmessage', '12345678', 0),
-	(1, 2, 'testmessage', '12345678', 1),
-	(2, 1, 'testmessage', '12345678', 0),
-	(2, 2, 'testmessage', '12345678', 0),
-	(4, 3, 'testmessage', '12345678', 0),
-	(4, 2, 'testmessage', '12345678', 0),
-	(1, 1, 'testmessage', '12345678', 0);
+INSERT INTO cc_chatMessage (gameId, authorId, messageText, isBotMsg) VALUES
+	(1, 1, 'testmessage', 0),
+	(1, 2, 'testmessage', 0),
+	(1, 2, 'testmessage', 1),
+	(2, 1, 'testmessage', 0),
+	(2, 2, 'testmessage', 0),
+	(4, 3, 'testmessage', 0),
+	(4, 2, 'testmessage', 0),
+	(1, 1, 'testmessage', 0);

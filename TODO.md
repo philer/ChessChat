@@ -1,15 +1,14 @@
 Larissa
 =======
-* Move::save() // write new db entry
-* Game::move() // update board array
+fix validateMove() for bishop, rook and queen (wrong result when moving further then 1 square)
 
 Phil
 ====
-* Game::save()
-* Game::update()
 
 
 Longterm
 --------
+* determine check
+* determine game over
 * castling
 * promoting
