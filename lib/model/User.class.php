@@ -5,7 +5,7 @@
  * A user may be a Guest, a Player, a Spectator...
  * @author Philipp Miller
  */
-class User {
+class User extends DatabaseModel {
 	
 	/**
 	 * Unique UserID
@@ -26,20 +26,35 @@ class User {
 	protected $email = '';
 	
 	/**
+	 * Cookie hash is used for login via cookie.
+	 * @var string
+	 */
+	protected $cookieHash = '';
+	
+	/**
 	 * User's preferred language as string (e.g. 'en')
 	 * @var string
 	 */
 	protected $language = '';
 	
 	/**
-	 * TODO
+	 * Amount of games this user is part of
+	 * @var integer
 	 */
-	public function __construct($id, $userName, $email = '', $language = '') {
-		$this->id = $id;
-		$this->userName = $userName;
-		if (!empty($email))    $this->email    = $email;
-		if (!empty($language)) $this->language = $language;
-		// TODO remove password + hash?
+	protected $gameCount = 0;
+	
+	/**
+	 * Creates a User object using provided data
+	 * or a Guest if none is provided.
+	 * @param 	array<mixed> $userData
+	 */
+	public function __construct(array $userData = null) {
+		if (is_null($userData)) {
+			$this->userId = 0;
+			$this->userName = 'Guest' . rand(1000,9999);
+		} else {
+			parent::__construct($userData);
+		}
 	}
 	
 	/**
@@ -57,8 +72,8 @@ class User {
 	 * @return 	integer
 	 */
 	public function getId() {
-		return $this->id;
-	}	
+		return $this->userId;
+	}
 	
 	/**
 	 * Getter for this User's name
@@ -74,10 +89,22 @@ class User {
 	 * @return 	string
 	 */
 	public function getLanguage() {
-		if (empty($this->language)) return false;
-		else return $this->language;
-	}	
-		
+		return $this->language;
+	}
+	
+	public function getGameCount() {
+		return $this->gameCount;
+	}
+	
+	/**
+	 * For use in URLs
+	 * @return 	string
+	 */
+	public function getRoute() {
+		$flatName = trim(preg_replace('#([^[:alnum:]]+)#','-',$this->userName), '-');
+		return 'User/' . $this->userId . '-' . $flatName;
+	}
+	
 	/**
 	 * Creates a blowfish hash for password encryption.
 	 * TODO create random salt
@@ -91,9 +118,126 @@ class User {
 	}
 	
 	/**
-	 * TODO
+	 * Checks if this user is a guest or a registered user
+	 * @return  boolean
 	 */
-	public function isRegisteredUser() {
-		return $this->userId > 0;
+	public function isGuest() {
+		return $this->userId === 0;
+	}
+	
+	/**
+	 * Checks if this user is the requesting user
+	 * @return boolean
+	 */
+	public function isSelf() {
+		return $this->userId === Core::getUser()->getId();
+	}
+	
+	/**
+	 * Generates a new cookieHash, saves it in database
+	 * and sends it to client.
+	 */
+	public function regenerateCookieHash() {
+		$cookieHash = Util::getRandomString(32);
+		if (Core::getDB()->sendQuery(
+			"UPDATE `cc_user`
+			 SET `cookieHash` = '" . $cookieHash . "' 
+			 WHERE `userId` = " . $this->userId
+		) !== true) throw new FatalException('could not reset cookieHash');
+		Util::setCookie('cookieHash', $cookieHash);
+		$this->cookieHash = $cookieHash;
+	}
+	
+	/**
+	 * Checks if the sent cookieHash matches this
+	 * cookieHash.
+	 * @return 	boolean
+	 */
+	public function checkCookieHash() {
+		if (!empty($this->cookieHash)) {
+			$cookieHash = Util::getCookie('cookieHash');
+			if (!is_null($cookieHash)) {
+				return Util::safeEquals($this->cookieHash, $cookieHash);
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns a pattern matching valid usernames
+	 * @param  string $delimiter defaults to '#'
+	 * @return string pattern
+	 */
+	public static function getUserNamePattern($delimiter = '#') {
+		return $delimiter . '^'
+		     . (USERNAME_FORCE_ASCII ? '[\x20-\x7E]' : '.')
+		     . '{' . USERNAME_MIN_LENGTH . ',' . USERNAME_MAX_LENGTH . '}$'
+		     . $delimiter;
+	}
+	
+	/**
+	 * Checks if $userName meets the required userName regulations.
+	 * @param  string $userName
+	 * @return boolean
+	 */
+	public static function validUserName($userName) {
+		// return strlen($userName) >= USERNAME_MIN_LENGTH
+		//     && strlen($userName) <= USERNAME_MAX_LENGTH;
+		return preg_match(self::getUserNamePattern(), $userName) === 1;
+	}
+	
+	/**
+	 * Returns a pattern matching valid email addresses
+	 * @param  string $delimiter defaults to '#'
+	 * @return string pattern
+	 */
+	public static function getEmailPattern($delimiter = '#') {
+		return $delimiter . '^\S+@[[:word:]0-9_.-]+\.[[:word:]]+$' . $delimiter;
+	}
+	
+	/**
+	 * Checks if $str is a valid email address.
+	 * TODO better pattern maybe
+	 * @param  string	$str
+	 * @return boolean
+	 */
+	public static function validEmail($email) {
+		return preg_match(self::getEmailPattern(), $email) === 1;
+	}
+	
+	/**
+	 * Returns a pattern matching valid password
+	 * @param  string $delimiter defaults to '#'
+	 * @return string pattern
+	 */
+	public static function getPasswordPattern($delimiter = '#') {
+		return $delimiter . '^.{' . PASSWORD_MIN_LENGTH . ',}$' . $delimiter;
+	}
+	
+	/**
+	 * Checks if $pw meets the required password criteria.
+	 * @param  string	$pw
+	 * @return boolean
+	 */
+	public static function validPassword($pw) {
+		return strlen($pw) >= PASSWORD_MIN_LENGTH;
+		// if (!( strlen($pw) >= PASSWORD_MIN_LENGTH
+		//     && strlen($pw) <= PASSWORD_MAX_LENGTH
+		//     && (!PASSWORD_REQUIRE_LOWERCASE || preg_match('#[a-z]+#', $pw))
+		//     && (!PASSWORD_REQUIRE_UPPERCASE || preg_match('#[A-Z]+#', $pw))
+		//     && (!PASSWORD_REQUIRE_NUMERIC   || preg_match('#[0-9]+#', $pw))
+		//    )) {
+		// 	return false;
+		// }
+		// if ('' !== $chars = PASSWORD_REQUIRE_SPECIALCHARS) {
+		// 	for ($i=0 ; $i<strlen($chars) ; $i++) {
+		// 		if (strpos($pw, $chars[$i]) !== false) {
+		// 			return true;
+		// 		}
+		// 	}
+		// 	return false;
+		// }
+		// return true;
 	}
 }

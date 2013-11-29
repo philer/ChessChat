@@ -49,6 +49,19 @@ final class TemplateEngine {
 	protected $var = array();
 	
 	/**
+	 * Controller that handles the current request.
+	 * @var RequestController
+	 */
+	protected $controller = null;
+	
+	/**
+	 * Name of the (full page) template that was requested
+	 * @see TemplateEngine::showPage()
+	 * @var string
+	 */
+	protected $page = '';
+	
+	/**
 	 * Initializes this TemplateEngine
 	 * @param 	Language 	$language 	The language to be used
 	 */
@@ -68,21 +81,12 @@ final class TemplateEngine {
 	/**
 	 * Alias function for easy use in templates,
 	 * returns the appropriate value for a language variable.
-	 * @param 	string 	$langVar
-	 * @return 	string
+	 * @param  string		$langVar
+	 * @param  array<mixed>	$params
+	 * @return string
 	 */
-	function lang($langVar) {
-		return $this->language->getLanguageItem($langVar);
-	}
-	
-	/**
-	 * Convenience function for easy use in templates,
-	 * returns an absolute url for a given route.
-	 * @param 	string 	$route
-	 * @return 	string
-	 */
-	function url($route) {
-		return HOST . 'index.php/' . $route;
+	protected function lang($langVar, array $params = null) {
+		return $this->language->getLanguageItem($langVar, $params);
 	}
 	
 	/**
@@ -90,7 +94,7 @@ final class TemplateEngine {
 	 * @param 	string 	$template 	name of the template
 	 */
 	public function show($template) {
-		include(ROOT_DIR."template/".$template.".tpl.php");
+		include(ROOT_DIR . 'template/' . $template . '.tpl.php');
 	}
 	
 	/**
@@ -98,14 +102,16 @@ final class TemplateEngine {
 	 * a full page with header and footer.
 	 * @param 	string 	$template 	name of the template
 	 */
-	public function showPage($template) {
-		$this->show("head");
-		// we can send the header right away, so browsers may
-		// start requesting other scripts right away
+	public function showPage($template, $controller) {
+		$this->page       = $template;
+		$this->controller = $controller;
+		
+		$this->show('_head');
 		flush();
-		$this->show("header");
+		$this->show('_header');
+		
 		$this->show($template);
-		$this->show("footer");
+		$this->show('_footer');
 		// make sure everything gets there as quickly as possible
 		flush();
 	}
@@ -124,22 +130,13 @@ final class TemplateEngine {
 	}
 	
 	/**
-	 * Includes a Template and adds relevant variables first.
-	 * @param 	string 	$template 	name of the template
-	 * @param 	array 	$vars 		variables to be added
-	 */
-	protected function includeTemplate($template, array $vars = array()) {
-		$this->var = array_merge($this->var, $vars);
-		$this->show($template, false);
-	}
-	
-	/**
 	 * Registered scripts and stylesheets that are globally accessible
 	 */
 	public function registerDefaultScripts() {
 		$this->registerScript('jquery-2.0.0.min');
 		$this->registerScript('jquery-ui-1.10.3.custom.min');
-		$this->registerDynamicScript('user-data');
+		$this->registerScript('chesschat');
+		// $this->registerDynamicScript('user-data');
 		$this->registerStylesheet('global');
 	}
 			
@@ -174,7 +171,7 @@ final class TemplateEngine {
 	 * @param 	string 	$script
 	 */
 	public function registerDynamicScript($script) {
-		$this->dynamicScripts[] = ROOT_DIR."lib/js/".$script.".js.php";
+		$this->dynamicScripts[] = ROOT_DIR . "lib/js/" . $script . ".js.php";
 	}
 	
 	
@@ -185,11 +182,10 @@ final class TemplateEngine {
 	 * @return 	string
 	 */
 	protected static function getScriptPath($script) {
-		//if (file_exists(ROOT_DIR."js/".$script.".min.js")) {return HOST."js/".$script.".min.js";} else
-		if (file_exists(ROOT_DIR."js/".$script.".js")) {
-			return HOST."js/".$script.".js";
-		} elseif (file_exists(ROOT_DIR."js/".$script)) {
-			return HOST."js/".$script.".js";
+		if (file_exists(ROOT_DIR . "js/" . $script . ".js")) {
+			return Util::getBaseUrl() . "js/" . $script . ".js";
+		} elseif (file_exists(ROOT_DIR . "js/" . $script)) {
+			return Util::getBaseUrl() . "js/" . $script;
 		}
 	}
 	
@@ -200,11 +196,10 @@ final class TemplateEngine {
 	 * @return 	string
 	 */
 	protected static function getStylesheetPath($stylesheet) {
-		//if (file_exists(ROOT_DIR."style/".$stylesheet.".min.css")) {return HOST."style/".$stylesheet.".min.css";} else
-		if (file_exists(ROOT_DIR."style/".$stylesheet.".css")) {
-			return HOST."style/".$stylesheet.".css";
-		} elseif (file_exists(ROOT_DIR."style/".$stylesheet)) {
-			return HOST."style/".$stylesheet.".css";
+		if (file_exists(ROOT_DIR . "style/" . $stylesheet . ".css")) {
+			return Util::getBaseUrl() . "style/" . $stylesheet . ".css";
+		} elseif (file_exists(ROOT_DIR . "style/" . $stylesheet)) {
+			return Util::getBaseUrl() . "style/" . $stylesheet;
 		}
 	}
 	

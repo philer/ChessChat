@@ -1,0 +1,126 @@
+ul.dataList {
+	margin: 0 0 1em 0;
+	padding: 0;
+	text-align: left;
+	font-size: .9em;
+	line-height: 1.3em;
+	overflow: hidden;
+	color: lighten(@main-text-color, 10%);
+	border-radius: 4px;
+	border-width: 1px 0 0 1px;
+	border-style: solid;
+	border-color: @frame-border-color;
+	// box-shadow: 0 0 3px rgba(0,0,0,.2);
+	// background-color: @main-bg-color;
+	> li {
+		// data list multi-column layout
+		display: inline-block;
+		padding: 1em;
+		min-width: 25em;
+		.border-box-sizing;
+		border-width: 0 1px 1px 0;
+		border-style: solid;
+		border-color: @frame-border-color;
+		
+		width: 100%;
+		background-color: @dataList-bg-color1;
+		&:hover {
+			background-color: @dataList-bg-hover-color1;
+		}
+		dl {
+			display: inline-block;
+			dt, dd {
+				display: inline;
+			}
+			dt:after {
+				content: ":";
+			}
+			.heading {
+				font-weight: bold;
+				font-size: 1.15em;
+			}
+		}
+		@media all and (min-width: 950px) and (max-width: 1439px) {
+			width: 50%;
+			&:nth-child(4n), &:nth-child(4n+1) {
+				background-color: @dataList-bg-color2;
+				&:hover {
+					background-color: @dataList-bg-hover-color2;
+				}
+			}
+		}
+		@media all and (min-width: 1440px) and (max-width: 1879px) {
+			width: 33.3%;
+		}
+		@media all and (min-width: 1880px) {
+			width: 25%;
+			&:nth-child(8n), &:nth-child(8n+1), &:nth-child(8n+3), &:nth-child(8n+6) {
+				background-color: @dataList-bg-color2;
+				&:hover {
+					background-color: @dataList-bg-hover-color2;
+				}
+			}
+		}
+		@media all and (max-width: 949px), (min-width: 1439px) and (max-width: 1879px) {
+			&:nth-child(odd) {
+				background-color: @dataList-bg-color2;
+				&:hover {
+					background-color: @dataList-bg-hover-color2;
+				}
+			}
+		}
+	}
+}
+
+dl.userData {
+	> dt.userName {
+		display: none;
+	}
+	> dd.userName {
+		display: block;
+	}
+}
+
+span.vs,
+dl.gameData dd.whitePlayer:after {
+	content: " vs ";
+	font-weight: normal;
+	opacity: .66;
+}
+
+dl.gameData {
+	dt.whitePlayer,
+	dt.blackPlayer,
+	dt.status {
+		display: none;
+	}
+}
+
+ul.gameList > li {
+	dt.lastUpdate:before,
+	dd.status:before {
+		content: "\A";
+		white-space: pre;
+	}
+	> a {
+		float: left;
+		// color: inherit !important;
+		outline-width: 0;
+		span {
+			display: none;
+			&.icon {
+				font-size: 4em;
+				line-height: 3/4em;
+				vertical-align: middle;
+				padding: 0;
+				margin-right: .25em;
+				color: @main-text-color;
+				text-shadow: 1px 1px 2px #aaa;
+			}
+		}
+	}
+	> a:hover  span.icon,
+	> a:active span.icon {
+		color: lighten(@main-text-color, 15%);
+	}
+}

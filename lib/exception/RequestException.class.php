@@ -1,9 +1,9 @@
 <?php
 
-class RequestException extends Exception {
+class RequestException extends Exception implements RequestController {
 	
 	protected $title = '';
-	protected $http_code = 200;
+	protected $httpCode = 200;
 	
 	/**
 	 * Creates a new RequestException.
@@ -16,12 +16,17 @@ class RequestException extends Exception {
 	}
 	
 	/**
-	 * Display a nice message to user
+	 * Display a nice message to user.
+	 * Detailed messages in debug mode only.
 	 */
 	public function show() {
-		Core::getTemplateEngine()->addVar('errorTitle', $this->getTitle());
-		Core::getTemplateEngine()->addVar('errorMessage', $this->message);
-		Core::getTemplateEngine()->showPage('error');
+		if (DEBUG_MODE) {
+			Core::getTemplateEngine()->addVar('errorTitle', $this->getTitle());
+			Core::getTemplateEngine()->addVar('errorMessage', $this->message);
+		} else {
+			Core::getTemplateEngine()->addVar('errorMessage', 'exception.' . $this->httpCode . '.msg');
+		}
+		Core::getTemplateEngine()->showPage('errorPage', $this);
 	}
 	
 	/**
@@ -29,11 +34,20 @@ class RequestException extends Exception {
 	 * @return 	string
 	 */
 	public function getTitle() {
-		if ($this->http_code >= 400) {
-			return $this->http_code . ' ' . $this->title;
+		if ($this->httpCode >= 400) {
+			return $this->httpCode . ' ' . $this->title;
 		} else {
 			return $this->title;
 		}
 	}
 	
+	public function getPageTitle() {
+		return $this->getTitle();
+	}
+	
+	public function getCanonicalRoute() {
+		return '';
+	}
+	
+	public function handleRequest(array $route) {}
 }

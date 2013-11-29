@@ -4,7 +4,13 @@
  * Represents a single message in a chat
  * @author Philipp Miller
  */
-class ChatMessage {
+class ChatMessage extends DatabaseModel {
+	
+	/**
+	 * Unique Id of this chat message
+	 * @var integer
+	 */
+	public $messageId = 0;
 	
 	/**
 	 * gameId of this message's game
@@ -23,19 +29,19 @@ class ChatMessage {
 	 * May be the name of a bot.
 	 * @var string
 	 */
-	public $authorName = "";
+	public $authorName = '';
 	
 	/**
 	 * When was this message sent?
 	 * @var integer
 	 */
-	public $timestamp = 0;
+	public $time = 0;
 	
 	/**
 	 * message text
 	 * @var string
 	 */
-	public $messageText = "";
+	public $messageText = '';
 	
 	/**
 	 * Bot messages are displayed differently
@@ -52,15 +58,17 @@ class ChatMessage {
 	 * @param 	integer 	$authorId
 	 * @param 	string  	$authorName
 	 * @param 	string 		$messageText
-	 * @param 	integer 	$timestamp
+	 * @param 	integer 	$time
 	 * @param 	boolean 	$isBotMsg
 	 */
-	public function __construct($gameId, $authorId, $authorName, $messageText, $timestamp = NOW, $isBotMsg = false) {
-		$this->authorId = $authorId;
-		$this->authorName = $authorName;
-		$this->messageText = $messageText;
-		$this->timestamp = $timestamp;
-		$this->isBotMsg = $isBotMsg;
+	public function __construct(array $msgData = null) {
+		if (!is_null($msgData)) {
+			if (!isset($msgData['authorId']))
+				$this->authorId = Core::getUser()->getId();
+			if (!isset($msgData['time']))
+				$this->time = NOW;
+			parent::__construct($msgData);
+		}
 	}
 	
 	/**
@@ -79,7 +87,7 @@ class ChatMessage {
 	 * @return 	string
 	 */
 	public function getFormattedTime() {
-		return date('G:i', $this->timestamp);
+		return date('G:i', $this->time);
 	}
 	
 }

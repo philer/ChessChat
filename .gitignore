@@ -1,9 +1,19 @@
 # editors and stuff
-*sublime*
-*gource*
+*.sublime-*
+.gource*
 
-# temp and backup files
+# eclipse
+.project
+.buildpath
+.settings/
+
+# temp and backup files, OS specific files
 *.backup
+*~
+*.tmp
+Thumbs.db
+._*
+.DS_Store
 
 # ignore local configs,
 # track config/default/ instead
@@ -11,3 +21,6 @@ config/*.conf.php
 
 # styles are compiled from less
 style/*.css
+
+# ignore .htaccess, track *.htaccess instead
+.htaccess

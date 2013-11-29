@@ -17,7 +17,7 @@ self::$languages = array(
 	// 	'name' => 'Français',
 	// 	'file' => 'frensh',
 	// ),
-	'none' => array(
+	'--' => array(
 		'name' => '_dummy',
 		'file' => 'dummy',
 	),

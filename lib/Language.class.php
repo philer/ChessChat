@@ -9,34 +9,40 @@ final class Language {
 	/**
 	 * Language code for this language
 	 * as used by request headers etc.
-	 * @var 	string
+	 * @var string
 	 */
 	protected $langCode;
 	
 	/**
 	 * name of language in this language
-	 * @var 	string
+	 * @var string
 	 */
 	protected $name;
 	
 	/**
 	 * all languages known by this system
-	 * @var 	array
+	 * @var array<array>
 	 */
 	protected static $languages;
 	
 	/**
 	 * all language variables of this language
-	 * @var 	array
+	 * @var array<string>
 	 */
 	protected $langVars;
 	
 	/**
 	 * global language variables are the same in all
 	 * languages
-	 * @var 	array
+	 * @var array<string>
 	 */
 	protected static $globalLangVars;
+	
+	/**
+	 * Identifier for parameters in dynamic language variables
+	 * @var string
+	 */
+	const P_IDENTIFIER = '%';
 	
 	/**
 	 * Loads the appropriate language files.
@@ -52,34 +58,39 @@ final class Language {
 	}
 	
 	/**
-	 * Returns the language variable in this language
-	 * see alias lang($langVar) for use in templates.
-	 * @param 	string 	$langVar
-	 * @return 	string
+	 * Returns the language variable in this language.
+	 * If $params array is specified, array keys will be searched
+	 * and replaced accordingly.
+	 * @param  string		$langVar
+	 * @param  array<mixed>	$params
+	 * @return string
 	 */
-	public function getLanguageItem($langVar) {
-		// search in language specific vars first
-		if (array_key_exists($langVar,$this->langVars)) {
-			return $this->langVars[$langVar];
+	public function getLanguageItem($langVar, array $params = null) {
+		if (array_key_exists((string) $langVar,$this->langVars)) {
+			$langVar = $this->langVars[(string) $langVar];
+		} elseif (array_key_exists((string) $langVar,self::$globalLangVars)) {
+			$langVar = self::$globalLangVars[(string) $langVar];
 		}
-		// then search in global vars
-		if (array_key_exists($langVar,self::$globalLangVars)) {
-			return self::$globalLangVars[$langVar];
+		
+		if (!is_null($params)) {
+			foreach ($params as $key => $value) {
+				$langVar = str_replace(self::P_IDENTIFIER . $key, $value, $langVar);
+			}
 		}
-		// nothing found -> let's print the langVar instead
 		return $langVar;
 	}
 	
 	/**
-	 * Returns an array containing the names of all known
+	 * Returns an alphabetically sorted array containing the names of all known
 	 * languages in their respective languages.
 	 * @return 	string
 	 */
-	public function getLanguageNames() {
+	public static function getLanguages() {
 		$languageNames = array();
-		foreach(self::$languages as $lang) {
-			$languageNames[] = $lang['name'];
+		foreach(self::$languages as $code => $lang) {
+			$languageNames[$code] = $lang['name'];
 		}
+		asort($languageNames, SORT_STRING);
 		return $languageNames;
 	}
 	
