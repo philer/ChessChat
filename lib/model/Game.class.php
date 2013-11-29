@@ -467,12 +467,13 @@ class Game extends DatabaseModel {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * For use in URLs
 	 * @return 	string
 	 */
 	public function getRoute() {
-		return 'Game/' . $this->gameHash;
+		// return 'Game/' . $this->gameHash;
+		return $this->gameHash;
 	}
 }

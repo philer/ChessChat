@@ -99,7 +99,7 @@ $this->langVars = array(
 
 'chess.rule.nocastling'	=> 'Die Rouchade ist nicht mehr möglich nachdem der König bewegt wurde',
 
-'chess.moved'			=> '<strong>%user</strong> zieht %piece von <strong>%from</strong> nach <strong>%to</strong>',
+'chess.moved'			=> '<strong>%user</strong> zieht <span class="chesspiece">%piece</span> von <strong>%from</strong> nach <strong>%to</strong>',
 
 'exception.404.msg' 	=> 'Diese Seite ist nicht mehr verfügbar.<br /><a href="index.php">Zurück zur Startseite</a>',
 'exception.403.msg' 	=> 'Sie haben keinen Zugriff auf diese Seite.<br /><a href="index.php">Zurück zur Startseite</a>',

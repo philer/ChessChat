@@ -2,7 +2,7 @@
 		<header id="header">
 			<h1>
 				<a href="<?php echo Util::getBaseUrl(); ?>">
-					<span id="logo" class="icon">&#x265A;</span><?php echo SITENAME ?>
+					<span id="logo" class="icon chesspiece">&#x265A;</span><?php echo SITENAME ?>
 				</a>
 			</h1>
 			<nav id="panel">
