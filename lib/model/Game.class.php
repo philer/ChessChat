@@ -211,6 +211,11 @@ class Game extends DatabaseModel {
 		return $this->lastUpdate;
 	}
 	
+	/**
+	 * Returns the moveId of the last move that was
+	 * executed in this game
+	 * @return int
+	 */
 	public function getLastMoveId() {
 		return $this->lastMoveId;
 	}
@@ -242,7 +247,9 @@ class Game extends DatabaseModel {
 	}
 	
 	/**
-	 * Checks if the given user is a player in this game
+	 * Checks if the given user is a player in this game.
+	 * If no User objetc is provided, checks for the active
+	 * request's User.
 	 * @param  User    $user	optional
 	 * @return boolean
 	 */
@@ -353,7 +360,7 @@ class Game extends DatabaseModel {
 	}
 	
 	/**
-	 * Wether or not this game has ended in
+	 * Whether or not this game has ended in
 	 * a draw. False if still running or
 	 * one player has won.
 	 * @return 	boolean
@@ -362,26 +369,44 @@ class Game extends DatabaseModel {
 		return $this->isOver() && $this->drawOffered();
 	}
 	
+	/**
+	 * Whether or not a draw has been offered by the last player
+	 * @see   Game::STATUS_DRAW_OFFERED
+	 * @return boolean
+	 */
 	public function drawOffered() {
 		return (boolean) ($this->status & Game::STATUS_DRAW_OFFERED);
 	}
 	
+	/**
+	 * Set drawOffered
+	 * @see   Game::STATUS_DRAW_OFFERED
+	 * @param boolean $offered
+	 */
 	public function setDrawOffered($offered) {
 		$this->setStatusFlag(Game::STATUS_DRAW_OFFERED, $offered);
 	}
 	
+	/**
+	 * Set resigned status to true (game over)
+	 * @see  Game::STATUS_RESIGNED
+	 */
 	public function setResigned() {
 		$this->status |= Game::STATUS_RESIGNED;
 	}
 	
+	/**
+	 * Set stalemate to true (game over)
+	 * @see  Game::STATUS_STALEMATE
+	 */
 	public function setStalemate() {
 		$this->status |= Game::STATUS_STALEMATE;
 	}
 	
 	/**
 	 * Checks and executes a given Move.
-	 * @param Move $move
-	 * @return  Game (chaining)
+	 * @param  Move $move
+	 * @return Game (chaining)
 	 */
 	public function move(Move $move) {
 		$this->board->move($move);
@@ -404,7 +429,7 @@ class Game extends DatabaseModel {
 	}
 
 	/**
-	 * Save changed game (existing db entry)
+	 * Save changed game (update existing db entry)
 	 */
 	public function update() {
 		Core::getDB()->sendQuery("

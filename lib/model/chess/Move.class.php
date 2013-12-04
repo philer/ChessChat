@@ -50,8 +50,10 @@ class Move extends DatabaseModel {
 	
 	/**
 	 * Creates a Move object from the given string.
-	 * @param string $moveData has to be valid but not system formatted
-	 * @param Game   $game       game in which this move was made
+	 * Expects parameter 1 to be either an array containing data to be set
+	 * or a valid (unformatted) move string such as 'a4-3A'.
+	 * @param  string/array  $moveData
+	 * @param  Game          $game      game in which this move was made
 	 */
 	public function __construct($moveData, Game $game = null) {
 		if (is_array($moveData)) { // data from database
@@ -78,13 +80,19 @@ class Move extends DatabaseModel {
 	
 	/**
 	 * When treated as string a Move object will
-	 * return it's formatted string representation
+	 * return it's system formatted string representation
+	 * such as 'A4-A3'
 	 * @return 	string
 	 */
 	public function __toString() {
 		return $this->from . '-' . $this->to;
 	}
 	
+	/**
+	 * Returns a user presentable version of this move if it is valid
+	 * or a user presentable version of it's invalid reason.
+	 * @return  string
+	 */
 	public function formatString() {
 		if ($this->isValid()) {
 			return Core::getLanguage()->getLanguageItem(
@@ -101,6 +109,10 @@ class Move extends DatabaseModel {
 		}
 	}
 	
+	/**
+	 * Validates this move by setting it's $valid and $invalidReason field accordingly.
+	 * Does basic validation by itself, then initiates piece specific validation.
+	 */
 	public function validate() {
 		if (Core::getUser()->getId() != $this->game->getCurrentPlayer()->getId()) {
 			$this->setInvalid('chess.invalidmove.notyourturn');
@@ -113,21 +125,37 @@ class Move extends DatabaseModel {
 		}
 	}
 	
-	public function getRankOffset() {
-		return $this->to->rank() - $this->from->rank();
-	}
-	
+	/**
+	 * Returns file difference caused by this move.
+	 * May be negative.
+	 * @return integer
+	 */
 	public function getFileOffset() {
 		return $this->to->file() - $this->from->file();
 	}
 	
+	/**
+	 * Returns rank difference caused by this move.
+	 * May be negative.
+	 * @return integer
+	 */
+	public function getRankOffset() {
+		return $this->to->rank() - $this->from->rank();
+	}
+	
+	
+	/**
+	 * Returns a range defined by this moves $from and $to Squares.
+	 * @see    Board::range()
+	 * @return array<Square>
+	 */
 	public function getPath() {
 		return $this->game->board->range($this->from, $this->to);
 	}
 	
 	/**
-	 * Move okay?
-	 * @return boolean
+	 * Move allowed?
+	 * @return  boolean
 	 */
 	public function isValid() {
 		return $this->valid;
@@ -135,8 +163,8 @@ class Move extends DatabaseModel {
 	
 	/**
 	 * When a move turns out to be invalid, use this function to flag it and
-	 * give a reason
-	 * @param string $reason why is this move invalid? use language variables
+	 * give a reason why.
+	 * @param  string  $reason  why is this move invalid? use language variables
 	 */
 	public function setInvalid($reason = '') {
 		$this->valid = false;
@@ -144,8 +172,8 @@ class Move extends DatabaseModel {
 	}
 	
 	/**
-	 * Why was this move flagged as invalid?
-	 * @return string
+	 * Returns reason why was this move flagged as invalid.
+	 * @return  string  language variable
 	 */
 	public function getInvalidReason() {
 		return $this->invalidReason;
@@ -169,6 +197,10 @@ class Move extends DatabaseModel {
 		return $ajaxData;
 	}
 	
+	/**
+	 * Saves this move to database.
+	 * Also updates this moves moveId.
+	 */
     public function save() {
         Core::getDB()->sendQuery("
             INSERT INTO cc_move (gameId, playerId, chessPiece, fromSquare, toSquare)
@@ -185,7 +217,7 @@ class Move extends DatabaseModel {
 	 * Checks if given string may be a move
 	 * pattern supported by this system.
 	 * DOES NOT validate or execute the move.
-	 * @param 	string 	$str
+	 * @param 	string   $str
 	 * @return 	boolean
 	 */
 	public static function patternMatch($str) {
@@ -195,8 +227,7 @@ class Move extends DatabaseModel {
 				. Square::PATTERN
 				. '$@'
 			, $str);
-		// OPTIONAL add support for algebraic notation
-		// $piece = '[pkqnbrPKQNBR]'; // language support maybe?
-		// return preg_match('@^'.$square.$separator.$square.'|'.$piece.$square.'$@', $str);
+		// TODO OPTIONAL add support for algebraic notation
+		// TODO OPTIONAL $piece = '[pkqnbrPKQNBR]'; // language support maybe?
 	}
 }

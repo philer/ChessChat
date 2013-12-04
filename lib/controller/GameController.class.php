@@ -71,6 +71,9 @@ class GameController extends AbstractRequestController implements AjaxController
 		}
 	}
 	
+	/**
+	 * Executes ajax actions
+	 */
 	public function handleAjaxRequest() {
 		if (isset($_POST['action']) && isset($_POST['gameId'])) {
 			switch ($_POST['action']) {
@@ -158,6 +161,7 @@ class GameController extends AbstractRequestController implements AjaxController
 		
 		if ($move->isValid()) {
 			$move->save();
+			
 			$game->move($move)
 			     ->setNextTurn()
 			     ->update();
@@ -169,10 +173,14 @@ class GameController extends AbstractRequestController implements AjaxController
 			$move->formatString(),
 			$gameId,
 			Core::getUser()->getName(),
-			$move->isValid()
+			$move->isValid() // don't save invalid messages
 		);
 	}
 	
+	/**
+	 * Prepares changes to an active game since the last update
+	 * @param  int $gameId
+	 */
 	public function getUpdate($gameId) {
 		$moves = $this->getNewMoves($gameId, $_POST['lastMoveId']);
 		if (!empty($moves)) {
@@ -199,6 +207,12 @@ class GameController extends AbstractRequestController implements AjaxController
 		}
 	}
 	
+	/**
+	 * Returns an array containing all moves since $lastId
+	 * @param  int $gameId
+	 * @param  int $lastId
+	 * @return array<Move>
+	 */
 	public function getNewMoves($gameId, $lastId) {
 		$movesData = Core::getDB()->sendQuery(
 			'SELECT moveId,
