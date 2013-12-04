@@ -39,7 +39,7 @@ class Knight extends ChessPiece {
 	 * and sets $move->valid and $move->invalidMessage accordingly.
 	 * @param 	Move 	$move
 	 */
-	public function validateMove(Move $move, Game $game ) {
+	public function validateMove(Move $move, Board $board) {
 		// Valid move for a Knight: 
 		// move to a square that is two squares horizontally and one square vertically, 
 		// or two squares vertically and one square horizontally

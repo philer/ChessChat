@@ -38,29 +38,16 @@ class Game extends DatabaseModel {
 	protected $lastUpdate = 0;
 	
 	/**
-	 * Chessboard
-	 * @see chessboard.tpl.php for an example
-	 * @var array<array>
+	 * Id of last move
+	 * @var integer
 	 */
-	public $board = array();
+	protected $lastMoveId = 0;
 	
 	/**
-	 * Chessboard is represented as a string for easy transmission and storage.
-	 * Conventions:
-	 * - 3 characters per piece. (3*32 = 96 total)
-	 * - first character: piece type, capital for white
-	 * - second character: file (column)
-	 *		+ capital for king means no castling yet
-	 * 		+ capital for pawn means he just did a double step, which is
-	 * 		  relevant for en passant (update it after next move!)
-	 * - third character: rank (row)
-	 * - files 'v' and 'w' for dead white pieces, files 'x' and 'y' for dead black pieces
-	 * TODO(- first chesspiece indicates who's turn it is (redundant with status))
-	 * 
-	 * @var string
+	 * Chessboard
+	 * @var Board
 	 */
-	const DEFAULT_BOARD_STRING =
-	'RA1Nb1Bc1Qd1KE1Bf1Ng1RH1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7rA8nb8bc8qd8kE8bf8ng8rH8';
+	public $board = null;
 	
 	/**
 	 * Game status as a short integer value
@@ -82,65 +69,42 @@ class Game extends DatabaseModel {
 	protected $status = 0;
 	
 	/**
-	 * Game status for white player's turn
-	 * @var integer 0b0
+	 * Game status for finished game
+	 * @var  integer 0b1
 	 */
-	const STATUS_WHITES_TURN = 0;
+	const STATUS_OVER = 1;
 	
 	/**
-	 * Game status for black player's turn
-	 * @var integer 0b1
+	 * Game status for white player's turn
+	 * @var integer 0b10
 	 */
-	const STATUS_BLACKS_TURN = 1;
+	const STATUS_WHITES_TURN = 2;
 	
 	/**
 	 * Game status for check
-	 * @var integer 0b10
-	 */
-	const STATUS_CHECK = 2;
-	
-	/**
-	 * Game status for a draw offering that
-	 * has not yet been accepted.
 	 * @var integer 0b100
 	 */
-	const STATUS_DRAW_OFFERED = 4;
+	const STATUS_CHECK = 4;
+	
+	/**
+	 * Game status for a draw offering by last turn's player.
+	 * After the game is finished this indicates if the draw
+	 * offer was accepted.
+	 * @var integer 0b1000
+	 */
+	const STATUS_DRAW_OFFERED = 8;
 	
 	/**
 	 * Game status for last player's resignation
-	 * @var integer 0b110
+	 * @var integer 0b10000
 	 */
-	const STATUS_RESIGNED = 6;
-	
-	/**
-	 * Game status for laste player's checkmate
-	 * @var integer 0b1000
-	 */
-	const STATUS_CHECKMATE = 8;
-	
-	/**
-	 * Game status for last player's accepted draw
-	 * @var integer 0b1010
-	 */
-	const STATUS_DRAW = 10;
+	const STATUS_RESIGNED = 16;
 	
 	/**
 	 * Game status for last player's achieved stalemate
-	 * @var integer 0b1100
+	 * @var integer 0b100000
 	 */
-	const STATUS_STALEMATE = 12;
-	
-	/**
-	 * Game status for draw by threefold repetition rule
-	 * @var integer 0b1110
-	 */
-	const STATUS_THREEFOLD_REPETITION = 14;
-	
-	/**
-	 * Game status for draw by fifty moves rule
-	 * @var integer 0b1111
-	 */
-	const STATUS_FIFTY_MOVES = 15;
+	const STATUS_STALEMATE = 32;
 	
 	/**
 	 * Creates a Game object using provided data
@@ -165,7 +129,8 @@ class Game extends DatabaseModel {
 		$this->whitePlayer = new User($whitePlayerData);
 		$this->blackPlayer = new User($blackPlayerData);
 		if (isset($gameData['boardString'])) {
-			$this->board = self::boardFromString($gameData['boardString']);
+			// $this->board = self::boardFromString($gameData['boardString']);
+			$this->board = new Board($gameData['boardString']);
 		}
 		// delete unneeded data
 		unset($gameData['whitePlayerId'],
@@ -180,34 +145,9 @@ class Game extends DatabaseModel {
 		} else {
 			parent::__construct($gameData);
 		}
+		settype($this->status, 'int'); // came as string from database (use PDO instead maybe)
 	}
 	
-	/**
-	 * Save a Game (new db entry)
-	 */
-	public function save() {
-		Core::getDB()->sendQuery("
-			INSERT INTO cc_game (gameHash, whitePlayerId, blackPlayerId, board, status)
-			VALUES ('" . $this->gameHash . "',
-			        " . $this->whitePlayer->getId() . ",
-			        " . $this->blackPlayer->getId() . ",
-			        '" . self::DEFAULT_BOARD_STRING . "',
-			        " . self::STATUS_WHITES_TURN . ")
-		");
-	}
-
-	/**
-	 * Save changed game (existing db entry)
-	 */
-	public function update() {
-		Core::getDB()->sendQuery("
-			UPDATE cc_game SET
-				board      = '" . self::boardToString($this->board) . "',
-				status     = " . $this->status . "
-			WHERE gameId = " . $this->gameId
-		);
-	}
-
 	/**
 	 * Returns this game's gameId
 	 * @return 	integer
@@ -216,7 +156,13 @@ class Game extends DatabaseModel {
 		return $this->gameId;
 	}
 	
-
+	/**
+	 * Returns this game's hash.
+	 * @return 	string
+	 */
+	public function getHash() {
+		return $this->gameHash;
+	}
 	
 	/**
 	 * Creates a hopefully unique hash for game identification.
@@ -249,106 +195,12 @@ class Game extends DatabaseModel {
 	}
 	
 	/**
-	 * Returns this game's hash.
+	 * For use in URLs
 	 * @return 	string
 	 */
-	public function getHash() {
+	public function getRoute() {
+		// return 'Game/' . $this->gameHash;
 		return $this->gameHash;
-	}
-	
-	/**
-	 * Checks and executes a given Move.
-	 * @param Move $move
-	 */
-	public function move(Move $move) {
-		$this->board[$move->toFile][$move->toRank] = $this->board[$move->fromFile][$move->fromRank];
-		$this->board[$move->fromFile][$move->fromRank] = null;
-		// TODO update status
-	}
-	
-	/**
-	 * Chessboard represented as a string for easy transmission and storage
-	 * @see  Game::$boardString
-	 * @see  Game::boardToString()
-	 * @param  string $boardStr
-	 * @return array<ChessPiece>
-	 */
-	public static function boardFromString($boardStr) { 
-		$board = array();
-		for ( $file='a' ; $file<='h' ; $file++ ) {
-			$board[$file] = array();
-			for ( $rank=1; $rank<=8 ; $rank++ ) {
-				$board[$file][$rank] = null;
-			}
-		}
-		$board['x'] = array();
-		$board['y'] = array();
-		
-		for ( $cp=0 ; $cp<96 ; $cp+=3 ) {
-			switch(strtolower($boardStr[$cp])) {
-				case Pawn::LETTER_BLACK : // en passant possible?
-					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
-						new Pawn(ctype_upper($boardStr[$cp]), ctype_upper($boardStr[$cp+1]));
-					break;
-				case Bishop::LETTER_BLACK :
-					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
-						new Bishop(ctype_upper($boardStr[$cp]));
-					break;
-				case Knight::LETTER_BLACK :
-					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
-						new Knight(ctype_upper($boardStr[$cp]));
-					break;
-				case Rook::LETTER_BLACK : // castling possible?
-					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
-						new Rook(ctype_upper($boardStr[$cp]), ctype_upper($boardStr[$cp+1]));
-					break;
-				case Queen::LETTER_BLACK :
-					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
-						new Queen(ctype_upper($boardStr[$cp]));
-					break;
-				case King::LETTER_BLACK : // castling possible?
-					$board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ] =
-						new King(ctype_upper($boardStr[$cp]), ctype_upper($boardStr[$cp+1]));
-					break;
-			}
-		}
-		return $board;
-	}
-	
-	/**
-	 * Renders a string representation of a given chess board (array)
-	 * @see  Game::$boardString
-	 * @see  Game::boardFromString()
-	 * @param  array $board
-	 * @return string
-	 */
-	public static function boardToString($board) {
-		$boardStr = '';
-		for ( $file='a' ; $file<='h' ; $file++ ) {
-			for ( $rank=1; $rank<=8 ; $rank++ ) {
-				if ($cp = $board[$file][$rank]) {
-					$boardStr .= $cp->letter();
-					switch (get_class($cp)) {
-						case 'Pawn' :
-							$boardStr .= $cp->canEnPassant ? strtoupper($file) : $file;
-							break;
-						case 'King' :
-							$boardStr .= $cp->canCastle ? strtoupper($file) : $file;
-							break;
-						case 'Rook' :
-							$boardStr .= $cp->canCastle ? strtoupper($file) : $file;
-							break;
-						default :
-							$boardStr .= $file;
-							break;
-					}
-					$boardStr .= $rank;
-				}
-			}
-		}
-		foreach ($board['x'] as $i => $cp) $boardStr .= $cp->letter() . 'x' . dechex($i);
-		foreach ($board['y'] as $i => $cp) $boardStr .= $cp->letter() . 'y' . dechex($i);
-		return $boardStr;
 	}
 	
 	/**
@@ -357,6 +209,10 @@ class Game extends DatabaseModel {
 	 */
 	public function getLastUpdate() {
 		return $this->lastUpdate;
+	}
+	
+	public function getLastMoveId() {
+		return $this->lastMoveId;
 	}
 	
 	/**
@@ -373,6 +229,42 @@ class Game extends DatabaseModel {
 	 */
 	public function getBlackPlayer() {
 		return $this->blackPlayer;
+	}
+	
+	/**
+	 * Returns the player who is active
+	 * according to status.
+	 * This _may_ mean that it is his turn.
+	 * @return 	User
+	 */
+	public function getCurrentPlayer() {
+		return $this->whitesTurn() ? $this->whitePlayer : $this->blackPlayer;
+	}
+	
+	/**
+	 * Checks if the given user is a player in this game
+	 * @param  User    $user	optional
+	 * @return boolean
+	 */
+	public function isPlayer(User $user = null) {
+		if (is_null($user)) $user = Core::getUser();
+		return $this->whitePlayer->getId() === $user->getId()
+		    || $this->blackPlayer->getId() === $user->getId();
+	}
+	
+	/**
+	 * Checks if the user is white,
+	 * returns null if he is not a player in this game.
+	 * @return 	boolean
+	 */
+	public function isWhitePlayer() {
+		if (Core::getUser()->getId() == $this->whitePlayer->getId()) {
+			return true;
+		}
+		if (Core::getUser()->getId() == $this->blackPlayer->getId()) {
+			return false;
+		}
+		return null;
 	}
 	
 	/**
@@ -407,11 +299,57 @@ class Game extends DatabaseModel {
 	}
 	
 	/**
+	 * Convenience Method for use in status setters
+	 * that set a status flag to either true or false
+	 * @param int     $flag  Game::STATUS_<constant>
+	 * @param boolean $value
+	 */
+	protected function setStatusFlag($flag, $value) {
+		if ($value) {
+			$this->status |= $flag;
+		} else {
+			$this->status &= !$flag;
+		}
+	}
+	
+	/**
 	 * Wether or not this game is over.
 	 * @return 	boolean
 	 */
 	public function isOver() {
-		return $this->status >= self::STATUS_RESIGNED;
+		return (boolean) ($this->status & Game::STATUS_OVER);
+	}
+	
+	/**
+	 * Mark this game as over
+	 */
+	public function setOver() {
+		$this->status |= Game::STATUS_OVER;
+	}
+	
+	/**
+	 * Wether or not it is white player's turn
+	 * @return 	boolean
+	 */
+	public function whitesTurn() {
+		return (boolean) ($this->status & Game::STATUS_WHITES_TURN);
+	}
+	
+	/**
+	 * Toggle Player
+	 * @return  Game (chaining)
+	 */
+	public function setNextTurn() {
+		$this->setStatusFlag(Game::STATUS_WHITES_TURN, !$this->whitesTurn());
+		return $this;
+	}
+	
+	/**
+	 * King is in check
+	 * @param   boolean $check
+	 */
+	public function setCheck($check) {
+		$this->setStatusFlag(Game::STATUS_CHECK, $check);
 	}
 	
 	/**
@@ -421,59 +359,59 @@ class Game extends DatabaseModel {
 	 * @return 	boolean
 	 */
 	public function isDraw() {
-		return $this->status >= self::STATUS_DRAW;
+		return $this->isOver() && $this->drawOffered();
+	}
+	
+	public function drawOffered() {
+		return (boolean) ($this->status & Game::STATUS_DRAW_OFFERED);
+	}
+	
+	public function setDrawOffered($offered) {
+		$this->setStatusFlag(Game::STATUS_DRAW_OFFERED, $offered);
+	}
+	
+	public function setResigned() {
+		$this->status |= Game::STATUS_RESIGNED;
+	}
+	
+	public function setStalemate() {
+		$this->status |= Game::STATUS_STALEMATE;
 	}
 	
 	/**
-	 * Returns the player who is active
-	 * according to status.
-	 * This _may_ mean that it is his turn.
-	 * @return 	User
+	 * Checks and executes a given Move.
+	 * @param Move $move
+	 * @return  Game (chaining)
 	 */
-	public function getCurrentPlayer() {
-		return $this->whitesTurn() ? $this->whitePlayer : $this->blackPlayer;
+	public function move(Move $move) {
+		$this->board->move($move);
+		// $this->lastMoveId = $move->moveId;
+		return $this;
 	}
 	
 	/**
-	 * Wether or not it is white player's turn
-	 * @return 	boolean
+	 * Save a Game (new db entry)
 	 */
-	public function whitesTurn() {
-		return ! (boolean) ($this->status % 2);
+	public function save() {
+		Core::getDB()->sendQuery("
+			INSERT INTO cc_game (gameHash, whitePlayerId, blackPlayerId, board, status)
+			VALUES ('" . $this->gameHash . "',
+			        " . $this->whitePlayer->getId() . ",
+			        " . $this->blackPlayer->getId() . ",
+			        '" . Board::DEFAULT_STRING . "',
+			        " . self::STATUS_WHITES_TURN . ")
+		");
 	}
-	
+
 	/**
-	 * Checks if the given user is a player in this game
-	 * @param  User    $user	optional
-	 * @return boolean
+	 * Save changed game (existing db entry)
 	 */
-	public function isPlayer(User $user = null) {
-		if (is_null($user)) $user = Core::getUser();
-		return $this->whitePlayer->getId() === $user->getId()
-		    || $this->blackPlayer->getId() === $user->getId();
-	}
-	
-	/**
-	 * Checks if the user is white,
-	 * returns null if he is not a player in this game.
-	 * @return 	boolean
-	 */
-	public function isWhitePlayer() {
-		if (Core::getUser()->getId() == $this->whitePlayer->getId()) {
-			return true;
-		}
-		if (Core::getUser()->getId() == $this->blackPlayer->getId()) {
-			return false;
-		}
-		return null;
-	}
-	
-	/**
-	 * For use in URLs
-	 * @return 	string
-	 */
-	public function getRoute() {
-		// return 'Game/' . $this->gameHash;
-		return $this->gameHash;
+	public function update() {
+		Core::getDB()->sendQuery("
+			UPDATE cc_game SET
+				board      = '" . $this->board . "',
+				status     = " . $this->status . "
+			WHERE gameId = " . $this->gameId
+		);
 	}
 }

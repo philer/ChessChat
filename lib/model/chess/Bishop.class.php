@@ -39,7 +39,7 @@ class Bishop extends ChessPiece {
 	 * and sets $move->valid and $move->invalidMessage accordingly
 	 * @param 	Move 	$move
 	 */
-	public function validateMove(Move $move, Game $game) {
+	public function validateMove(Move $move, Board $board) {
 		// Valid move for a Bishop:
 		// diagonal movement
 		// no limits in distance
@@ -48,11 +48,10 @@ class Bishop extends ChessPiece {
 			$move->setInvalid('chess.invalidmove.bishop');
 			return;
 		}
-		for ( $i=0 ; $i<$move->getRankOffset()-1 ; $i++ ) {
-			if ($game->board[chr(ord($move->fromFile) + $i)][$move->fromRank] != null) {
-				$move->setInvalid('chess.invalidmove.blocked');
-				return;
-			}
-		}
+		$obstacles = array_filter(
+			$move->getPath(),
+			function($square) { return !$square->isEmpty(); }
+		);
+		if (!empty($obstacles)) $move->setInvalid('chess.invalidmove.blocked');
 	}
 }

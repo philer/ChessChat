@@ -50,7 +50,7 @@ class King extends ChessPiece {
 	 * and sets $move->valid and $move->invalidMessage accordingly.
 	 * @param 	Move 	$move
 	 */
-	public function validateMove(Move $move, Game $game) {
+	public function validateMove(Move $move, Board $board) {
 		if (abs($move->getRankOffset()) > 1 || abs($move->getFileOffset()) > 1) {
 			$move->setInvalid('chess.invalidmove.king');
 		}

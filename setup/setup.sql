@@ -25,7 +25,7 @@ CREATE TABLE cc_game (
 	blackPlayerId INT(10)     UNSIGNED NOT NULL,
 	board         CHAR(96)    NOT NULL DEFAULT '', -- fixed length
 	-- status BIT(4) NOT NULL DEFAULT 0,   -- status is 0 trough 15
-	status        TINYINT(2)  NOT NULL DEFAULT 0,
+	status        TINYINT(3)  NOT NULL DEFAULT 0,
 	lastUpdate    TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (gameId),
 	UNIQUE KEY (gameHash),
@@ -38,7 +38,7 @@ CREATE TABLE cc_move (
 	moveId     INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
 	gameId     INT(10)    UNSIGNED NOT NULL,
 	playerId   INT(10)    UNSIGNED NOT NULL,
-	chessPiece VARCHAR(6) NOT NULL,
+	chessPiece CHAR(1)    NOT NULL,
 	fromSquare CHAR(2)    NOT NULL,
 	toSquare   CHAR(2)    NOT NULL,
 	time       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

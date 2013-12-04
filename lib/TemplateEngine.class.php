@@ -78,6 +78,10 @@ final class TemplateEngine {
 		$this->var[$key] = $value;
 	}
 	
+	public function __get($name) {
+		return $this->var[$name];
+	}
+	
 	/**
 	 * Alias function for easy use in templates,
 	 * returns the appropriate value for a language variable.
@@ -135,8 +139,13 @@ final class TemplateEngine {
 	public function registerDefaultScripts() {
 		$this->registerScript('jquery-2.0.0.min');
 		$this->registerScript('jquery-ui-1.10.3.custom.min');
-		$this->registerScript('chesschat');
-		// $this->registerDynamicScript('user-data');
+		
+		$this->registerScript('core');
+		$this->registerScript('overlay');
+		$this->registerScript('init');
+		
+		$this->registerDynamicScript('user-data');
+		
 		$this->registerStylesheet('global');
 	}
 			

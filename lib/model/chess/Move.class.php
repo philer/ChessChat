@@ -4,44 +4,26 @@
  * Represents a chess move
  * @author Philipp Miller, Larissa Hammerstein
  */
-class Move {
+class Move extends DatabaseModel {
 	
 	/**
-	 * From where did we move?
-	 * @var string
+	 * Anything has and Id nowadays
+	 * @var integer
 	 */
-	public $fromFile = '';
+	public $moveId = 0;
 	
 	/**
-	 * Where did we move?
-	 * @var string
+	 * Square where we start
+	 * @var Square
 	 */
-	public $toFile = '';
-
-	/**
-	 * From where did we move?
-	 * @var string
-	 */
-	public $fromRank = '';
+	public $from = null;
 	
 	/**
-	 * Where did we move?
-	 * @var string
+	 * Square where we arrive
+	 * @var Square
 	 */
-	public $toRank = '';
+	public $to = null;
 	
-	/**
-	 * Chesspiece that was moved.
-	 * @var ChessPiece
-	 */
-	protected $chesspiece = null;
-	
-	/**
-	 * Chesspiece that was taken (if any).
-	 * @var ChessPiece
-	 */
-	protected $target = null;
-
 	/**
 	 * Once the move has been checked it will be flagged as (not) valid.
 	 * @var boolean
@@ -59,117 +41,114 @@ class Move {
 	 * Current game
 	 * @var Game
 	 */
-	 protected $game = null;
-
-	/**
-	 * Coordinates may be written like this
-	 */
-	const COORDINATE_PATTERN = '([a-hA-H][1-8]|[1-8][a-hA-H])';
-
+	protected $game = null;
+	
 	/**
 	 * Seperator for coordinate notation
 	 */
 	const SEPERATOR_PATTERN = '[_ -]';
-
+	
 	/**
 	 * Creates a Move object from the given string.
-	 * @param string $moveString has to be valid but not system formatted
+	 * @param string $moveData has to be valid but not system formatted
 	 * @param Game   $game       game in which this move was made
 	 */
-	public function __construct($moveString, Game $game) {
-        $this->game = $game;
-		
-        if (!self::patternMatch($moveString)) throw new Exception('chess.invalidmove.format');
-		$moveString = strtoupper(preg_replace(
-			'@' . self::SEPERATOR_PATTERN . '@',
-			'',
-			$moveString
-		));
-		
-		if (is_numeric($moveString[0])) {
-			$this->fromRank = strtolower($moveString[0]);
-			$this->fromFile = strtolower($moveString[1]);
-		} else {
-			$this->fromRank = strtolower($moveString[1]);
-			$this->fromFile = strtolower($moveString[0]);
-		}
-		if (is_numeric($moveString[2])) {
-			$this->toRank = strtolower($moveString[2]);
-			$this->toFile = strtolower($moveString[3]);
-		} else {
-			$this->toRank = strtolower($moveString[3]);
-			$this->toFile = strtolower($moveString[2]);
-		}
-		
-		$this->chesspiece = $this->game->board[$this->fromFile][$this->fromRank];
-		$this->target     = $this->game->board[$this->toFile][$this->toRank];
-		
-		// validation
-		if (Core::getUser()->getId() != $this->game->getCurrentPlayer()->getId()) {
-			$this->setInvalid('chess.invalidmove.notyourturn');
-		} elseif ($this->chesspiece == null) {
-			$this->setInvalid('chess.invalidmove.nopiece');
-		} elseif ($this->target != null && $this->chesspiece->isWhite() == $this->target->isWhite()) {
-			$this->setInvalid('chess.invalidmove.owncolor');
-		} else {
-			$this->chesspiece->validateMove($this, $this->game);
+	public function __construct($moveData, Game $game = null) {
+		if (is_array($moveData)) { // data from database
+			
+			$this->from = new Square($moveData['fromSquare'], ChessPiece::getInstance($moveData['chessPiece']));
+			$this->to   = new Square($moveData['toSquare']);
+			
+			$this->moveId = $moveData['moveId'];
+			
+		} elseif (self::patternMatch($moveData) && $game !== null) { // new move
+			
+			$this->game = $game;
+			$moveData = preg_replace('@' . self::SEPERATOR_PATTERN . '@', '', $moveData);
+			
+			// 'clone' to make sure we can execute this move without changing it
+			$this->from = clone $this->game->board->{ $moveData[0] . $moveData[1] };
+			$this->to   = clone $this->game->board->{ $moveData[2] . $moveData[3] };
+			
+			if (empty($invalidMsg)) $this->validate();
+			else $this->setInvalid($invalidMsg);
+			
 		}
 	}
 	
-    public function save() {
-        Core::getDB()->sendQuery("
-            INSERT INTO cc_move (gameId, playerId, chessPiece, fromSquare, toSquare)
-            VALUES (" . $this->game->getId() . ",
-                    " . Core::getUser()->getId() . ",
-                    '" . $this->chesspiece->letter() . "',
-                    '" . $this->from() . "',
-                    '" . $this->to() . "')
-        ");
-    }
-    
 	/**
 	 * When treated as string a Move object will
 	 * return it's formatted string representation
 	 * @return 	string
 	 */
 	public function __toString() {
-		return $this->from() . '-' . $this->to();
+		return $this->from . '-' . $this->to;
 	}
 	
-	/**
-	 * Where does this move start?
-	 * @return 	string
-	 */
-	public function from() {
-		return strtoupper($this->fromFile) . $this->fromRank;
+	public function formatString() {
+		if ($this->isValid()) {
+			return Core::getLanguage()->getLanguageItem(
+				'chess.moved',
+				array(
+					'user'  => Core::getUser(),
+					'piece' => $this->from->chesspiece->utf8(),
+					'from'  => $this->from,
+					'to'    => $this->to
+				)
+			);
+		} else {
+			return Core::getLanguage()->getLanguageItem($this->invalidReason);
+		}
 	}
-
-	/**
-	 * Where does this move go?
-	 * @return string
-	 */
-	public function to() {
-		return strtoupper($this->toFile) . $this->toRank;
+	
+	public function validate() {
+		if (Core::getUser()->getId() != $this->game->getCurrentPlayer()->getId()) {
+			$this->setInvalid('chess.invalidmove.notyourturn');
+		} elseif ($this->from->isEmpty()) {
+			$this->setInvalid('chess.invalidmove.nopiece');
+		} elseif (!$this->to->isEmpty() && $this->from->chesspiece->isWhite() == $this->to->chesspiece->isWhite()) {
+			$this->setInvalid('chess.invalidmove.owncolor');
+		} else {
+			$this->from->chesspiece->validateMove($this, $this->game->board);
+		}
 	}
 	
 	public function getRankOffset() {
-		return $this->toRank - $this->fromRank;
+		return $this->to->rank() - $this->from->rank();
 	}
 	
 	public function getFileOffset() {
-		return ord($this->toFile) - ord($this->fromFile);
+		return $this->to->file() - $this->from->file();
 	}
 	
-	public function getChesspiece() {
-		return $this->chesspiece;
+	public function getPath() {
+		return $this->game->board->range($this->from, $this->to);
 	}
 	
-	public function getTarget() {
-		return $this->target;
+	/**
+	 * Move okay?
+	 * @return boolean
+	 */
+	public function isValid() {
+		return $this->valid;
 	}
 	
-	public function getGame() {
-		return $this->game;
+	/**
+	 * When a move turns out to be invalid, use this function to flag it and
+	 * give a reason
+	 * @param string $reason why is this move invalid? use language variables
+	 */
+	public function setInvalid($reason = '') {
+		$this->valid = false;
+		$this->invalidReason = $reason;
+	}
+	
+	/**
+	 * Why was this move flagged as invalid?
+	 * @return string
+	 */
+	public function getInvalidReason() {
+		return $this->invalidReason;
 	}
 	
 	/**
@@ -179,43 +158,30 @@ class Move {
 	 */
 	public function ajaxData() {
 		$ajaxData = array(
-			'from'  => $this->from(),
-			'to'    => $this->to(),
-			'valid' => $this->valid,
+			'id'    => $this->moveId,
+			'from'  => (string) $this->from,
+			'to'    => (string) $this->to,
+			'valid' => $this->isValid(),
 		);
-		if (!$this->valid) {
-			$ajaxData['invalidReason'] = Core::getLanguage()->getLanguageItem($this->invalidReason);
-		}
+		// if (!$this->isValid()) {
+		// 	$ajaxData['invalidReason'] = Core::getLanguage()->getLanguageItem($this->invalidReason);
+		// }
 		return $ajaxData;
 	}
 	
-	/**
-	 * When a move turns out to be invalid, use this function to flag it and
-	 * give a reason
-	 * @param string $reason why is this move invalid? use language variables
-	 */
-	public function setInvalid($reason = "") {
-		$this->valid = false;
-		$this->invalidReason = $reason;
-	}
-
-	/**
-	 * Move okay?
-	 * @return boolean
-	 */
-	public function isValid() {
-		return $this->valid;
-	}
-
-	/**
-	 * Why was this move flagged as invalid?
-	 * @return string
-	 */
-	public function getInvalidReason() {
-		return $this->invalidReason;
-	}
-
-	/**
+    public function save() {
+        Core::getDB()->sendQuery("
+            INSERT INTO cc_move (gameId, playerId, chessPiece, fromSquare, toSquare)
+            VALUES (" . $this->game->getId() . ",
+                    " . Core::getUser()->getId() . ",
+                    '" . $this->from->chesspiece->letter() . "',
+                    '" . $this->from . "',
+                    '" . $this->to . "')
+        ");
+        $this->moveId = Core::getDB()->getLastInsertId();
+    }
+    
+    /**
 	 * Checks if given string may be a move
 	 * pattern supported by this system.
 	 * DOES NOT validate or execute the move.
@@ -224,9 +190,9 @@ class Move {
 	 */
 	public static function patternMatch($str) {
 		return preg_match('@^'
-				. Move::COORDINATE_PATTERN
-				. Move::SEPERATOR_PATTERN . '?'
-				. Move::COORDINATE_PATTERN
+				. Square::PATTERN
+				. self::SEPERATOR_PATTERN . '?'
+				. Square::PATTERN
 				. '$@'
 			, $str);
 		// OPTIONAL add support for algebraic notation

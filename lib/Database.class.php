@@ -117,4 +117,7 @@ final class Database {
 		return $this->sentQueries;
 	}
 	
+	public function getLastInsertId() {
+		return $this->db->insert_id;
+	}
 }

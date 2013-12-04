@@ -163,17 +163,19 @@ class Core {
 		} elseif ($route[0] === "ajax") {
 			// ajax request route
 			try {
-				$controllerClass = $_POST['controller'];
-				if ($controllerClass == 'TemplateEngine') {
-					AjaxUtil::queueReply('tpl',
-							self::$templateEngine->fetch($_POST['tpl'])
-						);
-				} elseif (class_exists($controllerClass)
-						&& is_subclass_of($controllerClass, 'AjaxController')) {
-					$controller = new $controllerClass();
-					$controller->handleAjaxRequest();
-				} else {
-					throw new RequestException("'" . $controllerClass . "' is not an AjaxController");
+				$controllerClasses = explode(',', $_POST['controller']);
+				foreach ($controllerClasses as $controllerClass) {
+					if ($controllerClass == 'TemplateEngine') {
+						AjaxUtil::queueReply('tpl',
+								self::$templateEngine->fetch($_POST['tpl'])
+							);
+					} elseif (class_exists($controllerClass)
+							&& is_subclass_of($controllerClass, 'AjaxController')) {
+						$controller = new $controllerClass();
+						$controller->handleAjaxRequest();
+					} else {
+						throw new RequestException("'" . $controllerClass . "' is not an AjaxController");
+					}
 				}
 				AjaxUtil::sendReply();
 				return;

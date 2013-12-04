@@ -50,45 +50,43 @@ class Pawn extends ChessPiece {
 	 * and sets $move->valid and $move->invalidMessage accordingly.
 	 * @param 	Move 	$move
 	 */
-	public function validateMove(Move $move, Game $game) {
-		 // Valid move for Pawn:
-		 // does not move backwards
-		 // normally advancing a single square
-		 // the first time a pawn is moved, it has the option of advancing two squares
-		 // Pawns may not use the initial two-square advance to jump over an occupied square, or to capture.
-		 // A pawn captures diagonally, one square forward and to the left or right. 
-		if (abs($move->getRankOffset()) > 2) {
+	public function validateMove(Move $move, Board $board) {
+		// Valid move for Pawn:
+		// does not move backwards
+		// normally advancing a single square
+		// the first time a pawn is moved, it has the option of advancing two squares
+		// Pawns may not use the initial two-square advance to jump over an occupied square, or to capture.
+		// A pawn captures diagonally, one square forward and to the left or right. 
+		if  (  abs($move->getFileOffset()) > 1
+			// || abs($move->getFileOffset()) == 1 &&
+			// 	!($this->canEnPassant && !$board->{$move->from->file() . $move->from->rank()+1})->isEmpty()
+			) {
 			$move->setInvalid('chess.invalidmove.pawn');
 			return;
 		}
-		if($this->white){
-			if($move->getRankOffset()<0){
+		
+		$roff = $move->getRankOffset();
+		if ($this->white) {
+			if  (  $roff < 1
+				|| $roff > 2
+				|| $roff == 2 && $move->from->rank() != 2
+				) {
 				$move->setInvalid('chess.invalidmove.pawn');
 				return;
 			}
-			// only valid for first move
-			if($move->getRankOffset() == 2){
-				if($move->fromRank != 2){
-					$move->setInvalid('chess.invalidmove.pawn.notfirstmove');
-				}
-				if($game->board[$move->fromFile][3] != null){
-					$move->setInvalid('chess.invalidmove.blocked');
-				}
+			if ($roff == 2 && !$board->getSquare($move->from->file(),3)->isEmpty()) {
+				$move->setInvalid('chess.invalidmove.blocked');
 			}
-		}
-		else{
-			if($move->getRankOffset()>0){
+		} else {
+			if  (  $roff > -1
+				|| $roff < -2
+				|| $roff == -2 && $move->from->rank() != 7
+				) {
 				$move->setInvalid('chess.invalidmove.pawn');
 				return;
 			}
-			// only valid for first move
-			if($move->getRankOffset() == -2){
-				if($move->fromRank != 7){
-					$move->setInvalid('chess.invalidmove.pawn.notfirstmove');
-				}
-				if($game->board[$move->fromFile][6] != null){
-					$move->setInvalid('chess.invalidmove.blocked');
-				}
+			if ($roff == 2 && !$board->{$move->from->file().'6'}->isEmpty()) {
+				$move->setInvalid('chess.invalidmove.blocked');
 			}
 		}
 	}

@@ -22,12 +22,23 @@ abstract class ChessPiece {
 		$this->white = $white;
 	}
 	
+	public static function getInstance($letter) {
+		switch(strtolower($letter)) {
+            case Pawn::LETTER_BLACK :   return new Pawn(  ctype_upper($letter));
+            case Bishop::LETTER_BLACK : return new Bishop(ctype_upper($letter));
+            case Knight::LETTER_BLACK : return new Knight(ctype_upper($letter));
+            case Rook::LETTER_BLACK :   return new Rook(  ctype_upper($letter));
+            case Queen::LETTER_BLACK :  return new Queen( ctype_upper($letter));
+            case King::LETTER_BLACK :   return new King(  ctype_upper($letter));
+        }
+	}
+	
 	/**
 	 * Checks if $move is a valid move for this chess piece
 	 * and sets $move->valid and $move->invalidMessage accordingly.
 	 * @param 	Move 	$move
 	 */
-	abstract public function validateMove(Move $move, Game $game);
+	abstract public function validateMove(Move $move, Board $board);
 	
 	public function __toString() {
 		return $this->utf8();

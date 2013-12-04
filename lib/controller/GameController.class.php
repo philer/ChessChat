@@ -4,7 +4,7 @@
  * The Game is important.
  * @author Philipp Miller
  */
-class GameController extends AbstractRequestController {
+class GameController extends AbstractRequestController implements AjaxController {
 	
 	/**
 	 * We may need a ChatController.
@@ -71,6 +71,27 @@ class GameController extends AbstractRequestController {
 		}
 	}
 	
+	public function handleAjaxRequest() {
+		if (isset($_POST['action']) && isset($_POST['gameId'])) {
+			switch ($_POST['action']) {
+				
+				case 'getUpdate' : 
+					$this->getUpdate($_POST['gameId']);
+					break;
+				
+				case 'move' : 
+					$this->move(
+						$_POST['move'],
+						$_POST['gameId']
+					);
+					break;
+				
+				default :
+					throw new RequestException('Action "' . $_POST['action'] . '" unknown');
+			}
+		} else throw new RequestException('Bad Ajax Request');
+	}
+	
 	/**
 	 * Creates a new Game from provided form data.
 	 * If creation failes due to incorrect user input
@@ -125,49 +146,75 @@ class GameController extends AbstractRequestController {
 			        B.userName as blackPlayerName,
 			        board as boardString,
 			        status
-			 FROM cc_game
-				JOIN cc_user W ON cc_game.whitePlayerId = W.userId
-				JOIN cc_user B ON cc_game.blackPlayerId = B.userId
+			 FROM cc_game G
+				JOIN cc_user W ON G.whitePlayerId = W.userId
+				JOIN cc_user B ON G.blackPlayerId = B.userId
 			 WHERE gameId = ' . intval($gameId)
 		)->fetch_assoc();
 		if (empty($gameData)) throw new NotFoundException('game doesn\'t exist');
 		
 		$game = new Game($gameData);
 		$move = new Move($moveString, $game);
-		AjaxUtil::queueReply('move', $move->ajaxData());
 		
 		if ($move->isValid()) {
-			$game->move($move);
-			$game->update();
 			$move->save();
+			$game->move($move)
+			     ->setNextTurn()
+			     ->update();
+			
 			AjaxUtil::queueReply('status', $game->getFormattedStatus());
-			$this->getChatController()->post(
-				Core::getLanguage()->getLanguageItem(
-					'chess.moved',
-					array(
-						'user'  => Core::getUser(),
-						'piece' => $move->getChesspiece()->utf8(),
-						'from'  => $move->from(),
-						'to'    => $move->to()
+		}
+		AjaxUtil::queueReply('move', $move->ajaxData());
+		$this->getChatController()->post(
+			$move->formatString(),
+			$gameId,
+			Core::getUser()->getName(),
+			$move->isValid()
+		);
+	}
+	
+	public function getUpdate($gameId) {
+		$moves = $this->getNewMoves($gameId, $_POST['lastMoveId']);
+		if (!empty($moves)) {
+			$gameData = Core::getDB()->sendQuery(
+			 	"SELECT status,
+			 			W.userName as whitePlayerName,
+				        B.userName as blackPlayerName
+				 FROM cc_game G
+					JOIN cc_user W ON G.whitePlayerId = W.userId
+					JOIN cc_user B ON G.blackPlayerId = B.userId
+				 WHERE gameId = " . intval($gameId)
+	 		)->fetch_assoc();
+			$game = new Game($gameData);
+			
+			AjaxUtil::queueReply('status', $game->getFormattedStatus());
+			AjaxUtil::queueReply(
+				'moves',
+				array_map(
+					function($move) { return $move->ajaxData(); },
+					$moves
 					)
-				),
-				$gameId,
-				Core::getUser()->getName()
 			);
-		} else {
-			// also sent via ajax move object
-			$this->getChatController()->post(
-				$move->getInvalidReason(),
-				$gameId,
-				Core::getUser()->getName(),
-				false
-			);
+			AjaxUtil::queueReply('lastMoveId', end($moves)->moveId);
 		}
 	}
 	
-	//TODO
-	public function getUpdate() {
-		// $this->chatController->getUpdate();
+	public function getNewMoves($gameId, $lastId) {
+		$movesData = Core::getDB()->sendQuery(
+			'SELECT moveId,
+					chessPiece,
+					fromSquare,
+			        toSquare
+			 FROM   cc_move
+			 WHERE  moveId > ' . intval($lastId) . '
+			    AND gameId = '    . intval($gameId) . '
+			 ORDER BY moveId ASC'
+		);
+		$moves = array();
+		while ($moveData = $movesData->fetch_assoc()) {
+			$moves[] = new Move($moveData);
+		}
+		return $moves;
 	}
 	
 	/**
@@ -218,10 +265,17 @@ class GameController extends AbstractRequestController {
 			        B.userName as blackPlayerName,
 			        board as boardString,
 			        status,
+			        coalesce(
+			        	(SELECT max(M.moveId)
+			                FROM cc_move M
+			                WHERE M.gameId = G.gameId
+			        	),
+						0
+					) as lastMoveId,
 			        UNIX_TIMESTAMP(lastUpdate) as lastUpdate
-			 FROM cc_game
-				JOIN cc_user W ON cc_game.whitePlayerId = W.userId
-				JOIN cc_user B ON cc_game.blackPlayerId = B.userId
+			 FROM cc_game G
+				JOIN cc_user W ON G.whitePlayerId = W.userId
+				JOIN cc_user B ON G.blackPlayerId = B.userId
 			 WHERE gameHash = '" . Util::esc($gameHash) . "'"
 	 	)->fetch_assoc();
 		if (empty($gameData)) throw new NotFoundException('game doesn\'t exist');
@@ -232,7 +286,8 @@ class GameController extends AbstractRequestController {
 		Core::getTemplateEngine()->addVar('chatMsgs', $this->getChatController()->getAllMessages($game->getId()));
 		
 		Core::getTemplateEngine()->registerDynamicScript('game-data');
-		Core::getTemplateEngine()->registerAsyncScript('game');
+		Core::getTemplateEngine()->registerScript('chess');
+		Core::getTemplateEngine()->registerScript('chat');
 		Core::getTemplateEngine()->registerStylesheet('game');
 		$this->pageTitle = $game->getWhitePlayer()
 		                 . ' vs '

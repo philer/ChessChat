@@ -20,5 +20,5 @@ abstract class DatabaseModel {
 		}
 	}
 	
-	// abstract public function save();
+	// abstract public function save(); // TODO
 }

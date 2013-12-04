@@ -10,10 +10,10 @@ $whitePlayer = $this->var['game']->isWhitePlayer()
 ?>
 <div id="chessboard">
 	<ol id="whitePrison" class="prison white <?php echo $whitePlayer ? 'own' : 'opp'; ?>-prison">
-<?php foreach ($board['x'] as $chesspiece) echo "<li>{$chesspiece}</li>"; ?>
+<?php foreach ($board->getWhitePrison() as $chesspiece) echo "<li>{$chesspiece}</li>"; ?>
 	</ol>
 	<ol id="blackPrison" class="prison black <?php echo $whitePlayer ? 'opp' : 'own'; ?>-prison">
-<?php foreach ($board['y'] as $chesspiece) echo "<li>{$chesspiece}</li>"; ?>
+<?php foreach ($board->getBlackPrison() as $chesspiece) echo "<li>{$chesspiece}</li>"; ?>
 	</ol>
 	<table id="chessboardTable">
 		<colgroup>
@@ -44,14 +44,14 @@ for ($i=1; $i<=8; $i++,$light=!$light) {
 		."\t<th>{$r}</th>";
 	for ($c='A'; $c<='H'; $c++,$light=!$light) {
 		echo "<td class=\"square "
-			.($light ? "light" : "dark")  // altering squares color
-			."\" id=\"square-{$c}{$r}\"><div>";
-		if (!is_null($board[strtolower($c)][$r])) {
+		   . ($light ? "light" : "dark")  // altering squares color
+		   . "\" id=\"square-{$c}{$r}\"><div>";
+		if ($cp = $board->{$c.$r}->chesspiece) {
 			echo "<span class=\"chesspiece "
-				.($board[strtolower($c)][$r]->isWhite() ? 'white' : 'black' )
-				."\" id=\"chesspiece-{$c}{$r}\">"
-				.$board[strtolower($c)][$r]
-				."</span>";
+			   . ($cp->isWhite() ? 'white' : 'black')
+			   . "\" id=\"chesspiece-{$c}{$r}\">"
+			   . $cp->utf8()
+			   . "</span>";
 		}	
 		echo "</div></td>";
 	}

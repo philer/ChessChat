@@ -50,7 +50,7 @@ class Rook extends ChessPiece {
 	 * and sets $move->valid and $move->invalidMessage accordingly.
 	 * @param 	Move 	$move
 	 */
-	public function validateMove(Move $move, Game $game) {
+	public function validateMove(Move $move, Board $board) {
 		 // Valid move for a Rook:
 		 // The rook moves horizontally or vertically, 
 		 // through any number of unoccupied squares
@@ -58,20 +58,10 @@ class Rook extends ChessPiece {
 			$move->setInvalid('chess.invalidmove.rook');
 			return;
 		}
-		if ($move->getRankOffset() == 0){
-			for ( $i=0 ; $i<$move->getFileOffset()-1 ; $i++ ){
-				if ($game->board[$move->fromFile][$i + $move->fromRank] != null) {
-					$move->setInvalid('chess.invalidmove.blocked');
-					return;
-				}
-			}
-		} else {
-			for ( $i=0 ; $i<$move->getRankOffset()-1 ; $i++ ){
-				if ($game->board[chr(ord($move->fromFile) + $i)][$move->fromRank] != null) {
-					$move->setInvalid('chess.invalidmove.blocked');
-					return;
-				}
-			}
-		}
+		$obstacles = array_filter(
+			$move->getPath(),
+			function($square) { return !$square->isEmpty(); }
+		);
+		if (!empty($obstacles)) $move->setInvalid('chess.invalidmove.blocked');
 	}
 }

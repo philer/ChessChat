@@ -71,15 +71,6 @@ class ChatController implements AjaxController {
 					}
 					break;
 				
-				case 'move' : 
-					if (Move::patternMatch($_POST['move'])) {
-						$this->getGameController()->move(
-							$_POST['move'],
-							$_POST['gameId']
-						);
-					} else throw new RequestException('Not a valid move');
-					break;
-					
 				default :
 					throw new RequestException('Action ' . $_POST['action'] . ' unknown');
 					break;
@@ -112,11 +103,10 @@ class ChatController implements AjaxController {
 		
 		if ($save) {
 			Core::getDB()->sendQuery("
-				INSERT INTO cc_chatMessage (gameId, authorId, messageText, time, isBotMsg)
+				INSERT INTO cc_chatMessage (gameId, authorId, messageText, isBotMsg)
 				VALUES ("  . intval($gameId) . ",
 				        "  . $msgObj->authorId . ",
 				        '" . Util::esc($msg) . "',
-				        '" . $msgObj->time . "',
 				        "  . (int) $msgObj->isBotMsg . ")
 				");	
 		}
@@ -131,7 +121,7 @@ class ChatController implements AjaxController {
 	 * @param  integer $gameId
 	 */
 	public function getUpdate($gameId) {
-		$msgs = $this->getNewMessages($gameId, $_POST['lastId']);
+		$msgs = $this->getNewMessages($gameId, $_POST['lastMsgId']);
 		if (!empty($msgs)) {
 			$reply = '';
 			foreach ($msgs as $msg) {
@@ -139,7 +129,7 @@ class ChatController implements AjaxController {
 				$reply .= Core::getTemplateEngine()->fetch('_chatMessage');
 			}
 			AjaxUtil::queueReply('msg', $reply);
-			AjaxUtil::queueReply('lastId', $msg->messageId);
+			AjaxUtil::queueReply('lastMsgId', $msg->messageId);
 		}
 	}
 	

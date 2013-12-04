@@ -39,44 +39,23 @@ class Queen extends ChessPiece {
 	 * and sets $move->valid and $move->invalidMessage accordingly
 	 * @param 	Move 	$move
 	 */
-	public function validateMove(Move $move, Game $game) {
+	public function validateMove(Move $move, Board $board) {
 		// Valid move for a Queen:
 		// The queen can be moved any number of unoccupied squares in 
 		// a straight line vertically, 
 		// horizontally, 
 		// or diagonally, 
-		// thus combining the moves of the Rook and Bishop. 
-
-		//acting like a rook
-		if ($move->getRankOffset() * $move->getFileOffset() == 0){
-			if ($move->getRankOffset() == 0){
-				for ( $i=0 ; $i<$move->getFileOffset()-1 ; $i++ ){
-					if ($game->board[$move->fromFile][$i + $move->fromRank] != null) {
-						$move->setInvalid('chess.invalidmove.queen');
-						return;
-					}
-				}
-			} else {
-				for ( $i=0 ; $i<$move->getRankOffset()-1 ; $i++ ){
-					if ($game->board[chr(ord($move->fromFile) + $i)][$move->fromRank] != null) {
-						$move->setInvalid('chess.invalidmove.queen');
-						return;
-					}
-				}
-			}
+		// thus combining the moves of the Rook and Bishop.
+		if  (  $move->getRankOffset() * $move->getFileOffset() != 0
+			&& abs($move->getRankOffset()) - abs($move->getFileOffset()) != 0
+			) {
+			$move->setInvalid('chess.invalidmove.queen');
+			return;
 		}
-		//acting like a bishop
-		
-		elseif(abs($move->getRankOffset()) == abs($move->getFileOffset())){
-			for ( $i=0 ; $i<$move->getRankOffset()-1 ; $i++ ) {
-				if ($game->board[chr(ord($move->fromFile) + $i)][$move->fromRank] != null) {
-					$move->setInvalid('chess.invalidmove.queen');
-					return;
-				}
-			}
-		}
-		else{
-			$tmp = false;
-		}
+		$obstacles = array_filter(
+			$move->getPath(),
+			function($square) { return !$square->isEmpty(); }
+		);
+		if (!empty($obstacles)) $move->setInvalid('chess.invalidmove.blocked');
 	}
 }
