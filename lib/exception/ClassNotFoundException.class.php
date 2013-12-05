@@ -7,10 +7,9 @@
  * @author Philipp Miller
  */
 class ClassNotFoundException extends FatalException {
-	
-	public function __construct($className) {
-		$this->title = "Class Not Found";
-		parent::__construct("Class ".$className.".class.php could not be found in any known directory.");
-	}
-
+    
+    public function __construct($className) {
+        $this->title = 'Class Not Found';
+        parent::__construct('Class ' . $className . '.class.php could not be found in any known directory.');
+    }
 }

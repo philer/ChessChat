@@ -1,229 +1,229 @@
 @import "_mixins.less";
 
 section#game {
-	width: 75%;
-	right: 25%;
-	padding: 0;
-	text-align: center;
-	
-	> header {
-		position: static; // undo positioning in global.less
-		dl.gameData {
-			float: right;
-			color: #999;
-			dd {
-				display: inline;
-			}
-		}
-		#clock {
-			border-left: 1px solid #e0e0e0;
-		}
-	}
-	
-	> footer {
-		position: absolute;
-		bottom: 0;
-		right: 0;
-		font-size: .85em;
-		#gameMenu {
-			ul, li {
-				list-style-type: none;
-				display: inline-block;
-			}
-			ul {
-				box-shadow: 0 0 2px #bbb;
-				&,
-				li:first-child,
-				li:first-child a {
-					border-top-left-radius: 6px;
-				}
-				li a {
-					color: #666;
-					text-shadow: 1px 1px 0 white;
-					border-color: white #ddd transparent white;
-					border-width: 1px 1px 0 1px;
-					.vertical-shiny(#f8f8f8, #e9e9e9, #dfdfdf, #f8f8f8);
-					
-					&:hover {
-						color: #444;
-						text-decoration: none;
-						.vertical-shiny(#f8f8f8, #dddddd, #cccccc, #f8f8f8);
-						border-color: #eee #ccc transparent #eee;
-						box-shadow: inset 0 0 3px rgba(0,0,0,.2);
-					}
-				}
-			}
-			ul li a {
-				display: inline-block;
-				padding: .5em 1em;
-			}
-		}
-	}
+    width: 75%;
+    right: 25%;
+    padding: 0;
+    text-align: center;
+    
+    > header {
+        position: static; // undo positioning in global.less
+        dl.gameData {
+            float: right;
+            color: #999;
+            dd {
+                display: inline;
+            }
+        }
+        #clock {
+            border-left: 1px solid #e0e0e0;
+        }
+    }
+    
+    > footer {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        font-size: .85em;
+        #gameMenu {
+            ul, li {
+                list-style-type: none;
+                display: inline-block;
+            }
+            ul {
+                box-shadow: 0 0 2px #bbb;
+                &,
+                li:first-child,
+                li:first-child a {
+                    border-top-left-radius: 6px;
+                }
+                li a {
+                    color: #666;
+                    text-shadow: 1px 1px 0 white;
+                    border-color: white #ddd transparent white;
+                    border-width: 1px 1px 0 1px;
+                    .vertical-shiny(#f8f8f8, #e9e9e9, #dfdfdf, #f8f8f8);
+                    
+                    &:hover {
+                        color: #444;
+                        text-decoration: none;
+                        .vertical-shiny(#f8f8f8, #dddddd, #cccccc, #f8f8f8);
+                        border-color: #eee #ccc transparent #eee;
+                        box-shadow: inset 0 0 3px rgba(0,0,0,.2);
+                    }
+                }
+            }
+            ul li a {
+                display: inline-block;
+                padding: .5em 1em;
+            }
+        }
+    }
 }
 
 @media all and (max-width: 1200px) {
-	section#game {
-		width: 66.66%;
-	}
-	aside#chat {
-		width: 33.33%;
-	}
+    section#game {
+        width: 66.66%;
+    }
+    aside#chat {
+        width: 33.33%;
+    }
 }
 @media all and (max-width: 800px) {
-	section#game {
-		bottom: auto;
-		height: 66.66%;
-		width: 100%;
-	}
-	aside#chat {
-		width: 100%;
-		height: 33.33%;
-		left: 0;
-		top: auto;
-	}
+    section#game {
+        bottom: auto;
+        height: 66.66%;
+        width: 100%;
+    }
+    aside#chat {
+        width: 100%;
+        height: 33.33%;
+        left: 0;
+        top: auto;
+    }
 }
 
 #chessboard {
-	display: inline-block;
-	position: relative;
-	margin: 50px auto 0; /* default */
-	font-size: 60px; /* default */
-	
-	font-family: 'Georgia', 'Times New Roman', serif;
-	
-	// prevent text selection, varying browser support
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+    display: inline-block;
+    position: relative;
+    margin: 50px auto 0; /* default */
+    font-size: 60px; /* default */
+    
+    font-family: 'Georgia', 'Times New Roman', serif;
+    
+    // prevent text selection, varying browser support
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
-	ol.prison {
-		font-size: .55em;
-		position: absolute;
-		li {
-			cursor: default;
-			color: #555;
-			text-shadow: 1px 1px 3px rgba(0,0,0,.2);
-		}
-	}
-	
-	ol.own-prison {
-		top: 5.55%;
-		right: 0;
-	}
-	ol.opp-prison {
-		bottom: 5.55%;
-		left: 0;
-	}
+    ol.prison {
+        font-size: .55em;
+        position: absolute;
+        li {
+            cursor: default;
+            color: #555;
+            text-shadow: 1px 1px 3px rgba(0,0,0,.2);
+        }
+    }
+    
+    ol.own-prison {
+        top: 5.55%;
+        right: 0;
+    }
+    ol.opp-prison {
+        bottom: 5.55%;
+        left: 0;
+    }
 
-	table#chessboardTable {
-		table-layout: fixed;
-		margin: 0 .6em; /* prison distance */
-		width: 700px;
-		height: 700px;
-		border-collapse: collapse;
-		
-		color: #444;
-		background-color: #d3d3d3;
-		box-shadow: 0 .5em .3em -.3em #ccc,
-					0 0 1em #ddd;
-		
-		thead td,
-		tfoot td,
-		th {
-			font-size: .33em;
-			font-weight: normal;
-			// background-color: transparent;
-			// box-shadow: inset 0 0 1em rgba(0,0,0,.1);
-		}
-		
-		// th {
-		//	background-color: #d3d3d3;
-		// 	border-style: solid;
-		// 	border-color: #ccc;
-		// }
-		// thead th {
-		// 	border-width: 0 0 4px 0;
-		// }
-		// tfoot th {
-		// 	border-width: 4px 0 0 0;
-		// }
-		// tr th:first-child {
-		// 	border-width: 0 4px 0 0;
-		// }
-		// tr th:last-child {
-		// 	border-width: 0 0 0 4px;
-		// }
-		
-		// thead th:nth-child(2), tr:first-child th:first-child {
-		// 	border-top-left-radius: 4px;
-		// }
-		// thead th:nth-last-child(2), tr:first-child th:last-child {
-		// 	border-top-right-radius: 4px;
-		// }
-		// tfoot th:nth-child(2), tr:last-child th:first-child {
-		// 	border-bottom-left-radius: 4px;
-		// }
-		// tfoot th:nth-last-child(2), tr:last-child th:last-child {
-		// 	border-bottom-right-radius: 4px;
-		// }
-		
-		thead, tfoot {
-			height: 5.55%;
-		}
-		col.numbersColumn {
-			width: 5.55%;
-		}
-		tbody td.square {
-			height: 11.11%;
-			width: 11.11%;
-			// overflow: hidden;
-			cursor: pointer;
-			
-			// box-shadow: inset 0 0 10px rgba(100,100,100,.2);
-			&:hover {
-				// box-shadow: inset 0 0 10px rgba(0,0,0,.3);
-			}
-			&.light {
-				background-color: #f5f5f5;
-				&:hover {
-					background-color: #fff;
-					color: #333;
-				}
-			}
-			&.dark {
-				background-color: #bbb;
-				&:hover {
-					background-color: #b0b0b0;
-					color: #222;
-				}
-			}
-			
-			> div {
-				width: 85%;
-				height: 85%;
-				margin: auto;
-				// overflow: hidden;
-				border-radius: 3px;
-				box-shadow: inset 0 0 4px rgba(0,0,0,.15);
-			}
-			.chesspiece {
-				display: block;
-				// width: 100%;
-				height: 100%;
-				font-weight: normal;
-				border-radius: 3px;
-				text-shadow: 1px 1px 2px rgba(0,0,0,.2);
-				&.selected {
-					.border-box-sizing;
-					border-width: 2px;
-					border-style: dashed;
-					border-color: rgba(50,50,50,.5);
-					background-color: rgba(50,50,50,.15);
-				}
-			}
-		}
-	}
+    table#chessboardTable {
+        table-layout: fixed;
+        margin: 0 .6em; /* prison distance */
+        width: 700px;
+        height: 700px;
+        border-collapse: collapse;
+        
+        color: #444;
+        background-color: #d3d3d3;
+        box-shadow: 0 .5em .3em -.3em #ccc,
+                    0 0 1em #ddd;
+        
+        thead td,
+        tfoot td,
+        th {
+            font-size: .33em;
+            font-weight: normal;
+            // background-color: transparent;
+            // box-shadow: inset 0 0 1em rgba(0,0,0,.1);
+        }
+        
+        // th {
+        //    background-color: #d3d3d3;
+        //     border-style: solid;
+        //     border-color: #ccc;
+        // }
+        // thead th {
+        //     border-width: 0 0 4px 0;
+        // }
+        // tfoot th {
+        //     border-width: 4px 0 0 0;
+        // }
+        // tr th:first-child {
+        //     border-width: 0 4px 0 0;
+        // }
+        // tr th:last-child {
+        //     border-width: 0 0 0 4px;
+        // }
+        
+        // thead th:nth-child(2), tr:first-child th:first-child {
+        //     border-top-left-radius: 4px;
+        // }
+        // thead th:nth-last-child(2), tr:first-child th:last-child {
+        //     border-top-right-radius: 4px;
+        // }
+        // tfoot th:nth-child(2), tr:last-child th:first-child {
+        //     border-bottom-left-radius: 4px;
+        // }
+        // tfoot th:nth-last-child(2), tr:last-child th:last-child {
+        //     border-bottom-right-radius: 4px;
+        // }
+        
+        thead, tfoot {
+            height: 5.55%;
+        }
+        col.numbersColumn {
+            width: 5.55%;
+        }
+        tbody td.square {
+            height: 11.11%;
+            width: 11.11%;
+            // overflow: hidden;
+            cursor: pointer;
+            
+            // box-shadow: inset 0 0 10px rgba(100,100,100,.2);
+            &:hover {
+                // box-shadow: inset 0 0 10px rgba(0,0,0,.3);
+            }
+            &.light {
+                background-color: #f5f5f5;
+                &:hover {
+                    background-color: #fff;
+                    color: #333;
+                }
+            }
+            &.dark {
+                background-color: #bbb;
+                &:hover {
+                    background-color: #b0b0b0;
+                    color: #222;
+                }
+            }
+            
+            > div {
+                width: 85%;
+                height: 85%;
+                margin: auto;
+                // overflow: hidden;
+                border-radius: 3px;
+                box-shadow: inset 0 0 4px rgba(0,0,0,.15);
+            }
+            .chesspiece {
+                display: block;
+                // width: 100%;
+                height: 100%;
+                font-weight: normal;
+                border-radius: 3px;
+                text-shadow: 1px 1px 2px rgba(0,0,0,.2);
+                &.selected {
+                    .border-box-sizing;
+                    border-width: 2px;
+                    border-style: dashed;
+                    border-color: rgba(50,50,50,.5);
+                    background-color: rgba(50,50,50,.15);
+                }
+            }
+        }
+    }
 }
 
 @import "_chat.less";

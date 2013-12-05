@@ -7,28 +7,28 @@
  * @author Philipp Miller
  */
 function __autoload($className) {
-	
-	// add new directories here
-	$dirs = array(
-		'lib/',
-		'lib/controller/',
-		'lib/model/',
-		'lib/model/chess/',
-		'lib/exception/',
-	);
-	
-	foreach ($dirs as $dir) { // try all directories for class.php
-		if (file_exists(ROOT_DIR.$dir.$className.'.class.php')) {
-			require_once(ROOT_DIR.$dir.$className.'.class.php');
-			return;
-		}
-	}
-	foreach ($dirs as $dir) { // try all directories for if.php
-		if (file_exists(ROOT_DIR.$dir.$className.'.if.php')) {
-			require_once(ROOT_DIR.$dir.$className.'.if.php');
-			return;
-		}
-	}
-	
-	//throw new ClassNotFoundException($className);
+    
+    // add new directories here
+    $dirs = array(
+        'lib/',
+        'lib/controller/',
+        'lib/model/',
+        'lib/model/chess/',
+        'lib/exception/',
+    );
+    
+    foreach ($dirs as $dir) { // try all directories for class.php
+        if (file_exists(ROOT_DIR.$dir.$className.'.class.php')) {
+            require_once(ROOT_DIR.$dir.$className.'.class.php');
+            return;
+        }
+    }
+    foreach ($dirs as $dir) { // try all directories for if.php
+        if (file_exists(ROOT_DIR.$dir.$className.'.if.php')) {
+            require_once(ROOT_DIR.$dir.$className.'.if.php');
+            return;
+        }
+    }
+    
+    //throw new ClassNotFoundException($className);
 }
