@@ -169,9 +169,9 @@ var chess = {
         var prisoner = newsquare.contents();
         if (typeof prisoner.html() !== 'undefined') {
             if (prisoner.hasClass('white')) {
-                chess.whitePrison.append('<li>' + prisoner.html() + '</li>');
+                chess.whitePrison.append('<li class="chesspiece">' + prisoner.html() + '</li>');
             } else {
-                chess.blackPrison.append('<li>' + prisoner.html() + '</li>');
+                chess.blackPrison.append('<li class="chesspiece">' + prisoner.html() + '</li>');
             }
         }
         newsquare.empty();

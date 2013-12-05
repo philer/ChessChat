@@ -13,6 +13,12 @@ class Move extends DatabaseModel {
     public $moveId = 0;
     
     /**
+     * userId of User who made/tried this move.
+     * @var integer
+     */
+    public $playerId = 0;
+    
+    /**
      * Square where we start
      * @var Square
      */
@@ -67,8 +73,8 @@ class Move extends DatabaseModel {
             
             $this->from = new Square($moveData['fromSquare'], ChessPiece::getInstance($moveData['chessPiece']));
             $this->to   = new Square($moveData['toSquare']);
-            
-            $this->moveId = $moveData['moveId'];
+            unset($moveData['fromSqare'], $moveData['toSquare']);
+            parent::__construct($moveData);
             
         } elseif (self::patternMatch($moveData) && $game !== null) { // new move
             

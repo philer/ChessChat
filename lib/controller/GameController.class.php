@@ -183,11 +183,12 @@ class GameController extends AbstractRequestController implements AjaxController
      */
     public function getUpdate($gameId) {
         $moves = $this->getNewMoves($gameId, $_POST['lastMoveId']);
-        if (!empty($moves)) {
+        // don't send our own moves (request may occur on slow connections)
+        if (!empty($moves) && $moves[0]->playerId != Core::getUser()->getId()) {
             $gameData = Core::getDB()->sendQuery(
                  "SELECT status,
                          W.userName as whitePlayerName,
-                        B.userName as blackPlayerName
+                         B.userName as blackPlayerName
                  FROM cc_game G
                     JOIN cc_user W ON G.whitePlayerId = W.userId
                     JOIN cc_user B ON G.blackPlayerId = B.userId
@@ -216,6 +217,7 @@ class GameController extends AbstractRequestController implements AjaxController
     public function getNewMoves($gameId, $lastId) {
         $movesData = Core::getDB()->sendQuery(
             'SELECT moveId,
+                    playerId,
                     chessPiece,
                     fromSquare,
                     toSquare

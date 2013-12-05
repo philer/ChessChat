@@ -9,12 +9,20 @@ $whitePlayer = $this->var['game']->isWhitePlayer()
 
 ?>
 <div id="chessboard">
-    <ol id="whitePrison" class="prison white <?php echo $whitePlayer ? 'own' : 'opp'; ?>-prison">
-<?php foreach ($board->getWhitePrison() as $chesspiece) echo "<li>{$chesspiece}</li>"; ?>
-    </ol>
-    <ol id="blackPrison" class="prison black <?php echo $whitePlayer ? 'opp' : 'own'; ?>-prison">
-<?php foreach ($board->getBlackPrison() as $chesspiece) echo "<li>{$chesspiece}</li>"; ?>
-    </ol>
+    <ol id="whitePrison" class="prison white <?php echo $whitePlayer ? 'own' : 'opp'; ?>-prison"><?php
+foreach ($board->getWhitePrison() as $chesspiece) {
+    echo '<li class="chesspiece">'
+       . $chesspiece
+       . '</li>';
+}
+    ?></ol>
+    <ol id="blackPrison" class="prison black <?php echo $whitePlayer ? 'opp' : 'own'; ?>-prison"><?php
+foreach ($board->getBlackPrison() as $chesspiece) {
+    echo '<li class="chesspiece">'
+       . $chesspiece
+       . '</li>';
+}
+    ?></ol>
     <table id="chessboardTable">
         <colgroup>
             <col id="numbersColumnLeft" class="numbersColumn"/>
