@@ -25,6 +25,13 @@ class Move extends DatabaseModel {
     public $to = null;
     
     /**
+     * A Square containing the ChessPiece that may be captured by this move.
+     * (May differ from $this->to if captured en passant)
+     * @var Square
+     */
+    public $target = null;
+    
+    /**
      * Once the move has been checked it will be flagged as (not) valid.
      * @var boolean
      */
@@ -71,6 +78,7 @@ class Move extends DatabaseModel {
             // 'clone' to make sure we can execute this move without changing it
             $this->from = clone $this->game->board->{ $moveData[0] . $moveData[1] };
             $this->to   = clone $this->game->board->{ $moveData[2] . $moveData[3] };
+            $this->target = $this->to;
             
             if (empty($invalidMsg)) $this->validate();
             else $this->setInvalid($invalidMsg);

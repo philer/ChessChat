@@ -14,15 +14,27 @@ class Board {
     
     /**
      * Prison owned by white player (contains black chess pieces)
-     * @var array
+     * @var array<ChessPiece>
      */
     protected $whitePrison = array();
     
     /**
      * Prison owned by black player (contains white chess pieces)
-     * @var array
+     * @var array<ChessPiece>
      */
     protected $blackPrison = array();
+    
+    /**
+     * Holds references to all active (non captured) white Pawns for easy access.
+     * @var array<Pawn>
+     */
+    protected $whitePawns = array();
+    
+    /**
+     * Holds references to all active (non captured) black Pawns for easy access.
+     * @var array<Pawn>
+     */
+    protected $blackPawns = array();
     
     /**
      * A chessboard is represented as a string for easy transmission and storage.
@@ -54,17 +66,31 @@ class Board {
                 $this->board[$file][$rank] = new Square($file, $rank);
             }
         }
-        $this->board['x'] = array(); // TODO
-        $this->board['y'] = array(); // TODO
+        $this->whitePrison = array();
+        $this->blackPrison = array();
         
         for ( $cp=0 ; $cp<96 ; $cp+=3 ) {
             $cpObj = ChessPiece::getInstance($boardStr[$cp]);
-            if ($cpObj instanceof Pawn) {
-                $cpObj->canEnPassant = ctype_upper($boardStr[$cp+1]);
-            } elseif ($cpObj instanceof Rook || $cpObj instanceof King) {
-                $cpObj->canCastle = ctype_upper($boardStr[$cp+1]);
+            
+            if ($boardStr[$cp+1] == 'x') {
+                $this->whitePrison[] = $cpObj;
+            
+            } elseif ($boardStr[$cp+1] == 'y') {
+                $this->blackPrison[] = $cpObj;
+            
+            } else {
+                if ($cpObj instanceof Pawn) {
+                    $cpObj->canEnPassant = ctype_upper($boardStr[$cp+1]);
+                    if ($cpObj->isWhite()) {
+                        $this->whitePawns[] = $cpObj;
+                    } else {
+                        $this->blackPawns[] = $cpObj;
+                    }
+                } elseif ($cpObj instanceof Rook || $cpObj instanceof King) {
+                    $cpObj->canCastle = ctype_upper($boardStr[$cp+1]);
+                }
+                $this->board[ strtolower($boardStr[$cp+1]) ][ intval($boardStr[$cp+2]) ]->chesspiece = $cpObj;
             }
-            $this->board[ strtolower($boardStr[$cp+1]) ][ hexdec($boardStr[$cp+2]) ]->chesspiece = $cpObj;
         }
     }
     
@@ -96,9 +122,8 @@ class Board {
                 }
             }
         }
-        // TODO
-        foreach ($this->board['x'] as $i => $cp) $boardStr .= $cp->letter() . 'x' . dechex($i);
-        foreach ($this->board['y'] as $i => $cp) $boardStr .= $cp->letter() . 'y' . dechex($i);
+        foreach ($this->whitePrison as $i => $cp) $boardStr .= $cp->letter() . 'x' . dechex($i);
+        foreach ($this->blackPrison as $i => $cp) $boardStr .= $cp->letter() . 'y' . dechex($i);
         return $boardStr;
     }
     
@@ -113,7 +138,7 @@ class Board {
     }
     
     /**
-     * Returns specified Square from this board.
+     * Returns specified Square from this board (by reference).
      * Expects either
      * 1 String defining a square, such as 'A1' or
      * 1 Square object or
@@ -190,8 +215,44 @@ class Board {
      * @param  Move   $move a valid move
      */
     public function move(Move $move) {
-        // if (!$move->to->isEmpty()) ; // TODO capture
+        $this->capture($move->target);
         $this->board[$move->to->fileChar()][$move->to->rank()]->chesspiece = $move->from->chesspiece;
         $this->board[$move->from->fileChar()][$move->from->rank()]->chesspiece = null;
+    }
+    
+    public function revert(Move $move) {
+        // TODO
+    }
+    
+    /**
+     * Executes a capture on the given Square if
+     * it contains a ChessPiece, return false otherwise.
+     * @param   Square   $square
+     * @return  boolean  successful capture
+     */
+    public function capture(Square $target) {
+        // get reference
+        $target = $this->getSquare($target);
+        if (is_null($target->chesspiece)) {
+            return false;
+        }
+        if ($target->chesspiece->isWhite()) {
+            $this->whitePrison[] = $target->chesspiece;
+        } else {
+            $this->blackPrison[] = $target->chesspiece;
+        }
+        $target->chesspiece = null;
+        return true;
+    }
+    
+    /**
+     * Sets all own Pawn's $canEnPassant flags to false.
+     * $white determines which color is 'own'. 
+     * @param  boolean  $white
+     */
+    public function clearEnPassant($white) {
+        foreach ( ($white ? $this->whitePawns : $this->blackPawns) as $pawn ) {
+            $pawn->canEnPassant = false;
+        }
     }
 }
