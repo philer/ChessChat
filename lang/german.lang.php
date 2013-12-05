@@ -1,7 +1,7 @@
 <?php
 
 /**
- * english language file
+ * german language file
  */
 
 $this->langVars = array(
@@ -22,26 +22,25 @@ $this->langVars = array(
 'form.reset'			=> 'Zurücksetzen',
 'form.invalid'			=> 'Bitte korriegieren Sie die markierten Felder!',
 'form.invalid.missing'			=> 'Diese Feld muss ausgefüllt werden.',
-'form.invalid.userName'			=> 'Ihr Benutzername muss mindestens '
+'form.invalid.username'			=> 'Ihr Benutzername muss mindestens '
 								 . USERNAME_MIN_LENGTH
 								 . ' Zeichen lang sein.',
-'form.invalid.userName.used'	=> 'Dieser Benutzername ist bereits vergeben.',
-'form.invalid.userName.nonexistant'	=> 'Der Benutzername existiert nicht.',
+'form.invalid.username.used'	=> 'Dieser Benutzername ist bereits vergeben.',
+'form.invalid.username.nonexistant'	=> 'Der Benutzername existiert nicht.',
 'form.invalid.email'			=> 'Keine E-Mail Adresse',
 'form.invalid.email.used'		=> 'Diese E-Mail Adresse ist bereits in Benutzung.',
-'form.invalid.emailConfirm'		=> 'Ihre E-Mail Adresse stimmt nicht überein.',
+'form.invalid.email.confirm'	=> 'Ihre E-Mail Adresse stimmt nicht überein.',
 'form.invalid.password'			=> 'Falsches Passwort',
+'form.invalid.password.confirm' => 'Ihr Passwort stimmt nicht überein.',
 'form.invalid.password.insecure'=> 'Ihr Passwort muss mindestens '
 								 . PASSWORD_MIN_LENGTH
 								 . ' Zeichen lang sein.',
-'form.invalid.passwordConfirm'	=> 'Ihr Passwort stimmt nicht überein.',
 
 // GLOBAL
 'site.index' 			=> 'Startseite',
 'site.legalnotice'		=> 'Impressum',
 'site.contact'			=> 'Kontaktinformationen',
 'site.menu.settings'	=> 'Einstellungen',
-
 'site.loggedinas' 		=> 'Angemeldet als',
 
 // SITES
@@ -52,7 +51,7 @@ $this->langVars = array(
 'legal.phone'			=> 'Telefon',
 'legal.fax'				=> 'Fax',
 'legal.representatives'	=> 'Vertretungsberechtigte',
-//'legal.taxID'			=> 'Steuernummer',
+'legal.taxID'			=> 'Steuernummer',
 
 'user.name' 			=> 'Benutzername',
 'user.gameCount'		=> 'Spiele',
@@ -71,7 +70,6 @@ $this->langVars = array(
 'game.opponent'			=> 'Gegner',
 'game.whiteplayer' 		=> 'Weißer Spieler',
 'game.blackplayer' 		=> 'Schwarzer Spieler',
-'game.status' 			=> 'Status',
 'game.list' 			=> 'Spiele',
 'game.list.running' 	=> 'Laufende Spiele',
 'game.list.finished'	=> 'Beendete Spiele',
@@ -80,6 +78,7 @@ $this->langVars = array(
 'game.new.against'		=> 'Gegen %opponent spielen',
 'game.settings'			=> 'Spieleinstellungen',
 'game.lastupdate' 		=> 'Letzte Aktivität',
+'game.status'           => 'Spielstatus',
 'game.status.nextturn' 	=> '%u ist dran',
 'game.status.won' 		=> '%u hat Gewonnen',
 'game.status.draw' 		=> 'Unentschieden',
@@ -96,6 +95,17 @@ $this->langVars = array(
 'chess.term.pawn'		=> 'Bauer',
 'chess.term.castling'	=> 'Rouchade',
 'chess.term.enpassant'	=> 'en passant',
+
+'chess.invalidmove.blocked'     => "Eine andere Figur versperrt den Weg.",
+'chess.invalidmove.nopiece'     => "Auf diesem Feld steht keine Figur.",
+'chess.invalidmove.notyourturn' => "Du bist nicht dran.",
+'chess.invalidmove.owncolor'    => "Auf diesem Feld steht bereits eine deiner Figuren.",
+'chess.invalidmove.bishop'      => "Ein Läufer kann so nicht bewegt werden.",
+'chess.invalidmove.king'        => "Ein König kann so nicht bewegt werden.",
+'chess.invalidmove.knight'      => "Ein Springer kann so nicht bewegt werden.",
+'chess.invalidmove.pawn'        => "Ein Bauer kann so nicht bewegt werden.",
+'chess.invalidmove.queen'       => "Eine Dame kann so nicht bewegt werden.",
+'chess.invalidmove.rook'        => "Ein Turm kann so nicht bewegt werden.",
 
 'chess.rule.nocastling'	=> 'Die Rouchade ist nicht mehr möglich nachdem der König bewegt wurde',
 

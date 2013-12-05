@@ -158,24 +158,28 @@ class Board {
     public function range(Square $from, Square $to) {
         $range = array();
         if ($from->file() == $to->file()) {
+            // vertical
             $minRank = min($from->rank(), $to->rank()) + 1;
             $maxRank = max($from->rank(), $to->rank()) - 1;
             for ( $r=$minRank ; $r<=$maxRank ; $r++ ) {
                 $range[] = $this->board[$from->fileChar()][$r];
             }
         } elseif ($from->rank() == $to->rank()) {
+            // horizontal
             $minFile = chr(min($from->file(), $to->file()) + 1 + ord('a'));
             $maxFile = chr(max($from->file(), $to->file()) - 1 + ord('a'));
             for ( $f=$minFile ; $f<=$maxFile ; $f++ ) {
                 $range[] = $this->board[$f][$from->rank()];
             }
         } else {
-            $ltr = $from->file() < $to->file();
+            // diagonal
             $offset = abs($from->rank() - $to->rank()) - 2;
             $minRank = min($from->rank(), $to->rank()) + 1;
             $minFile = min($from->file(), $to->file()) + 1;
+            $ltr = $from->file() < $to->file(); // left-to-right or right-to-left
+            $up  = $from->rank() < $to->rank(); // up or down
             for ( $i=0 ; $i<=$offset ; $i++ ) {
-                $range[] = $this->board[chr(($ltr ? $i : $offset-$i) + $minFile + ord('a'))][$i + $minRank];
+                $range[] = $this->board[chr(($ltr ? $i : $offset-$i) + $minFile + ord('a'))][($up ? $i : $offset-$i) + $minRank];
             }
         }
         return $range;
