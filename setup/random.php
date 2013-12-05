@@ -4,9 +4,7 @@
  * random users and games for chesschat.
  * Don't try to access this script directly via browser or commandline!
  * @see  setup.php
- * 
  * @author  Philipp Miller
- * 
  */
 
 // options

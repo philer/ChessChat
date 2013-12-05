@@ -19,6 +19,9 @@ abstract class AbstractRequestController implements RequestController {
      */
     protected $route = '';
     
+    /**
+     * Default behaviour of a new RequestController
+     */
     public function __construct() {
         $controllerName = get_class($this);
         $this->route = substr($controllerName, 0, strlen($controllerName) - 10)

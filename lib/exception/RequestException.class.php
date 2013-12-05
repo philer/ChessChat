@@ -1,8 +1,22 @@
 <?php
 
+/**
+ * Use this Exception to return an HTTP error page (like 404 or 403).
+ * Output verbosity depends on DEBUG_MODE.
+ * By default this sends a status code of 200 (successful request)
+ */
 class RequestException extends Exception implements RequestController {
     
+    /**
+     * Name of the HTTP status 
+     * @var string
+     */
     protected $title = '';
+    
+    /**
+     * HTTP status
+     * @var integer
+     */
     protected $httpCode = 200;
     
     /**
@@ -41,13 +55,27 @@ class RequestException extends Exception implements RequestController {
         }
     }
     
+    /**
+     * Returns the name of the HTTP status
+     * @return string
+     */
     public function getPageTitle() {
         return $this->getTitle();
     }
     
+    /**
+     * Errors shouldn't have route, redirect to index instead
+     * @return  string  empty string
+     */
     public function getCanonicalRoute() {
         return '';
     }
     
+    /**
+     * RequestExceptions implement RequestController but
+     * shouldn't be called as a request handler. Hence
+     * this method does nothing.
+     * @param  array  $route
+     */
     public function handleRequest(array $route) {}
 }

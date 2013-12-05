@@ -109,14 +109,20 @@ final class Database {
     }
     
     /**
-     * Returns an array containing all queries that have been sent by now as a string array.
-     * for debugging and benchmarking purposes
-     * @return     array<string>
+     * For debugging and benchmarking purposes.
+     * Returns an array containing all queries that
+     * have been sent by now as a string array.
+     * @return array<string>
      */
     public function getSentQueries() {
         return $this->sentQueries;
     }
     
+    /**
+     * Returns the autoincrement ID of the last row
+     * that was inserted via a INSERT query.
+     * @return integer
+     */
     public function getLastInsertId() {
         return $this->db->insert_id;
     }
