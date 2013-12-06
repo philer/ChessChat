@@ -40,13 +40,17 @@ abstract class ChessPiece {
      */
     abstract public function validateMove(Move $move, Board $board);
     
+    /**
+     * Convenience method for easy string representation.
+     * @return  string  utf8 chess symbol
+     */
     public function __toString() {
         return $this->utf8();
     }
     
     /**
      * Returns this ChessPiece's utf-8 html entity.
-     * @return     string
+     * @return  string  utf8 chess symbol
      */
     public function utf8() {
         return $this->white ? static::UTF8_WHITE : static::UTF8_BLACK;

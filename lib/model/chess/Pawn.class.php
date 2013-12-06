@@ -7,7 +7,8 @@
 class Pawn extends ChessPiece {
     
     /**
-     * Pawn's may sometimes move 'en passant'
+     * Indicates if this Pawn may be captured en passant,
+     * which is the case right after it took a double step.
      * @var boolean
      */
     public $canEnPassant = false;
@@ -65,6 +66,7 @@ class Pawn extends ChessPiece {
             if  ($roff < 1 || $roff > 2) {
             
                 $move->setInvalid('chess.invalidmove.pawn');
+                return;
             
             } elseif ($roff == 2) {
             
@@ -77,19 +79,13 @@ class Pawn extends ChessPiece {
                     return;
                 }
                 // opponents pawns may capture en passant next move
-                if ($move->from->file() > 0) {
-                    $oppPawn = $board->getSquare($move->from->file() - 1, 4)->chesspiece;
-                    if ($oppPawn instanceof Pawn) $oppPawn->canEnPassant = true;
-                }
-                if ($move->from->file() < 7) {
-                    $oppPawn = $board->getSquare($move->from->file() + 1, 4)->chesspiece;
-                    if ($oppPawn instanceof Pawn) $oppPawn->canEnPassant = true;
-                }
+                $this->canEnPassant = true;
             }
         } else {
             if  ($roff > -1 || $roff < -2) {
             
                 $move->setInvalid('chess.invalidmove.pawn');
+                return;
             
             } elseif ($roff == -2) {
             
@@ -102,42 +98,42 @@ class Pawn extends ChessPiece {
                     return;
                 }
                 // opponents pawns may capture en passant next move
-                if ($move->from->file() > 0) {
-                    $oppPawn = $board->getSquare($move->from->file() - 1, 5)->chesspiece;
-                    if ($oppPawn instanceof Pawn) $oppPawn->canEnPassant = true;
-                }
-                if ($move->from->file() < 7) {
-                    $oppPawn = $board->getSquare($move->from->file() + 1, 5)->chesspiece;
-                    if ($oppPawn instanceof Pawn) $oppPawn->canEnPassant = true;
-                }
+                $this->canEnPassant = true;
             }
         }
         
         if (abs($foff) > 1) {
             $move->setInvalid('chess.invalidmove.pawn');
+            return;
             
         } elseif (abs($foff) == 1) {
-            //attempted capture
+            // capture
             if (abs($roff) == 1) {
-                if ($this->canEnPassant) {
-                    // note: if you can move en passant there can't be a piece at $move->to
-                    $target = clone $board->getSquare($move->from->file() + $foff, $move->from->rank());
-                } else {
-                    $target = $move->to;
-                }
-                if (is_null($target->chesspiece)) {
-                    $move->setInvalid('chess.invalidmove.pawn.nocapture');
-                } elseif ($target->chesspiece->isWhite() == $move->from->chesspiece->isWhite()) {
+                if ($move->to->isEmpty()) {
+                    // en passant
+                    $target = $board->getSquare($move->to->file(), $move->from->rank());
+                    if (   $target->isEmpty()
+                        || !$target->chesspiece->canEnPassant
+                        || $target->chesspiece->isWhite() == $move->from->chesspiece->isWhite()
+                        ) {
+                        $move->setInvalid('chess.invalidmove.pawn.nocapture');
+                        return;
+                    }
+                    $move->capture = $target;
+                    return;
+                
+                } elseif ($move->to->chesspiece->isWhite() == $move->from->chesspiece->isWhite()) {
                     $move->setInvalid('chess.invalidmove.owncolor');
-                } else {
-                    $move->target = $target;
+                    return;
                 }
             } else {
                 $move->setInvalid('chess.invalidmove.pawn');
+                return;
             }
-        } elseif (!is_null($move->to->chesspiece)) {
+        } elseif (!$move->to->isEmpty()) {
             // pawn can only capture diagonally
             $move->setInvalid('chess.invalidmove.blocked');
+            return;
         }
     }
 }

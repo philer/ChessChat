@@ -1,5 +1,6 @@
 === minor ===
-* (js/php) add en passant capture to view
+* add 'your turn' to status display
+* add capture to move messages
 
 === major ===
 * determine check

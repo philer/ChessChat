@@ -41,6 +41,7 @@ CREATE TABLE cc_move (
     chessPiece CHAR(1)    NOT NULL,
     fromSquare CHAR(2)    NOT NULL,
     toSquare   CHAR(2)    NOT NULL,
+    capture    char(3),
     time       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (moveId),
     KEY (gameId)

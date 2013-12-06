@@ -138,7 +138,7 @@ class Board {
     }
     
     /**
-     * Returns specified Square from this board (by reference).
+     * Returns a copy of the specified Square from this board.
      * Expects either
      * 1 String defining a square, such as 'A1' or
      * 1 Square object or
@@ -149,9 +149,12 @@ class Board {
      * @return Square
      */
     public function getSquare($p1, $p2 = null) {
-        if ($p1 instanceof Square) $square = $p1;
-        else $square = new Square($p1, $p2);
-        return $this->board[ $square->fileChar() ][ $square->rank() ];
+        if ($p1 instanceof Square) {
+            $square = $p1;
+        } else {
+            $square = new Square($p1, $p2);
+        }
+        return clone $this->board[ $square->fileChar() ][ $square->rank() ];
     }
     
     /**
@@ -215,9 +218,10 @@ class Board {
      * @param  Move   $move a valid move
      */
     public function move(Move $move) {
-        $this->capture($move->target);
+        $this->capture($move->capture);
         $this->board[$move->to->fileChar()][$move->to->rank()]->chesspiece = $move->from->chesspiece;
         $this->board[$move->from->fileChar()][$move->from->rank()]->chesspiece = null;
+        $this->clearEnPassant(!$move->from->chesspiece->isWhite()); // clear opponents canEnPassant flags
     }
     
     public function revert(Move $move) {

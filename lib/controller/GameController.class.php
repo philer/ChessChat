@@ -204,7 +204,6 @@ class GameController extends AbstractRequestController implements AjaxController
                     $moves
                     )
             );
-            AjaxUtil::queueReply('lastMoveId', end($moves)->moveId);
         }
     }
     
@@ -220,7 +219,8 @@ class GameController extends AbstractRequestController implements AjaxController
                     playerId,
                     chessPiece,
                     fromSquare,
-                    toSquare
+                    toSquare,
+                    capture
              FROM cc_move
              WHERE  moveId > ' . intval($lastId) . '
                 AND gameId = '    . intval($gameId) . '

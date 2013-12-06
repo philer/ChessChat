@@ -35,7 +35,7 @@ class Move extends DatabaseModel {
      * (May differ from $this->to if captured en passant)
      * @var Square
      */
-    public $target = null;
+    public $capture = null;
     
     /**
      * Once the move has been checked it will be flagged as (not) valid.
@@ -69,26 +69,35 @@ class Move extends DatabaseModel {
      * @param  Game          $game      game in which this move was made
      */
     public function __construct($moveData, Game $game = null) {
+        $this->game = $game;
+        
         if (is_array($moveData)) { // data from database
             
             $this->from = new Square($moveData['fromSquare'], ChessPiece::getInstance($moveData['chessPiece']));
             $this->to   = new Square($moveData['toSquare']);
-            unset($moveData['fromSqare'], $moveData['toSquare']);
+            
+            if (is_null($moveData['capture'])) {
+                $this->capture = $this->to;
+            } else {
+                $this->capture = new Square($moveData['capture']);
+                if ($this->to->equals($this->capture)) {
+                    // get references right
+                    $this->to = $this->capture;
+                }
+            }
+            
+            unset($moveData['fromSqare'], $moveData['toSquare'], $moveData['capture']);
             parent::__construct($moveData);
             
-        } elseif (self::patternMatch($moveData) && $game !== null) { // new move
-            
-            $this->game = $game;
+        } elseif (self::patternMatch($moveData) && $game !== null) { // new Move
             $moveData = preg_replace('@' . self::SEPERATOR_PATTERN . '@', '', $moveData);
             
             // 'clone' to make sure we can execute this move without changing it
             $this->from = clone $this->game->board->{ $moveData[0] . $moveData[1] };
             $this->to   = clone $this->game->board->{ $moveData[2] . $moveData[3] };
-            $this->target = $this->to;
+            $this->capture = $this->to; // default case
             
-            if (empty($invalidMsg)) $this->validate();
-            else $this->setInvalid($invalidMsg);
-            
+            $this->validate();
         }
     }
     
@@ -200,11 +209,14 @@ class Move extends DatabaseModel {
      */
     public function ajaxData() {
         $ajaxData = array(
-            'id'    => $this->moveId,
-            'from'  => (string) $this->from,
-            'to'    => (string) $this->to,
-            'valid' => $this->isValid(),
+            'id'      => $this->moveId,
+            'from'    => (string) $this->from,
+            'to'      => (string) $this->to,
+            'valid'   => $this->isValid()
         );
+        if (!$this->capture->isEmpty()) {
+            $ajaxData['capture'] = (string) $this->capture;
+        }
         // if (!$this->isValid()) {
         //     $ajaxData['invalidReason'] = Core::getLanguage()->getLanguageItem($this->invalidReason);
         // }
@@ -216,14 +228,17 @@ class Move extends DatabaseModel {
      * Also updates this moves moveId.
      */
     public function save() {
-        Core::getDB()->sendQuery(
-        	"INSERT INTO cc_move (gameId, playerId, chessPiece, fromSquare, toSquare)
-             VALUES (" . $this->game->getId() . ",
-                     " . Core::getUser()->getId() . ",
-                     '" . $this->from->chesspiece->letter() . "',
-                     '" . $this->from . "',
-                     '" . $this->to . "')
-        ");
+        $fields = 'gameId, playerId, chessPiece, fromSquare, toSquare';
+        $values = $this->game->getId()
+                . ", " . Core::getUser()->getId()
+                . ", '" . $this->from->chesspiece->letter() . "'"
+                . ", '" . $this->from . "'"
+                . ", '" . $this->to . "'";
+        if (!$this->capture->isEmpty()) {
+            $fields .= ', capture';
+            $values .= ", '" . $this->capture->chesspiece->letter() . (string) $this->capture . "'";
+        }
+        Core::getDB()->sendQuery("INSERT INTO cc_move ({$fields}) VALUES ({$values})");
         $this->moveId = Core::getDB()->getLastInsertId();
     }
     

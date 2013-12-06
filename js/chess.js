@@ -166,15 +166,19 @@ var chess = {
         var chesspiece = $('#chesspiece-' + move.from);
         var newsquare  = $('#square-' + move.to + ' > div');
         
-        var prisoner = newsquare.contents();
-        if (typeof prisoner.html() !== 'undefined') {
-            if (prisoner.hasClass('white')) {
-                chess.whitePrison.append('<li class="chesspiece">' + prisoner.html() + '</li>');
-            } else {
-                chess.blackPrison.append('<li class="chesspiece">' + prisoner.html() + '</li>');
+        if (move.capture) {
+            var target = $('#square-' + move.capture + ' > div');
+            var prisoner = target.contents();
+            if (typeof prisoner.html() !== 'undefined') {
+                if (prisoner.hasClass('white')) {
+                    chess.whitePrison.append('<li class="chesspiece">' + prisoner.html() + '</li>');
+                } else {
+                    chess.blackPrison.append('<li class="chesspiece">' + prisoner.html() + '</li>');
+                }
             }
+            target.empty();
         }
-        newsquare.empty();
+        
         chesspiece.appendTo(newsquare)
                   .css({top: '0px', left: '0px'})
                   .attr('id', 'chesspiece-' + move.to);

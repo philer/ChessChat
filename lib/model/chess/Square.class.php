@@ -44,27 +44,45 @@ class Square {
      * @param ChessPiece     $chesspiece
      */
     public function __construct($file, $rank = null, Chesspiece $chesspiece = null) {
+        $this->chesspiece = $chesspiece;
+        
         if (is_int($file)) {
             // two int
             $this->file = $file;
             $this->rank = (int) $rank;
         
-        } elseif (strlen($file) == 1) {
-            // one char one int
-            $this->file = ord(strtolower($file)) - ord('a');
-            $this->rank = (int) $rank;
-        
-        } else {
-            // string like 'a4' or '4A'
-            if (is_numeric($file[0])) {
-                $this->rank = intval($file[0]);
-                $this->file = ord(strtolower($file[1])) - ord('a');
+        } elseif (is_string($file)) {
+            if (strlen($file) == 1) {
+                // one char one int
+                $this->file = ord(strtolower($file)) - ord('a');
+                $this->rank = (int) $rank;
+            
             } else {
-                $this->rank = intval($file[1]);
-                $this->file = ord(strtolower($file[0])) - ord('a');
+                if (strlen($file) == 3) {
+                    $this->chesspiece = ChessPiece::getInstance($file[0]);
+                    $file = substr($file, 1);
+                }
+                // string like 'a4' or '4A'
+                if (is_numeric($file[0])) {
+                    $this->rank = intval($file[0]);
+                    $this->file = ord(strtolower($file[1])) - ord('a');
+                } else {
+                    $this->rank = intval($file[1]);
+                    $this->file = ord(strtolower($file[0])) - ord('a');
+                }
             }
+        } else {
+            throw new Exception('Expecting parameter 1 to be either int or string');
         }
-        $this->chesspiece = $chesspiece;
+    }
+    
+    /**
+     * Equals method that only cares about coordinates (not ChessPieces).
+     * @param  Square $square
+     * @return boolean
+     */
+    public function equals(Square $square) {
+        return $this->file == $square->file() && $this->rank == $square->rank();
     }
     
     /**
