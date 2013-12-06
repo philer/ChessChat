@@ -49,22 +49,23 @@ $light = true;  // altering squares color
 for ($i=1; $i<=8; $i++,$light=!$light) {
     $r = $whitePlayer ? 9-$i : $i;  // turn board upside down for black
     echo "<tr id=\"rank{$r}\" class=\"rank\">\n"
-        ."\t<th>{$r}</th>";
+       . "\t<th>{$r}</th>";
     for ($c='A'; $c<='H'; $c++,$light=!$light) {
-        echo "<td class=\"square "
-           . ($light ? "light" : "dark")  // altering squares color
-           . "\" id=\"square-{$c}{$r}\"><div>";
+        echo '<td'
+           . ' class="square ' . ($light ? 'light' : 'dark') . '"'
+           . ' id="square-' . $c . $r . '"><div>';
         if ($cp = $board->{$c.$r}->chesspiece) {
-            echo "<span class=\"chesspiece "
-               . ($cp->isWhite() ? 'white' : 'black')
-               . "\" id=\"chesspiece-{$c}{$r}\">"
+            echo '<span'
+               . ' data-chesspiece="' . $cp->letter() . '"'
+               . ' class="chesspiece ' . ($cp->isWhite() ? 'white' : 'black') . '"'
+               . ' id="chesspiece-' . $c . $r . '">'
                . $cp->utf8()
-               . "</span>";
+               . '</span>';
         }    
-        echo "</div></td>";
+        echo '</div></td>';
     }
     echo "<th>{$r}</th>\n"
-        ."\t</tr>";
+       . "\t</tr>";
 }
 ?>
         </tbody>

@@ -38,6 +38,12 @@ class Move extends DatabaseModel {
     public $capture = null;
     
     /**
+     * A ChessPiece that resulted from a Pawn promotion
+     * @var ChessPiece
+     */
+    public $promotion = null;
+    
+    /**
      * Once the move has been checked it will be flagged as (not) valid.
      * @var boolean
      */
@@ -85,17 +91,23 @@ class Move extends DatabaseModel {
                     $this->to = $this->capture;
                 }
             }
+            if ($moveData['promotion']) {
+                $this->promotion = ChessPiece::getInstance($moveData['promotion']);
+            }
             
-            unset($moveData['fromSqare'], $moveData['toSquare'], $moveData['capture']);
+            unset($moveData['fromSqare'], $moveData['toSquare'], $moveData['capture'], $moveData['promotion']);
             parent::__construct($moveData);
             
         } elseif (self::patternMatch($moveData) && $game !== null) { // new Move
             $moveData = preg_replace('@' . self::SEPERATOR_PATTERN . '@', '', $moveData);
             
-            // 'clone' to make sure we can execute this move without changing it
-            $this->from = clone $this->game->board->{ $moveData[0] . $moveData[1] };
-            $this->to   = clone $this->game->board->{ $moveData[2] . $moveData[3] };
+            $this->from = $this->game->board->{ $moveData[0] . $moveData[1] };
+            $this->to   = $this->game->board->{ $moveData[2] . $moveData[3] };
             $this->capture = $this->to; // default case
+            
+            if (strlen($moveData) == 5) {
+                $this->promotion = ChessPiece::getInstance($moveData[4]);
+            }
             
             $this->validate();
         }
@@ -117,20 +129,29 @@ class Move extends DatabaseModel {
      * @return  string
      */
     public function formatString() {
-       if ($this->isValid()) {
-             $moveData = array(
-                'user'  => Core::getUser(),
-                'piece' => $this->from->chesspiece->utf8(),
-                'from'  => $this->from,
-                'to'    => $this->to
+        if ($this->isValid()) {
+            $string = Core::getLanguage()->getLanguageItem(
+                'chess.moved',
+                $moveData = array(
+                    'user'  => Core::getUser(),
+                    'piece' => (string) $this->from->chesspiece,
+                    'from'  => (string) $this->from,
+                    'to'    => (string) $this->to
+                )
             );
-            if ($this->capture->isEmpty()) {
-                return Core::getLanguage()->getLanguageItem('chess.moved', $moveData);
-            } else {
-                $moveData['capture'] = $this->capture->chesspiece->utf8();
-                return Core::getLanguage()->getLanguageItem('chess.movedandcaptured', $moveData);
+            if (!$this->capture->isEmpty()) {
+                $string .= Core::getLanguage()->getLanguageItem(
+                    'chess.andcaptured',
+                    array('capture' => (string) $this->capture->chesspiece)
+                );
             }
-            
+            if($this->promotion) {
+                $string .= Core::getLanguage()->getLanguageItem(
+                    'chess.andpromoted',
+                    array('promotion' => (string) $this->promotion)
+                );
+            }
+            return $string;
         } else {
             return Core::getLanguage()->getLanguageItem($this->invalidReason);
         }
@@ -221,6 +242,9 @@ class Move extends DatabaseModel {
         if (!$this->capture->isEmpty()) {
             $ajaxData['capture'] = (string) $this->capture;
         }
+        if ($this->promotion) {
+            $ajaxData['promotion'] = $this->promotion->letter();
+        }
         // if (!$this->isValid()) {
         //     $ajaxData['invalidReason'] = Core::getLanguage()->getLanguageItem($this->invalidReason);
         // }
@@ -242,6 +266,10 @@ class Move extends DatabaseModel {
             $fields .= ', capture';
             $values .= ", '" . $this->capture->chesspiece->letter() . (string) $this->capture . "'";
         }
+        if ($this->promotion) {
+            $fields .= ', promotion';
+            $values .= ", '" . $this->promotion->letter() . "'";
+        }
         Core::getDB()->sendQuery("INSERT INTO cc_move ({$fields}) VALUES ({$values})");
         $this->moveId = Core::getDB()->getLastInsertId();
     }
@@ -258,9 +286,9 @@ class Move extends DatabaseModel {
                 . Square::PATTERN
                 . self::SEPERATOR_PATTERN . '?'
                 . Square::PATTERN
+                . ChessPiece::PATTERN . '?'
                 . '$@'
             , $str);
         // TODO OPTIONAL add support for algebraic notation
-        // TODO OPTIONAL $piece = '[pkqnbrPKQNBR]'; // language support maybe?
     }
 }

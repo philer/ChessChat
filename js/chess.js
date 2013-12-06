@@ -9,6 +9,21 @@ var chess = {
     
     lastMoveId  : 0,
     
+    utf8 : {
+        'Q' : '&#x2655;',
+        'q' : '&#x265B;',
+        'P' : '&#x2659;',
+        'p' : '&#x265F;',
+        'N' : '&#x2658;',
+        'n' : '&#x265E;',
+        'R' : '&#x2656;',
+        'r' : '&#x265C;',
+        'K' : '&#x2654;',
+        'k' : '&#x265A;',
+        'B' : '&#x2657;',
+        'b' : '&#x265D;'
+    },
+    
     init : function() {
         
         chess.lastMoveId = gameData.lastMoveId;
@@ -23,7 +38,7 @@ var chess = {
         if (gameData.ownColor) {
             chess.chesspieces = $('table#chessboardTable span.chesspiece.' + gameData.ownColor);
             chess.chesspieces.click(chess.select);
-            chess.squares.click(chess.moveTo);
+            chess.squares.click(chess.clickMove);
             
             chess.chesspieces.draggable({
                 containment   : 'table#chessboardTable',
@@ -42,7 +57,7 @@ var chess = {
             
             chess.squares.droppable({
                 accept : chess.chesspieces,
-                drop   : chess.handleMove
+                drop   : chess.dropMove
             });
         
             $('#resign').click(function(){
@@ -71,9 +86,9 @@ var chess = {
     },
     
     /**
-     * Marks a chesspiece as 'selected'
+     * Marks a chesspiece as 'selected' via mouse click
      */
-    select : function(event) {
+    select : function() {
         if (chess.selected !== null) {
             chess.selected.removeClass('selected');
             if (chess.selected.getField() === $(this).getField()) {
@@ -85,21 +100,13 @@ var chess = {
     },
     
     /**
-     * Moves a selected chesspiece to the appropriate spot
+     * Moves a selected chesspiece to the appropriate spot via mouse click
      */
-    moveTo : function(event) {
+    clickMove : function() {
         if (chess.selected !== null
             && chess.selected.getField() !== $(this).getField() ) {
             
-            moveStr = chess.selected.getField()
-                    + '-'
-                    + $(this).getField();
-            core.post(
-                'GameController',
-                'move', 
-                'gameId=' + gameData.id + '&move=' + moveStr,
-                [chat.handleReply, chess.handleReply]
-                );
+            chess.move(chess.selected, $(this));
             
             chess.selected.removeClass('selected');
             chess.selected = null;
@@ -109,25 +116,77 @@ var chess = {
     /**
      * Handles move via drag & drop
      */
-    handleMove : function(event, ui) {
+    dropMove : function(event, ui) {
         // ui.draggable.draggable( 'option', 'revert', false );
         // var moveStr = ui.draggable.getField() + '-' + $(this).getField();
         if (ui.draggable.getField() !== $(this).getField()) {
-            core.post(
-                'GameController',
-                'move', 
-                'gameId='
-                    + gameData.id
-                    + '&move='
-                    + ui.draggable.getField()
-                    + '-'
-                    + $(this).getField(),
-                [chat.handleReply, chess.handleReply]
-                );
+            chess.move(ui.draggable, $(this));
+
         } else {
             chess.resetMove(ui.draggable.getField());
         }
         ui.draggable.removeClass('selected');
+    },
+    
+    /**
+     * Returns a chesspiece to its original position, e.g.
+     * when a move was invalid. Only works on moves that have not
+     * been sent/executed yet.
+     * @param  string  from  coordinates
+     */
+    resetMove : function(from) {
+        $('#chesspiece-' + from).css({top: '0px', left: '0px'});
+    },
+    
+    /**
+     * Does a local move and sends request to server
+     * @param  node  from
+     * @param  node  to
+     */
+    move : function(from, to) {
+        var toSquare = to.getField();
+        
+        if (toSquare[1] == 8 && from.getChessPiece() == 'P') {
+            var promotionWhite = 1;
+        } else if (toSquare[1] == 1 && from.getChessPiece() == 'p') {
+            var promotionWhite = 0;
+        } else {
+            // regular move
+            core.post(
+                'GameController',
+                'move',
+                'gameId=' + gameData.id + '&move=' + from.getField() + '-' + toSquare,
+                [chat.handleReply, chess.handleReply]
+            );
+            return;
+        }
+        // request promotion input
+        overlay.showTpl(
+            '_promotion',
+            'white=' + promotionWhite,
+            function() {
+                $('.promotion-option').click(function() {
+                    chess.promotionMove(from, to, $(this).getChessPiece());
+                });
+            },
+            function() {
+                chess.resetMove(from.getField());
+            }
+        );
+    },
+    
+    /**
+     * Handles moves that require a promotion.
+     * Use this as a callback.
+     */
+    promotionMove : function(from, to, promotion) {
+        core.post(
+            'GameController',
+            'move',
+            'gameId=' + gameData.id + '&move=' + from.getField() + '-' + to.getField() + promotion,
+            [chat.handleReply, chess.handleReply]
+        );
+        overlay.hide();
     },
     
     /**
@@ -140,7 +199,6 @@ var chess = {
                 chess.executeMove(reply.move);
                 chess.lastMoveId = reply.move.id;
             } else {
-                // alert(reply.move.invalidReason);
                 chess.resetMove(reply.move.from);
             }
         }
@@ -160,9 +218,6 @@ var chess = {
      * @param  {string} move "E3-"E4"
      */
     executeMove : function(move) {
-        // var from = move.substr(0,2);
-        // var to   = move.substr(3,2);
-        
         var chesspiece = $('#chesspiece-' + move.from);
         var newsquare  = $('#square-' + move.to + ' > div');
         
@@ -182,17 +237,11 @@ var chess = {
         chesspiece.appendTo(newsquare)
                   .css({top: '0px', left: '0px'})
                   .attr('id', 'chesspiece-' + move.to);
-    },
-    
-    /**
-     * Returns a chesspiece to its original position, e.g.
-     * when a move was invalid.
-     * This only works if executeMove has not been called yet.
-     * @param  {string} move "E3-E4"
-     */
-    resetMove : function(from) {
-        // from = move.substr(0,2);
-        $('#chesspiece-' + from).css({top: '0px', left: '0px'});
+        
+        if (move.promotion) {
+            chesspiece.data('chesspiece', move.promotion);
+            chesspiece.html(chess.utf8[move.promotion]);
+        }
     },
     
     /**
@@ -213,6 +262,11 @@ var chess = {
 
 /// chess lib ////
 jQuery.fn.getField = function() {
-    id = $(this[0]).attr('id');
+    var id = $(this[0]).attr('id');
+    // id looks like 'chesspiece-A4'
     return id.substr( id.indexOf('-')+1 );
+};
+
+jQuery.fn.getChessPiece = function() {
+    return $(this[0]).data('chesspiece');
 };

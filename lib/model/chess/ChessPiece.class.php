@@ -14,6 +14,11 @@ abstract class ChessPiece {
     protected $white = true;
     
     /**
+     * A ChessPiece (letter) may be identified by this pattern
+     */
+    const PATTERN = '([bpnrkqBPNRKQ]{1})';
+    
+    /**
      * Creates a ChessPiece. Color is required.
      * @param     boolean     $white
      * @param     string         $square

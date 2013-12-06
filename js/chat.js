@@ -26,6 +26,7 @@ var chat = {
             chat.chatText.val('');
         }
         if (msg) {
+            // if (msg == 'debug') { } else
             core.post(
                 'ChatController',
                 'msg',

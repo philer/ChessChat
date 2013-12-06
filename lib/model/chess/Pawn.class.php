@@ -81,6 +81,15 @@ class Pawn extends ChessPiece {
                 // opponents pawns may capture en passant next move
                 $this->canEnPassant = true;
             }
+            if ($move->to->rank() == 8
+                &&  (  is_null($move->promotion)
+                    || $move->promotion instanceof Pawn
+                    || $move->promotion instanceof King
+                    )
+                ) {
+                $move->setInvalid('chess.invalidmove.promotion');
+                return;
+            }
         } else {
             if  ($roff > -1 || $roff < -2) {
             
@@ -99,6 +108,15 @@ class Pawn extends ChessPiece {
                 }
                 // opponents pawns may capture en passant next move
                 $this->canEnPassant = true;
+            }
+            if  (   $move->to->rank() == 1
+                &&  (  is_null($move->promotion)
+                    || $move->promotion instanceof Pawn
+                    || $move->promotion instanceof King
+                    )
+                ) {
+                $move->setInvalid('chess.invalidmove.promotion');
+                return;
             }
         }
         

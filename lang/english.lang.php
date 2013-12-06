@@ -88,8 +88,11 @@ $this->langVars = array(
 
 'chat.send' => 'Send',
 
-'chess.moved'            => '<strong>%user</strong> moved <span class="chesspiece">%piece</span> from <strong>%from</strong> to <strong>%to</strong>',
-'chess.movedandcaptured' => '<strong>%user</strong> moved <span class="chesspiece">%piece</span> from <strong>%from</strong> to <strong>%to</strong> and captured <span class="chesspiece">%capture</span>',
+'chess.moved'       => '<strong>%user</strong> moved <span class="chesspiece">%piece</span> from <strong>%from</strong> to <strong>%to</strong>',
+'chess.andcaptured' => ' and captured <span class="chesspiece">%capture</span>',
+'chess.andpromoted' => ' and promoted to <span class="chesspiece">%promotion</span>',
+'chess.promotion' => 'Promotion',
+'chess.promotion.explanation' => "It's dangerous to go alone! Take this.",
 
 'chess.invalidmove.blocked'     => "There is another chess piece blocking the path.",
 'chess.invalidmove.nopiece'     => "There is no chesspiece on that field.",

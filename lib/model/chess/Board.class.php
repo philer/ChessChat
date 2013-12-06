@@ -219,9 +219,13 @@ class Board {
      */
     public function move(Move $move) {
         $this->capture($move->capture);
-        $this->board[$move->to->fileChar()][$move->to->rank()]->chesspiece = $move->from->chesspiece;
+        if ($move->promotion) {
+            $this->board[$move->to->fileChar()][$move->to->rank()]->chesspiece = $move->promotion;
+        } else {
+            $this->board[$move->to->fileChar()][$move->to->rank()]->chesspiece = $move->from->chesspiece;
+        }
         $this->board[$move->from->fileChar()][$move->from->rank()]->chesspiece = null;
-        $this->clearEnPassant(!$move->from->chesspiece->isWhite()); // clear opponents canEnPassant flags
+        $this->clearEnPassant(!$move->from->chesspiece->isWhite());
     }
     
     public function revert(Move $move) {

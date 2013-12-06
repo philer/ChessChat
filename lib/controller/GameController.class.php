@@ -125,7 +125,7 @@ class GameController extends AbstractRequestController implements AjaxController
                 }
                 $game = new Game($gameData);
                 $game->save();
-                header('Location: ' . Util::url('Game/' . $game->getHash()));
+                header('Location: ' . Util::url($game->getRoute()));
                 return true;
             }
              Core::getTemplateEngine()->addVar('errorMessage', 'form.invalid');
@@ -163,7 +163,7 @@ class GameController extends AbstractRequestController implements AjaxController
             $move->save();
             
             $game->move($move)
-                 // ->setNextTurn()
+                 ->setNextTurn()
                  ->update();
             
             AjaxUtil::queueReply('status', $game->getFormattedStatus());
@@ -220,7 +220,8 @@ class GameController extends AbstractRequestController implements AjaxController
                     chessPiece,
                     fromSquare,
                     toSquare,
-                    capture
+                    capture,
+                    promotion
              FROM cc_move
              WHERE  moveId > ' . intval($lastId) . '
                 AND gameId = '    . intval($gameId) . '
