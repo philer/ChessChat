@@ -79,6 +79,7 @@ $this->langVars = array(
 'game.settings'        => 'Game settings',
 'game.lastupdate'      => 'last update',
 'game.status'          => 'Status',
+'game.status.yourturn' => "<strong>It's your turn!</strong>",
 'game.status.nextturn' => "It's %u's turn",
 'game.status.won'      => '%u won',
 'game.status.draw'     => 'draw',
@@ -86,6 +87,9 @@ $this->langVars = array(
 'game.menu.offerdraw'  => 'Offer Draw',
 
 'chat.send' => 'Send',
+
+'chess.moved'            => '<strong>%user</strong> moved <span class="chesspiece">%piece</span> from <strong>%from</strong> to <strong>%to</strong>',
+'chess.movedandcaptured' => '<strong>%user</strong> moved <span class="chesspiece">%piece</span> from <strong>%from</strong> to <strong>%to</strong> and captured <span class="chesspiece">%capture</span>',
 
 'chess.invalidmove.blocked'     => "There is another chess piece blocking the path.",
 'chess.invalidmove.nopiece'     => "There is no chesspiece on that field.",
@@ -97,8 +101,6 @@ $this->langVars = array(
 'chess.invalidmove.pawn'        => "A pawn can't move like that.",
 'chess.invalidmove.queen'       => "A queen can't move like that.",
 'chess.invalidmove.rook'        => "A rook can't move like that.",
-
-'chess.moved' => '<strong>%user</strong> moved <span class="chesspiece">%piece</span> from <strong>%from</strong> to <strong>%to</strong>',
 
 'exception.404.msg' => 'This page is no longer available.<br /><a href="index.php">Return to home</a>',
 'exception.403.msg' => 'You don\'t have access to this page.<br /><a href="index.php">Return to home</a>',

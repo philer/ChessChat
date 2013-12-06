@@ -163,7 +163,7 @@ class GameController extends AbstractRequestController implements AjaxController
             $move->save();
             
             $game->move($move)
-                 ->setNextTurn()
+                 // ->setNextTurn()
                  ->update();
             
             AjaxUtil::queueReply('status', $game->getFormattedStatus());
@@ -254,7 +254,7 @@ class GameController extends AbstractRequestController implements AjaxController
             $sql .= ' AND (G.whitePlayerId = ' . intval($userId)
                   . '  OR  G.blackPlayerId = ' . intval($userId) . ') ';
         }
-        $sql .= ' ORDER BY status, lastUpdate
+        $sql .= ' ORDER BY lastUpdate DESC, status
                   LIMIT 30';
         $gamesData = Core::getDB()->sendQuery($sql);
         $games = array();

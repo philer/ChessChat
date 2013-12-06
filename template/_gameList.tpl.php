@@ -8,7 +8,10 @@ if ($runningGames && $game->getStatus() >= Game::STATUS_RESIGNED) {
         . $this->lang('game.list.finished')
         . '</h2><ul class="gameList dataList">';
 }
-                    ?><li class="status-<?php echo $game->getStatus(); ?>">
+                    ?><li class="status-<?php
+                        echo $game->getStatus();
+                        if ($game->ownTurn()) echo ' ownturn';
+                    ?>">
                         <dl class="gameData">
                             <dt class="whitePlayer heading"><?php
                                 echo $this->lang('game.whiteplayer');
@@ -40,13 +43,7 @@ if ($runningGames && $game->getStatus() >= Game::STATUS_RESIGNED) {
                             ?></dd>
                         </dl>
                         <a href="<?php echo Util::url($game->getRoute()) ?>">
-                            <span class="icon chesspiece"><?php
-                                if ($game->isDraw()) {
-                                    echo new Pawn(false);
-                                } else {
-                                    echo new King($game->whitesTurn());
-                                }
-                            ?></span>
+                            <span class="icon statusicon chesspiece"><?php echo $game->getStatusIcon() ?></span>
                             <span><?php
                                 echo $this->lang('game.list.gotogame');
                             ?></span>

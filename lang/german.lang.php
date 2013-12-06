@@ -79,22 +79,17 @@ $this->langVars = array(
 'game.settings'        => 'Spieleinstellungen',
 'game.lastupdate'      => 'Letzte Aktivität',
 'game.status'          => 'Spielstatus',
+'game.status.yourturn' => '<strong>Du bist dran!</strong>',
 'game.status.nextturn' => '%u ist dran',
 'game.status.won'      => '%u hat Gewonnen',
 'game.status.draw'     => 'Unentschieden',
 'game.menu.resign'     => 'Aufgeben',
 'game.menu.offerdraw'  => 'Patt anbieten',
 
-'chat.send' => 'Abschicken',
+'chat.send' => 'Absenden',
 
-'chess.term.king'      => 'König',
-'chess.term.queen'     => 'Dame',
-'chess.term.rook'      => 'Turm',
-'chess.term.bishop'    => 'Läufer',
-'chess.term.knight'    => 'Springer',
-'chess.term.pawn'      => 'Bauer',
-'chess.term.castling'  => 'Rouchade',
-'chess.term.enpassant' => 'en passant',
+'chess.moved' => '<strong>%user</strong> zieht <span class="chesspiece">%piece</span> von <strong>%from</strong> nach <strong>%to</strong>',
+'chess.movedandcaptured' => '<strong>%user</strong> zieht <span class="chesspiece">%piece</span> von <strong>%from</strong> nach <strong>%to</strong> und wirft <span class="chesspiece">%capture</span>',
 
 'chess.invalidmove.blocked'     => "Eine andere Figur versperrt den Weg.",
 'chess.invalidmove.nopiece'     => "Auf diesem Feld steht keine Figur.",
@@ -106,10 +101,6 @@ $this->langVars = array(
 'chess.invalidmove.pawn'        => "Ein Bauer kann so nicht bewegt werden.",
 'chess.invalidmove.queen'       => "Eine Dame kann so nicht bewegt werden.",
 'chess.invalidmove.rook'        => "Ein Turm kann so nicht bewegt werden.",
-
-'chess.rule.nocastling' => 'Die Rouchade ist nicht mehr möglich nachdem der König bewegt wurde',
-
-'chess.moved' => '<strong>%user</strong> zieht <span class="chesspiece">%piece</span> von <strong>%from</strong> nach <strong>%to</strong>',
 
 'exception.404.msg' => 'Diese Seite ist nicht mehr verfügbar.<br /><a href="index.php">Zurück zur Startseite</a>',
 'exception.403.msg' => 'Sie haben keinen Zugriff auf diese Seite.<br /><a href="index.php">Zurück zur Startseite</a>',

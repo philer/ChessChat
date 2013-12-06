@@ -290,6 +290,9 @@ class Game extends DatabaseModel {
      */
     public function getFormattedStatus() {
         if (!$this->isOver()) {
+            if ($this->ownTurn()) {
+                return Core::getLanguage()->getLanguageItem('game.status.yourturn');
+            }
             return Core::getLanguage()->getLanguageItem(
                 'game.status.nextturn',
                 array('u' => $this->getCurrentPlayer())
@@ -302,7 +305,13 @@ class Game extends DatabaseModel {
                 array('u' => $this->getCurrentPlayer())
             );
         }
-         return $this->status;
+        return $this->status;
+    }
+    
+    public function getStatusIcon() {
+        // TODO
+        return King::UTF8_WHITE;
+        return "&#8986;";
     }
     
     /**
@@ -336,15 +345,23 @@ class Game extends DatabaseModel {
     
     /**
      * Wether or not it is white player's turn
-     * @return     boolean
+     * @return boolean
      */
     public function whitesTurn() {
         return (boolean) ($this->status & Game::STATUS_WHITES_TURN);
     }
     
     /**
+     * Convenience method checks if it's the request owner's turn.
+     * @return boolean
+     */
+    public function ownTurn() {
+        return $this->whitesTurn() === $this->isWhitePlayer();
+    }
+    
+    /**
      * Toggle Player
-     * @return  Game (chaining)
+     * @return Game (chaining)
      */
     public function setNextTurn() {
         $this->setStatusFlag(Game::STATUS_WHITES_TURN, !$this->whitesTurn());

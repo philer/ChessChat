@@ -1,6 +1,5 @@
 === minor ===
-* add 'your turn' to status display
-* add capture to move messages
+* add game status icons
 
 === major ===
 * determine check

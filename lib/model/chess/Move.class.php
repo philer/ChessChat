@@ -117,16 +117,20 @@ class Move extends DatabaseModel {
      * @return  string
      */
     public function formatString() {
-        if ($this->isValid()) {
-            return Core::getLanguage()->getLanguageItem(
-                'chess.moved',
-                array(
-                    'user'  => Core::getUser(),
-                    'piece' => $this->from->chesspiece->utf8(),
-                    'from'  => $this->from,
-                    'to'    => $this->to
-                )
+       if ($this->isValid()) {
+             $moveData = array(
+                'user'  => Core::getUser(),
+                'piece' => $this->from->chesspiece->utf8(),
+                'from'  => $this->from,
+                'to'    => $this->to
             );
+            if ($this->capture->isEmpty()) {
+                return Core::getLanguage()->getLanguageItem('chess.moved', $moveData);
+            } else {
+                $moveData['capture'] = $this->capture->chesspiece->utf8();
+                return Core::getLanguage()->getLanguageItem('chess.movedandcaptured', $moveData);
+            }
+            
         } else {
             return Core::getLanguage()->getLanguageItem($this->invalidReason);
         }
