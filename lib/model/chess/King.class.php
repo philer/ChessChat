@@ -51,8 +51,29 @@ class King extends ChessPiece {
      * @param     Move     $move
      */
     public function validateMove(Move $move, Board $board) {
-        if (abs($move->getRankOffset()) > 1 || abs($move->getFileOffset()) > 1) {
+        $foff = $move->getFileOffset();
+        if ($this->canCastle && abs($foff) == 2) {
+            // TODO check check
+            $rookFrom = $board->getSquare( $foff > 0 ? 'h' : 'a', $move->from->rank() );
+            if (!$rookFrom->chesspiece instanceof Rook || !$rookFrom->chesspiece->canCastle) {
+                $move->setInvalid('chess.invalidmove.castling');
+                return;
+            }
+            $obstacles = array_filter(
+                $board->range($move->from, $rookFrom),
+                function($square) { return !$square->isEmpty(); }
+            );
+            if (!empty($obstacles)) {
+                $move->setInvalid('chess.invalidmove.blocked');
+                return;
+            }
+            // TODO check check for King's path
+            $move->castling['from'] = $rookFrom;
+            $move->castling['to'] = $board->getSquare( $foff > 0 ? 'f' : 'd', $move->from->rank() );
+        
+        } elseif (abs($foff) > 1 || abs($move->getRankOffset()) > 1) {
             $move->setInvalid('chess.invalidmove.king');
+            return;
         }
     }
 }

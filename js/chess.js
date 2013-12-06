@@ -9,21 +9,6 @@ var chess = {
     
     lastMoveId  : 0,
     
-    utf8 : {
-        'Q' : '&#x2655;',
-        'q' : '&#x265B;',
-        'P' : '&#x2659;',
-        'p' : '&#x265F;',
-        'N' : '&#x2658;',
-        'n' : '&#x265E;',
-        'R' : '&#x2656;',
-        'r' : '&#x265C;',
-        'K' : '&#x2654;',
-        'k' : '&#x265A;',
-        'B' : '&#x2657;',
-        'b' : '&#x265D;'
-    },
-    
     init : function() {
         
         chess.lastMoveId = gameData.lastMoveId;
@@ -215,7 +200,7 @@ var chess = {
     
     /**
      * Actually moves chesspiece to new html parent.
-     * @param  {string} move "E3-"E4"
+     * @param  string  move  "E3-E4"
      */
     executeMove : function(move) {
         var chesspiece = $('#chesspiece-' + move.from);
@@ -239,8 +224,11 @@ var chess = {
                   .attr('id', 'chesspiece-' + move.to);
         
         if (move.promotion) {
-            chesspiece.data('chesspiece', move.promotion);
-            chesspiece.html(chess.utf8[move.promotion]);
+            chesspiece.html(move.promotion.utf8);
+            chesspiece.data('chesspiece', move.promotion.letter);
+        }
+        if (move.castling) {
+            chess.executeMove(move.castling);
         }
     },
     

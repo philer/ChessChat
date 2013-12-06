@@ -77,4 +77,17 @@ abstract class ChessPiece {
     public function isWhite() {
         return $this->white;
     }
+    
+    /**
+     * Returns a json encoded (string) representation of this Move's relevant
+     * information for use in ajax response
+     * @return array
+     */
+    public function ajaxData() {
+        return array(
+            // 'name'   => get_class($this), // use langvar
+            'letter' => $this->letter(),
+            'utf8'   => $this->utf8()
+        );
+    }
 }

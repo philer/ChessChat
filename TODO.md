@@ -1,8 +1,8 @@
-=== minor ===
-* add game status icons
-
 === major ===
 * determine check
 * determine game over
-* castling
-* promoting
+
+=== minor ===
+* add game status icons
+* fix game list sorting
+

@@ -132,7 +132,7 @@ class Pawn extends ChessPiece {
                     $target = $board->getSquare($move->to->file(), $move->from->rank());
                     if (   $target->isEmpty()
                         || !$target->chesspiece->canEnPassant
-                        || $target->chesspiece->isWhite() == $move->from->chesspiece->isWhite()
+                        || $target->chesspiece->isWhite() == $this->isWhite()
                         ) {
                         $move->setInvalid('chess.invalidmove.pawn.nocapture');
                         return;
@@ -140,7 +140,7 @@ class Pawn extends ChessPiece {
                     $move->capture = $target;
                     return;
                 
-                } elseif ($move->to->chesspiece->isWhite() == $move->from->chesspiece->isWhite()) {
+                } elseif ($move->to->chesspiece->isWhite() == $this->isWhite()) {
                     $move->setInvalid('chess.invalidmove.owncolor');
                     return;
                 }

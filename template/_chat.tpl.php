@@ -9,6 +9,7 @@ foreach ($this->var['chatMsgs'] as $this->var['msg']) {
 ?>
 
 <pre><?php
+    // echo $this->game->board;
     // var_dump($this->game->getStatus());
     // var_dump($this->game->isOver());
     // print_r($this->game->board->range(new Square('a1'), new Square('5a')));

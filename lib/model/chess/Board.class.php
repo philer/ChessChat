@@ -42,9 +42,8 @@ class Board {
      * - 3 characters per piece. (3*32 = 96 total)
      * - first character: piece type, capital for white
      * - second character: file (column)
-     *      + capital for king means no castling yet
-     *      + capital for pawn means he just did a double step, which is
-     *        relevant for en passant (update it after next move!)
+     *      + capital for king and rook means he hasn't moved yet, can do castling
+     *      + capital for pawn means he just did a double step, can be captured en passant
      * - third character: rank (row)
      * - file 'x' for dead white pieces, file 'y' for dead black pieces
      *      + rank in hex to allow one digit counting 16 pieces
@@ -219,12 +218,24 @@ class Board {
      */
     public function move(Move $move) {
         $this->capture($move->capture);
-        if ($move->promotion) {
-            $this->board[$move->to->fileChar()][$move->to->rank()]->chesspiece = $move->promotion;
-        } else {
-            $this->board[$move->to->fileChar()][$move->to->rank()]->chesspiece = $move->from->chesspiece;
-        }
+        
         $this->board[$move->from->fileChar()][$move->from->rank()]->chesspiece = null;
+        $toPiece = &$this->board[$move->to->fileChar()][$move->to->rank()]->chesspiece;
+        
+        if ($move->promotion) {
+            $toPiece = $move->promotion;
+        } else {
+            $toPiece = $move->from->chesspiece;
+        }
+        if (!empty($move->castling)) {
+            $this->board[$move->castling['from']->fileChar()][$move->castling['from']->rank()]
+                ->chesspiece = null;
+            $this->board[$move->castling['to']->fileChar()][$move->castling['to']->rank()]
+                ->chesspiece = new Rook($toPiece->isWhite(), false);
+        }
+        if ($toPiece instanceof Rook || $toPiece instanceof King) {
+            $toPiece->canCastle = false;
+        }
         $this->clearEnPassant(!$move->from->chesspiece->isWhite());
     }
     
