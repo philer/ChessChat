@@ -256,7 +256,7 @@ class GameController extends AbstractRequestController implements AjaxController
                   . '  OR  G.blackPlayerId = ' . intval($userId) . ') ';
         }
         $sql .= ' ORDER BY lastUpdate DESC, status
-                  LIMIT 30';
+                  LIMIT 100';
         $gamesData = Core::getDB()->sendQuery($sql);
         $games = array(
             'running' => array(),

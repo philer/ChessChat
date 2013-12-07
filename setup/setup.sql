@@ -14,6 +14,7 @@ CREATE TABLE cc_user (
     password   VARCHAR(100) NOT NULL,
     cookieHash VARCHAR(100) NOT NULL DEFAULT '',
     language   VARCHAR(2)   NOT NULL DEFAULT '',
+    registered TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (userId),
     UNIQUE KEY (userName)
 );
@@ -43,21 +44,20 @@ CREATE TABLE cc_move (
     toSquare   CHAR(2)    NOT NULL,
     capture    CHAR(3),
     promotion  CHAR(1),
-    time       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    time       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (moveId),
     KEY (gameId)
 );
 
 CREATE TABLE cc_chatMessage (
     messageId   INT(10)   UNSIGNED NOT NULL AUTO_INCREMENT,
-    gameId         INT(10)   UNSIGNED NOT NULL,
+    gameId      INT(10)   UNSIGNED NOT NULL,
     authorId    INT(10)   UNSIGNED NOT NULL,
     messageText TEXT      NOT NULL,
     isBotMsg    BIT(1)    NOT NULL DEFAULT b'0',
-    time        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    time        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (messageId),
-    KEY (gameId),
-    KEY (gameId, time)
+    KEY (gameId)
 );
 
 -- add foreign keys

@@ -65,6 +65,14 @@ if (isset($_GET['reset']) || in_array('reset', $argv)) {
     $queries = array_merge($queries, explode(';', $sql));
 }
 
+///////////////////////////////////
+// include randomized test data? //
+///////////////////////////////////
+if (isset($_GET['random']) || in_array('random', $argv)) {
+    echo "=== including random testdata...\n";
+    include(ROOT_DIR . 'setup/random.php');
+}
+
 ////////////////////////
 // include test data? //
 ////////////////////////
@@ -72,14 +80,6 @@ if (isset($_GET['testdata']) || in_array('testdata', $argv)) {
     echo "=== including testdata...\n";
     $sql = file_get_contents(ROOT_DIR . 'setup/test.sql');
     $queries = array_merge($queries, explode(';', $sql));
-}
-
-///////////////////////////////////
-// include randomized test data? //
-///////////////////////////////////
-if (isset($_GET['random']) || in_array('random', $argv)) {
-    echo "=== including random testdata...\n";
-    include(ROOT_DIR . 'setup/random.php');
 }
 
 ////////////////

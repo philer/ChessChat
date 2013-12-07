@@ -223,7 +223,7 @@ class UserController extends AbstractRequestController {
                         OR U.userId = G.blackPlayerId) as gameCount
              FROM cc_user U
              ORDER BY gameCount DESC, userName ASC
-             LIMIT 30'
+             LIMIT 100'
         );
         
         $users = array();

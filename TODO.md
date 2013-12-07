@@ -4,4 +4,4 @@
 
 === minor ===
 * add game status icons
-
+* add pagination

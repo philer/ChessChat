@@ -4,10 +4,11 @@ INSERT INTO cc_user (userName, email, password, cookieHash, language) VALUES
     ('larissa', 'larissa@hamm.er', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', 'de'),
     ('bare', 'bare@example.com', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', '--'),
     ('someguywithareallylongname', 'someguywithareallylongname@reallylongdomain.topleveldomain', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', 'en'),
-    ('Full Name Guy', 'bare@example.com', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', '--'),
-    ('stUp!d.n@m3$', 'bare@example.com', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', '--'),
-    ('--.-.-.-__––…·–…,.…', 'bare@example.com', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', '--'),
-    ('MoreInvalidCharacters?+*,.', 'bare@example.com', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', '--');
+    ('Full Name Guy', 'bare@example.com', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', 'fr'),
+    ('stUp!d.n@m3$', 'bare@example.com', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', 'it'),
+    ('--.-.-.-__––…·–…,.…', 'bare@example.com', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', ''),
+    ('MoreInvalidCharacters?+*,.', 'bare@example.com', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', ''),
+    ('someUTF8Chars…·–æſðđæ€ł¶end', 'utf8@example.com', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', 'wellthatsnotareallhash', '');
 
 INSERT INTO cc_game (gameHash, whitePlayerId, blackPlayerId, board, status) VALUES
     ('testt1', 1, 2, 'RA1Nb1Bc1Qd1KE1Bf1Ng1RH1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7rA8nb8bc8qd8kE8bf8ng8rH8', 0),
@@ -24,11 +25,11 @@ INSERT INTO cc_game (gameHash, whitePlayerId, blackPlayerId, board, status) VALU
     ('test11', 4, 2, 'RA1Nb1Bc1Qd1KE1Bf1Ng1RH1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7rA8nb8bc8qd8kE8bf8ng8rH8', 15);
 
 INSERT INTO cc_chatMessage (gameId, authorId, messageText, isBotMsg) VALUES
-    (1, 1, 'testmessage', 0),
-    (1, 2, 'testmessage', 0),
-    (1, 2, 'testmessage', 1),
-    (2, 1, 'testmessage', 0),
-    (2, 2, 'testmessage', 0),
-    (4, 3, 'testmessage', 0),
-    (4, 2, 'testmessage', 0),
-    (1, 1, 'testmessage', 0);
+    (1, 1, 'testmessage1', 0),
+    (1, 2, 'testmessage2', 0),
+    (1, 2, 'testmessage3', 1),
+    (2, 1, 'testmessage4', 0),
+    (2, 2, 'testmessage5', 0),
+    (4, 3, 'testmessage6', 0),
+    (4, 2, 'testmessage7', 0),
+    (1, 1, 'testmessage8', 0);

@@ -150,14 +150,46 @@ class Util {
     }
     
     /**
+     * Generates a cryptographicaly secure random integer
+     * between $min and $max (inclusive)
+     * @see http://php.net/manual/en/function.openssl-random-pseudo-bytes.php#104322
+     * 
+     * @param  integer $min
+     * @param  integer $max
+     * @return integer
+     */
+    public static function rand($min, $max) {
+        $range = $max - $min;
+        if ($range <= 0) return $min;
+        $log    = log($range, 2);
+        $bytes  = (int) ($log / 8)   + 1; // length in bytes
+        $bits   = (int)  $log        + 1; // length in bits
+        $filter = (int) (1 << $bits) - 1; // set all lower bits to 1
+        do {
+            $rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes)));
+            $rnd = $rnd & $filter; // discard irrelevant bits
+        } while ($rnd > $range);
+        return $min + $rnd;
+    }
+    
+    /**
      * Generates a random string containing
      * upper- and lowercase letters and digits.
      * Additional characters may be specified.
-     * @param  integer $length          defaults to 16
+     * maxLength may be omitted, making $minLength the actual length.
+     * @param  integer $minLength       defaults to 16
+     * @param  integer $maxLength       defaults to 0
      * @param  string  $additionalChars
      * @return string
      */
-    public static function getRandomString($length = 16, $additionalChars = '') {
+    public static function getRandomString($minLength = 16, $maxLength = 0, $additionalChars = '') {
+        if (is_string($maxLength)) {
+            $length = $minLength;
+            $additionalChars .= $maxLength;
+        } else {
+            $length = self::rand($minLength, $maxLength);
+        }
+        
         $chars = 'abcdefghijklmnopqrstuvwxyz'
                . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
                . '0123456789'
@@ -187,28 +219,6 @@ class Util {
                 0,
                 $length
             );
-    }
-    
-    /**
-     * Generates a cryptographicaly secure random integer between $min and $max
-     * @see http://php.net/manual/en/function.openssl-random-pseudo-bytes.php#104322
-     * 
-     * @param  integer $min
-     * @param  integer $max
-     * @return integer
-     */
-    public static function rand($min, $max) {
-        $range = $max - $min;
-        if ($range <= 0) return $min;
-        $log    = log($range, 2);
-        $bytes  = (int) ($log / 8)   + 1; // length in bytes
-        $bits   = (int)  $log        + 1; // length in bits
-        $filter = (int) (1 << $bits) - 1; // set all lower bits to 1
-        do {
-            $rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes, $s)));
-            $rnd = $rnd & $filter; // discard irrelevant bits
-        } while ($rnd >= $range);
-        return $min + $rnd;
     }
     
     /**
