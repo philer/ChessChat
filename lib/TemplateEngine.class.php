@@ -98,7 +98,7 @@ final class TemplateEngine {
      * @param     string     $template     name of the template
      */
     public function show($template) {
-        include(ROOT_DIR . 'template/' . $template . '.tpl.php');
+        include(self::includePath($template));
     }
     
     /**
@@ -131,6 +131,15 @@ final class TemplateEngine {
         $result = ob_get_contents();
         ob_end_clean();
         return $result;
+    }
+    
+    /**
+     * Returns the full (local) path to the specified template.
+     * @param  string  $tplName  without suffix
+     * @return string
+     */
+    public static function includePath($tplName) {
+        return ROOT_DIR . 'template/' . $tplName . '.tpl.php';
     }
     
     /**
@@ -212,7 +221,6 @@ final class TemplateEngine {
         }
     }
     
-    
     /**
      * Returns a clean array of all stylesheets to be linked
      * in the document head.
@@ -248,5 +256,4 @@ final class TemplateEngine {
     public function getDynamicScripts() {
         return array_unique($this->dynamicScripts);
     }
-    
 }

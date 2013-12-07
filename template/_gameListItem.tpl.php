@@ -1,13 +1,8 @@
-                <h2><?php echo $this->lang('game.list.running'); ?></h2>
-                <ul class="gameList dataList"><?php
-$runningGames = true;
-foreach ($this->var['games'] as $game) {
-if ($runningGames && $game->getStatus() >= Game::STATUS_RESIGNED) {
-    $runningGames = false;
-    echo '</ul><h2>'
-        . $this->lang('game.list.finished')
-        . '</h2><ul class="gameList dataList">';
-}
+<?php
+/**
+ * Displays a preview version of a Game in a list.
+ * Expects $game to be set.
+ */
                     ?><li class="status-<?php
                         echo $game->getStatus();
                         if ($game->ownTurn()) echo ' ownturn';
@@ -48,6 +43,4 @@ if ($runningGames && $game->getStatus() >= Game::STATUS_RESIGNED) {
                                 echo $this->lang('game.list.gotogame');
                             ?></span>
                         </a>
-                    </li><?php
-}
-                ?></ul>
+                    </li><?

@@ -258,9 +258,17 @@ class GameController extends AbstractRequestController implements AjaxController
         $sql .= ' ORDER BY lastUpdate DESC, status
                   LIMIT 30';
         $gamesData = Core::getDB()->sendQuery($sql);
-        $games = array();
+        $games = array(
+            'running' => array(),
+            'over'    => array()
+            );
         while ($gameData = $gamesData->fetch_assoc()) {
-            $games[] = new Game($gameData);
+            $game = new Game($gameData);
+            if ($game->isOver()) {
+                $games['over'][] = $game;
+            } else {
+                $games['running'][] = $game;
+            }
         }
         
         Core::getTemplateEngine()->addVar('games', $games);

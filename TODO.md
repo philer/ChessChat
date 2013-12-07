@@ -4,5 +4,4 @@
 
 === minor ===
 * add game status icons
-* fix game list sorting
 
