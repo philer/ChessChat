@@ -154,4 +154,21 @@ class Pawn extends ChessPiece {
             return;
         }
     }
+    
+    public static function getAttackRange(Square $position, Board $board) {
+        // this also works the other way round, to check if a piece may
+        // be attacked by a pawn of the opposite color. See Board::inCheck()
+        $roff = $position->chesspiece->white ? 1 : -1;
+        $emptySquares = array(
+            new Square($position->file() -1, $position->rank() + $roff),
+            new Square($position->file() +1, $position->rank() + $roff)
+        );
+        $squares = array();
+        foreach ($emptySquares as $square) {
+            if ($square->exists()) {
+                $squares[] = $board->getSquare($square);
+            }
+        }
+        return $squares;
+    }
 }

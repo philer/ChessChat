@@ -48,4 +48,24 @@ class Knight extends ChessPiece {
             $move->setInvalid('chess.invalidmove.knight');
         }
     }
+    
+    public static function getAttackRange(Square $position, Board $board) {
+        $emptySquares = array(
+            new Square($position->file() -1, $position->rank() +2),
+            new Square($position->file() +1, $position->rank() +2),
+            new Square($position->file() +2, $position->rank() +1),
+            new Square($position->file() +2, $position->rank() -1),
+            new Square($position->file() +1, $position->rank() -2),
+            new Square($position->file() -1, $position->rank() -2),
+            new Square($position->file() -2, $position->rank() -1),
+            new Square($position->file() -2, $position->rank() +1),
+        );
+        $squares = array();
+        foreach ($emptySquares as $square) {
+            if ($square->exists()) {
+                $squares[] = $board->getSquare($square);
+            }
+        }
+        return $squares;
+    }
 }

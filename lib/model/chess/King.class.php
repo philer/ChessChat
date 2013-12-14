@@ -59,11 +59,7 @@ class King extends ChessPiece {
                 $move->setInvalid('chess.invalidmove.castling');
                 return;
             }
-            $obstacles = array_filter(
-                $board->range($move->from, $rookFrom),
-                function($square) { return !$square->isEmpty(); }
-            );
-            if (!empty($obstacles)) {
+            if (!$board->getRange($move->from, $rookFrom)->isEmpty()) {
                 $move->setInvalid('chess.invalidmove.blocked');
                 return;
             }
@@ -74,6 +70,22 @@ class King extends ChessPiece {
         } elseif (abs($foff) > 1 || abs($move->getRankOffset()) > 1) {
             $move->setInvalid('chess.invalidmove.king');
             return;
+        }
+    }
+    
+    public static function getAttackRange(Square $position, Board $board) {
+        for ( $f=-1 ; $f<=1 ; $f++ )
+        for ( $r=-1 ; $r<=1 ; $r++ ) {
+            if (!($f==0 && $r==0)) {
+                $square = new Square(
+                    $position->file() + $f,
+                    $position->rank() + $r
+                );
+                if ($square->exists()) {
+                    $squares[] = $board->getSquare($square);
+                }
+                
+            }
         }
     }
 }

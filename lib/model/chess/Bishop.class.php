@@ -48,10 +48,16 @@ class Bishop extends ChessPiece {
             $move->setInvalid('chess.invalidmove.bishop');
             return;
         }
-        $obstacles = array_filter(
-            $move->getPath(),
-            function($square) { return !$square->isEmpty(); }
-        );
-        if (!empty($obstacles)) $move->setInvalid('chess.invalidmove.blocked');
+        if (!$move->getPath()->isEmpty()) {
+            $move->setInvalid('chess.invalidmove.blocked');
+        }
+    }
+    
+    public static function getAttackRange(Square $position, Board $board) {
+        $ranges = array();
+        foreach (array(Range::TOP_LEFT, Range::TOP_RIGHT, Range::BOTTOM_RIGHT, Range::BOTTOM_LEFT) as $direction) {
+            $ranges[] = new Range($position, $direction, $board);
+        }
+        return $ranges;
     }
 }

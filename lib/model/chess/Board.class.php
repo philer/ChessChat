@@ -37,6 +37,20 @@ class Board {
     protected $blackPawns = array();
     
     /**
+     * Location of the white King.
+     * References the King's Square in $board array
+     * @var Square
+     */
+    protected $whiteKingSquare = null;
+    
+    /**
+     * Location of the black King.
+     * References the King's Square in $board array
+     * @var Square
+     */
+    protected $blackKingSquare = null;
+    
+    /**
      * A chessboard is represented as a string for easy transmission and storage.
      * Conventions:
      * - 3 characters per piece. (3*32 = 96 total)
@@ -78,6 +92,7 @@ class Board {
                 $this->blackPrison[] = $cpObj;
             
             } else {
+                $square = &$this->board[ strtolower($boardStr[$cp+1]) ][ intval($boardStr[$cp+2]) ];
                 if ($cpObj instanceof Pawn) {
                     $cpObj->canEnPassant = ctype_upper($boardStr[$cp+1]);
                     if ($cpObj->isWhite()) {
@@ -85,10 +100,17 @@ class Board {
                     } else {
                         $this->blackPawns[] = $cpObj;
                     }
-                } elseif ($cpObj instanceof Rook || $cpObj instanceof King) {
+                } elseif ($cpObj instanceof Rook) {
                     $cpObj->canCastle = ctype_upper($boardStr[$cp+1]);
+                } elseif ($cpObj instanceof King) {
+                    $cpObj->canCastle = ctype_upper($boardStr[$cp+1]);
+                    if ($cpObj->isWhite()) {
+                        $this->whiteKingSquare = $square;
+                    } else {
+                        $this->blackKingSquare = $square;
+                    }
                 }
-                $this->board[ strtolower($boardStr[$cp+1]) ][ intval($boardStr[$cp+2]) ]->chesspiece = $cpObj;
+                $square->chesspiece = $cpObj;
             }
         }
     }
@@ -142,6 +164,7 @@ class Board {
      * 1 String defining a square, such as 'A1' or
      * 1 Square object or
      * 2 parameters defining a square, such as 'A' and 1
+     * Returns null if Square coordinates don't exist
      * @see    Square::__construct()
      * @param  String/Square $p1
      * @param  int           $p2
@@ -153,7 +176,11 @@ class Board {
         } else {
             $square = new Square($p1, $p2);
         }
-        return clone $this->board[ $square->fileChar() ][ $square->rank() ];
+        if ($square->exists()) {
+            return clone $this->board[ $square->fileChar() ][ $square->rank() ];
+        } else {
+            return null;
+        }
     }
     
     /**
@@ -178,38 +205,63 @@ class Board {
      * Returns an array containing all squares between
      * the two Squares $from and $to (excluding $from and $to).
      * Works horizontally, vertically and diagonally.
+     * @see  Range::__construct()
+     * 
      * @param  Square $from
-     * @param  Square $to
-     * @return array<Square>
+     * @param  mixed $to
+     * @return Range
      */
-    public function range(Square $from, Square $to) {
-        $range = array();
-        if ($from->file() == $to->file()) {
-            // vertical
-            $minRank = min($from->rank(), $to->rank()) + 1;
-            $maxRank = max($from->rank(), $to->rank()) - 1;
-            for ( $r=$minRank ; $r<=$maxRank ; $r++ ) {
-                $range[] = $this->board[$from->fileChar()][$r];
-            }
-        } elseif ($from->rank() == $to->rank()) {
-            // horizontal
-            $minFile = chr(min($from->file(), $to->file()) + 1 + ord('a'));
-            $maxFile = chr(max($from->file(), $to->file()) - 1 + ord('a'));
-            for ( $f=$minFile ; $f<=$maxFile ; $f++ ) {
-                $range[] = $this->board[$f][$from->rank()];
-            }
-        } else {
-            // diagonal
-            $offset = abs($from->rank() - $to->rank()) - 2;
-            $minRank = min($from->rank(), $to->rank()) + 1;
-            $minFile = min($from->file(), $to->file()) + 1;
-            $ltr = $from->file() < $to->file(); // left-to-right or right-to-left
-            $up  = $from->rank() < $to->rank(); // up or down
-            for ( $i=0 ; $i<=$offset ; $i++ ) {
-                $range[] = $this->board[chr(($ltr ? $i : $offset-$i) + $minFile + ord('a'))][($up ? $i : $offset-$i) + $minRank];
+    public function getRange(Square $from, $to) {
+        return new Range($from, $to, $this);
+    }
+    
+    /**
+     * Checks if player's King is in check.
+     * @param  boolean  $white  which color to check
+     * @return boolean
+     */
+    public function inCheck($white) {
+        $kingSquare = $white ? $this->whiteKingSquare : $this->blackKingSquare;
+        
+        foreach (Pawn::getAttackRange($kingSquare, $this) as $square) {
+            if (   $square->chesspiece instanceof Pawn
+                && $square->chesspiece->isWhite() != $white) {
+                return true;
             }
         }
-        return $range;
+        foreach (Knight::getAttackRange($kingSquare, $this) as $square) {
+            if (   $square->chesspiece instanceof Knight
+                && $square->chesspiece->isWhite() != $white) {
+                return true;
+            }
+        }
+        foreach (Rook::getAttackRange($kingSquare, $this) as $range) {
+            foreach ($range as $square) {
+                if (!$square->isEmpty()) {
+                    if (   $square->chesspiece->isWhite() != $white
+                        && (   $square->chesspiece instanceof Rook
+                            || $square->chesspiece instanceof Queen)) {
+                        return true;
+                    } else {
+                        break 1;
+                    }
+                }
+            }
+        }
+        foreach (Bishop::getAttackRange($kingSquare, $this) as $range) {
+            foreach ($range as $square) {
+                if (!$square->isEmpty()) {
+                    if (   $square->chesspiece->isWhite() != $white
+                        && (   $square->chesspiece instanceof Bishop
+                            || $square->chesspiece instanceof Queen)) {
+                        return true;
+                    } else {
+                        break 1;
+                    }
+                }
+            }
+        }
+        return false;
     }
     
     /**

@@ -143,40 +143,6 @@ class Move extends DatabaseModel {
     }
     
     /**
-     * Returns a user presentable version of this move if it is valid
-     * or a user presentable version of it's invalid reason.
-     * @return  string
-     */
-    public function formatString() {
-        if ($this->isValid()) {
-            $string = Core::getLanguage()->getLanguageItem(
-                'chess.moved',
-                $moveData = array(
-                    'user'  => Core::getUser(),
-                    'piece' => (string) $this->from->chesspiece,
-                    'from'  => (string) $this->from,
-                    'to'    => (string) $this->to
-                )
-            );
-            if (!$this->capture->isEmpty()) {
-                $string .= Core::getLanguage()->getLanguageItem(
-                    'chess.andcaptured',
-                    array('capture' => (string) $this->capture->chesspiece)
-                );
-            }
-            if($this->promotion) {
-                $string .= Core::getLanguage()->getLanguageItem(
-                    'chess.andpromoted',
-                    array('promotion' => (string) $this->promotion)
-                );
-            }
-            return $string;
-        } else {
-            return Core::getLanguage()->getLanguageItem($this->invalidReason);
-        }
-    }
-    
-    /**
      * Validates this move by setting it's $valid and $invalidReason field accordingly.
      * Does basic validation by itself, then initiates piece specific validation.
      */
@@ -213,11 +179,12 @@ class Move extends DatabaseModel {
     
     /**
      * Returns a range defined by this moves $from and $to Squares.
-     * @see    Board::range()
-     * @return array<Square>
+     * @see Board::getRange()
+     * 
+     * @return Range
      */
     public function getPath() {
-        return $this->game->board->range($this->from, $this->to);
+        return new Range($this->from, $this->to, $this->game->board);
     }
     
     /**
@@ -244,6 +211,40 @@ class Move extends DatabaseModel {
      */
     public function getInvalidReason() {
         return $this->invalidReason;
+    }
+    
+    /**
+     * Returns a user presentable version of this move if it is valid
+     * or a user presentable version of it's invalid reason.
+     * @return  string
+     */
+    public function formatString() {
+        if ($this->isValid()) {
+            $string = Core::getLanguage()->getLanguageItem(
+                'chess.moved',
+                $moveData = array(
+                    'user'  => Core::getUser(),
+                    'piece' => (string) $this->from->chesspiece,
+                    'from'  => (string) $this->from,
+                    'to'    => (string) $this->to
+                )
+            );
+            if (!$this->capture->isEmpty()) {
+                $string .= Core::getLanguage()->getLanguageItem(
+                    'chess.andcaptured',
+                    array('capture' => (string) $this->capture->chesspiece)
+                );
+            }
+            if($this->promotion) {
+                $string .= Core::getLanguage()->getLanguageItem(
+                    'chess.andpromoted',
+                    array('promotion' => (string) $this->promotion)
+                );
+            }
+            return $string;
+        } else {
+            return Core::getLanguage()->getLanguageItem($this->invalidReason);
+        }
     }
     
     /**

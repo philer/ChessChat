@@ -52,10 +52,8 @@ class Queen extends ChessPiece {
             $move->setInvalid('chess.invalidmove.queen');
             return;
         }
-        $obstacles = array_filter(
-            $move->getPath(),
-            function($square) { return !$square->isEmpty(); }
-        );
-        if (!empty($obstacles)) $move->setInvalid('chess.invalidmove.blocked');
+        if (!$move->getPath()->isEmpty()) {
+            $move->setInvalid('chess.invalidmove.blocked');
+        }
     }
 }
