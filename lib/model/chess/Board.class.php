@@ -217,11 +217,18 @@ class Board {
     
     /**
      * Checks if player's King is in check.
-     * @param  boolean  $white  which color to check
-     * @return boolean
+     * If no Square is provided defaults to specified
+     * color's King on this Board.
+     * @param  boolean  $white
+     * @param  Square   $square
+     * @return
      */
-    public function inCheck($white) {
-        $kingSquare = $white ? $this->whiteKingSquare : $this->blackKingSquare;
+    public function inCheck($white, Square $square = null) {
+        if ($square instanceof Square) {
+            $kingSquare = $square;
+        } else {
+            $kingSquare = clone ($white ? $this->whiteKingSquare : $this->blackKingSquare);
+        }
         
         foreach (Pawn::getAttackRange($kingSquare, $this) as $square) {
             if (   $square->chesspiece instanceof Pawn
@@ -262,6 +269,24 @@ class Board {
             }
         }
         return false;
+    }
+    
+    /**
+     * Checks if player's King is able to move without stepping into check.
+     * @param  boolean  $white  which color to check
+     * @return boolean
+     */
+    public function inCheckmate($white) {
+        $kingSquare = $white ? $this->whiteKingSquare : $this->blackKingSquare;
+        foreach (King::getAttackRange($kingSquare, $this) as $escape) {
+            if ($escape->isEmpty() || $escape->chesspiece->isWhite() != $white) {
+                $escape->chesspiece = new King ($white); // temporary King
+                if (!$this->inCheck($white, $escape)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     
     /**

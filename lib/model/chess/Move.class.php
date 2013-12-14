@@ -147,7 +147,9 @@ class Move extends DatabaseModel {
      * Does basic validation by itself, then initiates piece specific validation.
      */
     public function validate() {
-        if (Core::getUser()->getId() != $this->game->getCurrentPlayer()->getId()) {
+        if ($this->game->isOver()) {
+            $this->setInvalid('chess.invalidmove.gameover');
+        } elseif (Core::getUser()->getId() != $this->game->getCurrentPlayer()->getId()) {
             $this->setInvalid('chess.invalidmove.notyourturn');
         } elseif ($this->from->isEmpty()) {
             $this->setInvalid('chess.invalidmove.nopiece');

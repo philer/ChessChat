@@ -361,11 +361,9 @@ class Game extends DatabaseModel {
     
     /**
      * Toggle Player
-     * @return Game (chaining)
      */
     public function setNextTurn() {
         $this->setStatusFlag(Game::STATUS_WHITES_TURN, !$this->whitesTurn());
-        return $this;
     }
     
     /**
@@ -374,6 +372,22 @@ class Game extends DatabaseModel {
      */
     public function setCheck($check) {
         $this->setStatusFlag(Game::STATUS_CHECK, $check);
+    }
+    
+    /**
+     * Did the last move set check?
+     * @return boolean
+     */
+    public function isCheck() {
+        return (boolean) ($this->status & Game::STATUS_CHECK);
+    }
+    
+    /**
+     * Did somebody win?
+     * @return boolean
+     */
+    public function isCheckmate() {
+        return $this->isOver() && $this->isCheck();
     }
     
     /**
@@ -396,7 +410,7 @@ class Game extends DatabaseModel {
     }
     
     /**
-     * Set drawOffered
+     * Set drawOffered flag
      * @see   Game::STATUS_DRAW_OFFERED
      * @param boolean $offered
      */
@@ -423,12 +437,19 @@ class Game extends DatabaseModel {
     /**
      * Checks and executes a given Move.
      * @param  Move $move
-     * @return Game (chaining)
      */
     public function move(Move $move) {
         $this->board->move($move);
-        // $this->lastMoveId = $move->moveId;
-        return $this;
+        
+        $this->setNextTurn();
+        
+        $color = $this->whitesTurn();
+        if ($this->board->inCheck($color)) {
+            $this->setCheck();
+            if ($this->board->inCheckmate($color)) {
+                $this->setOver();
+            }
+        }
     }
     
     /**

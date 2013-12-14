@@ -74,18 +74,21 @@ class King extends ChessPiece {
     }
     
     public static function getAttackRange(Square $position, Board $board) {
-        for ( $f=-1 ; $f<=1 ; $f++ )
-        for ( $r=-1 ; $r<=1 ; $r++ ) {
-            if (!($f==0 && $r==0)) {
-                $square = new Square(
-                    $position->file() + $f,
-                    $position->rank() + $r
-                );
-                if ($square->exists()) {
-                    $squares[] = $board->getSquare($square);
+        $squares = array();
+        for ( $f=-1 ; $f<=1 ; $f++ ) {
+            for ( $r=-1 ; $r<=1 ; $r++ ) {
+                if (!($f==0 && $r==0)) {
+                    $square = new Square(
+                        $position->file() + $f,
+                        $position->rank() + $r
+                    );
+                    if ($square->exists()) {
+                        $squares[] = $board->getSquare($square);
+                    }
+                    
                 }
-                
             }
         }
+        return $squares;
     }
 }

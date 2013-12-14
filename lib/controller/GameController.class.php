@@ -162,9 +162,8 @@ class GameController extends AbstractRequestController implements AjaxController
         if ($move->isValid()) {
             $move->save();
             
-            $game->move($move)
-                 ->setNextTurn()
-                 ->update();
+            $game->move($move);
+            $game->update();
             
             AjaxUtil::queueReply('status', $game->getFormattedStatus());
         }

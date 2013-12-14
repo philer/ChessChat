@@ -39,20 +39,20 @@ class FatalException extends Exception {
     <head>
         <meta charset="utf-8" />
         <style media="screen" type="text/css">/*<![CDATA[*/
-            body {
+            body#fatalExceptionBody {
                 text-align: center;
                 background-color: #222;
-                color: #eee;
-                font-family: 'Courier New', mono, sans;
+                min-width: 800px;
             }
             /* layout */
             #fatalException {
                 border: 3px solid #191919;
                 background-color: #333;
-                min-width: 700px;
                 max-width: 90%;
-                display: inline-block;
+                display: block;
                 margin: 50px auto;
+                color: #eee;
+                font-family: 'Courier New', mono, sans;
                 font-size: 16px;
                 overflow: auto;
             }
@@ -82,7 +82,7 @@ class FatalException extends Exception {
         /*]]>*/</style>
         <title><?php echo $this->title; ?></title>
     </head>
-    <body>
+    <body id="fatalExceptionBody">
         <section id="fatalException">
             <h1 id="exceptionTitle"><?php echo $this->title; ?></h1>
             <div id="exceptionContent">
