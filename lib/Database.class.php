@@ -55,9 +55,9 @@ final class Database {
      * Override this for different database types!
      */
     protected function connect() {
-        $this->db = new MySQLi($this->host, $this->user, $this->pass, $this->name);
+        @$this->db = new MySQLi($this->host, $this->user, $this->pass, $this->name);
         if ($this->db->connect_errno) {
-            throw new DatabaseException("Database Connection Failed: ".$this->db->connect_error());
+            throw new DatabaseException('Database Connection Failed: ' . $this->db->connect_error());
         }
         $this->db->set_charset("utf8");
     }
@@ -68,7 +68,7 @@ final class Database {
      * @return     array
      */
     public function sendQuery($query) {
-        $result = $this->db->query($query);
+        @$result = $this->db->query($query);
         $this->queryCount++;
         $this->sentQueries[] = $query;
         if(!$result) {

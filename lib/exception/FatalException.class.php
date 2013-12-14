@@ -3,6 +3,7 @@
 /**
  * Fatal Exceptions pervent a regular page building
  * and send a predefined error template with detailed information instead.
+ * The given error message is written to the servers error log.
  * Extend this class for more specific exception handling!
  * @author Philipp Miller
  */
@@ -20,7 +21,10 @@ class FatalException extends Exception {
      * @param     string     $message
      */
     public function __construct($message = '') {
-        if(!empty($message)) $this->message = $message;
+        if(!empty($message)) {
+            $this->message = $message;
+            error_log('ChessChat ' . get_class($this) . ': ' . $message, 0);
+        }
         else $this->message = 'Something went very horribly wrong.';
     }
     
@@ -135,10 +139,13 @@ foreach ($stacktrace as $i) {
                 $params = ' ';
                 foreach($i['args'] as $k) {
                     if (is_object($k)) {
-                        $params .= '{' . get_class($k) . ' object} ';
+                        $params .= '{' . get_class($k) . ' object}';
+                    } elseif (is_array($k)) {
+                        $params .= serialize($k);
                     } else {
-                        $params .= $k.' ';
+                        $params .= $k;
                     }
+                    $params .= ' ';
                 }
                 return $params;
             }    

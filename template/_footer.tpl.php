@@ -9,12 +9,14 @@
                     ?></li>
                 </ul>
             </nav>
-            <div id="benchmark" style="float:right;">
+            <div style="float:right;">
                 <span>logged in as <?php echo Core::getUser() ?></span>
+<?php if (DEBUG_MODE) { ?>
                 |
                 <span>time: <?php echo round(microtime(true) - START_TIME, 4); ?></span>
                 |
                 <span>queries: <?php echo Core::getDB()->getQueryCount(); ?></span>
+<?php } ?>
             </div>
             <div id="copyright"><?php echo $this->lang('site.copyrightby') ?>Phil &amp; Larissa</div>
         </footer>

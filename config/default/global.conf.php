@@ -61,7 +61,7 @@ define('DEBUG_MODE', false);
 
 // Default update interval for ajax chat in seconds
 // Adjust to server load. Do not use values below 1.
-define('CHAT_UPDATE_INTERVAL', 3);
+define('AJAX_UPDATE_INTERVAL', 3);
 
 // Cookie names are prefixed to prevent
 // collision with other applications
