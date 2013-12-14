@@ -173,6 +173,18 @@ class Util {
     }
     
     /**
+     * Signum function (math).
+     * Returns 1 for positive numbers,
+     * -1 for negative and 0 for 0.
+     * @return integer
+     */
+    public static function sign($number) {
+        if ($number > 0) return 1;
+        if ($number < 0) return -1;
+        return 0;
+    }
+    
+    /**
      * Generates a random string containing
      * upper- and lowercase letters and digits.
      * Additional characters may be specified.

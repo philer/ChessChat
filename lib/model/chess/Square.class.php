@@ -131,6 +131,17 @@ class Square {
     }
     
     /**
+     * Checks whether this Square's coordinates exist on a chess board.
+     * @return  boolean
+     */
+    public function exists() {
+        return $this->file >= 0
+            && $this->file <= 7
+            && $this->rank >= 1
+            && $this->rank <= 8;
+    }
+    
+    /**
      * Whether or not there is a ChessPiece standing on this Square
      * @return boolean
      */
