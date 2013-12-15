@@ -51,6 +51,12 @@ class Board {
     protected $blackKingSquare = null;
     
     /**
+     * Move that has been executed on this Board
+     * @var Move
+     */
+    protected $moved = null;
+    
+    /**
      * A chessboard is represented as a string for easy transmission and storage.
      * Conventions:
      * - 3 characters per piece. (3*32 = 96 total)
@@ -183,6 +189,14 @@ class Board {
         }
     }
     
+    protected function getSquareByReference(Square $square) {
+        return $this->board[ $square->fileChar() ][ $square->rank() ];
+    }
+    
+    public function getKingSquare($white) {
+        return $white ? $this->whiteKingSquare : $this->blackKingSquare;
+    }
+    
     /**
      * Returns this boards white prison
      * @see    whitePrison
@@ -211,8 +225,8 @@ class Board {
      * @param  mixed $to
      * @return Range
      */
-    public function getRange(Square $from, $to) {
-        return new Range($from, $to, $this);
+    public function getRange(Square $from, $to, $exclusive = true) {
+        return new Range($this, $from, $to, $exclusive);
     }
     
     /**
@@ -221,28 +235,64 @@ class Board {
      * color's King on this Board.
      * @param  boolean  $white
      * @param  Square   $square
-     * @return
+     * @return boolean
      */
-    public function inCheck($white, Square $square = null) {
-        if ($square instanceof Square) {
-            $kingSquare = $square;
+    public function inCheck($white, Square $kingSquare = null) {
+        if ($kingSquare instanceof Square) {
+            return $this->underAttack($kingSquare, $white);
         } else {
-            $kingSquare = clone ($white ? $this->whiteKingSquare : $this->blackKingSquare);
+            return $this->underAttack($white ? $this->whiteKingSquare : $this->blackKingSquare, $white);
+        }
+    }
+    
+    /**
+     * Checks if player's King is able to move without stepping into check.
+     * Does not check if the King is actually in check himself!
+     * @param  boolean  $white  which color to check
+     * @return boolean
+     */
+    public function kingCanMove($white) {
+        $kingSquare = $white ? $this->whiteKingSquare : $this->blackKingSquare;
+        foreach (King::getAttackRange($this, $kingSquare) as $escape) {
+            if (($escape->isEmpty() || $escape->chesspiece->isWhite() != $white)
+                && !$this->underAttack($escape, $white)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Determines whether or not the given Square is attack.
+     * $white may be omitted if $square does hold a ChessPiece.
+     * @param  Square   $target
+     * @param  boolean  $white   own color
+     * @return boolean
+     */
+    public function underAttack(Square $target, $white = null) {
+        if ($white === null) {
+            $white = $target->chesspiece->isWhite();
         }
         
-        foreach (Pawn::getAttackRange($kingSquare, $this) as $square) {
+        foreach (Pawn::getAttackRange($this, $target, $white) as $square) {
             if (   $square->chesspiece instanceof Pawn
                 && $square->chesspiece->isWhite() != $white) {
                 return true;
             }
         }
-        foreach (Knight::getAttackRange($kingSquare, $this) as $square) {
+        foreach (Knight::getAttackRange($this, $target) as $square) {
             if (   $square->chesspiece instanceof Knight
                 && $square->chesspiece->isWhite() != $white) {
                 return true;
             }
         }
-        foreach (Rook::getAttackRange($kingSquare, $this) as $range) {
+        foreach (King::getAttackRange($this, $target) as $square) {
+            if (   $square->chesspiece instanceof King
+                && $square->chesspiece->isWhite() != $white) {
+                return true;
+            }
+        }
+        foreach (Rook::getAttackRange($this, $target) as $range) {
             foreach ($range as $square) {
                 if (!$square->isEmpty()) {
                     if (   $square->chesspiece->isWhite() != $white
@@ -255,7 +305,7 @@ class Board {
                 }
             }
         }
-        foreach (Bishop::getAttackRange($kingSquare, $this) as $range) {
+        foreach (Bishop::getAttackRange($this, $target) as $range) {
             foreach ($range as $square) {
                 if (!$square->isEmpty()) {
                     if (   $square->chesspiece->isWhite() != $white
@@ -272,21 +322,65 @@ class Board {
     }
     
     /**
-     * Checks if player's King is able to move without stepping into check.
-     * @param  boolean  $white  which color to check
-     * @return boolean
+     * Get all Paths on which an opponent's ChessPiece may reach the given Square.
+     * Returns a mixed Array containing Ranges and another array with single Squares.
+     * $white may be omitted if $target contains a ChessPiece.
+     * @param  Square  $target
+     * @param  boolean $white
+     * @return array
      */
-    public function inCheckmate($white) {
-        $kingSquare = $white ? $this->whiteKingSquare : $this->blackKingSquare;
-        foreach (King::getAttackRange($kingSquare, $this) as $escape) {
-            if ($escape->isEmpty() || $escape->chesspiece->isWhite() != $white) {
-                $escape->chesspiece = new King ($white); // temporary King
-                if (!$this->inCheck($white, $escape)) {
-                    return false;
+    public function getAttackPaths(Square $target, $white = null) {
+        if ($white === null) {
+            $white = $target->chesspiece->isWhite();
+        }
+        
+        $paths = array();
+        $paths[0] = array($target); // single squares
+        foreach (Pawn::getAttackRange($this, $target, $white) as $square) {
+            if (   $square->chesspiece instanceof Pawn
+                && $square->chesspiece->isWhite() != $white) {
+                $paths[0][] = $square;
+            }
+        }
+        foreach (Knight::getAttackRange($this, $target) as $square) {
+            if (   $square->chesspiece instanceof Knight
+                && $square->chesspiece->isWhite() != $white) {
+                $paths[0][] = $square;
+            }
+        }
+        foreach (King::getAttackRange($this, $target) as $square) {
+            if (   $square->chesspiece instanceof King
+                && $square->chesspiece->isWhite() != $white) {
+                $paths[0][] = $square;
+            }
+        }
+        foreach (Rook::getAttackRange($this, $target) as $range) {
+            foreach ($range as $square) {
+                if (!$square->isEmpty()) {
+                    if (   $square->chesspiece->isWhite() != $white
+                        && (   $square->chesspiece instanceof Rook
+                            || $square->chesspiece instanceof Queen)) {
+                        $paths[] = new Range($this, $square, $target, false);
+                    } else {
+                        break 1;
+                    }
                 }
             }
         }
-        return true;
+        foreach (Bishop::getAttackRange($this, $target) as $range) {
+            foreach ($range as $square) {
+                if (!$square->isEmpty()) {
+                    if (   $square->chesspiece->isWhite() != $white
+                        && (   $square->chesspiece instanceof Bishop
+                            || $square->chesspiece instanceof Queen)) {
+                        $paths[] = new Range($this, $square, $target, false);
+                    } else {
+                        break 1;
+                    }
+                }
+            }
+        }
+        return $paths;
     }
     
     /**
@@ -294,51 +388,86 @@ class Board {
      * @param  Move   $move a valid move
      */
     public function move(Move $move) {
-        $this->capture($move->capture);
         
-        $this->board[$move->from->fileChar()][$move->from->rank()]->chesspiece = null;
-        $toPiece = &$this->board[$move->to->fileChar()][$move->to->rank()]->chesspiece;
+        if (!$move->capture->isEmpty()) {
+            $capture = $this->getSquareByReference($move->capture);
+            if ($capture->chesspiece->isWhite()) {
+                $this->whitePrison[] = $capture->chesspiece;
+            } else {
+                $this->blackPrison[] = $capture->chesspiece;
+            }
+            $capture->chesspiece = null;
+        }
         
+        $this->getSquareByReference($move->from)->chesspiece = null;
+        
+        $to = $this->getSquareByReference($move->to);
         if ($move->promotion) {
-            $toPiece = $move->promotion;
+            $to->chesspiece = clone $move->promotion;
         } else {
-            $toPiece = $move->from->chesspiece;
+            $to->chesspiece = clone $move->from->chesspiece;
         }
+        
+        if ($to->chesspiece instanceof King) {
+            if ($to->chesspiece->isWhite()) {
+                $this->whiteKingSquare = $to;
+            } else {
+                $this->blackKingSquare = $to;
+            }
+        }
+        
         if (!empty($move->castling)) {
-            $this->board[$move->castling['from']->fileChar()][$move->castling['from']->rank()]
-                ->chesspiece = null;
-            $this->board[$move->castling['to']->fileChar()][$move->castling['to']->rank()]
-                ->chesspiece = new Rook($toPiece->isWhite(), false);
+            $this->getSquareByReference($move->castling['from'])->chesspiece = null;
+            $this->getSquareByReference($move->castling['to'])->chesspiece = 
+                new Rook($to->chesspiece->isWhite(), false);
         }
-        if ($toPiece instanceof Rook || $toPiece instanceof King) {
-            $toPiece->canCastle = false;
-        }
-        $this->clearEnPassant(!$move->from->chesspiece->isWhite());
-    }
-    
-    public function revert(Move $move) {
-        // TODO
+        
+        $this->moved = $move;
     }
     
     /**
-     * Executes a capture on the given Square if
-     * it contains a ChessPiece, return false otherwise.
-     * @param   Square   $square
-     * @return  boolean  successful capture
+     * Reverts a Move that was executed on this Board.
+     * This is no longer reliably possible once Board::cleanup()
+     * has been called.
      */
-    public function capture(Square $target) {
-        // get reference
-        $target = $this->getSquare($target);
-        if (is_null($target->chesspiece)) {
-            return false;
-        }
-        if ($target->chesspiece->isWhite()) {
-            $this->whitePrison[] = $target->chesspiece;
+    public function revert() {
+        if ($this->moved) {
+            $move = $this->moved;
         } else {
-            $this->blackPrison[] = $target->chesspiece;
+            throw new Exception('no Move to revert');
         }
-        $target->chesspiece = null;
-        return true;
+        
+        $this->getSquareByReference($move->from)->chesspiece = clone $move->from->chesspiece;
+        $this->getSquareByReference($move->to)->chesspiece   = null;
+        
+        if (!$move->capture->isEmpty()) {
+            $capture = $this->getSquareByReference($move->capture);
+            if ($move->capture->chesspiece->isWhite()) {
+                $capture->chesspiece = array_pop($this->whitePrison);
+            } else {
+                $capture->chesspiece = array_pop($this->blackPrison);
+            }
+        }
+        
+        if (!empty($move->castling)) {
+            $this->getSquareByReference($move->castling['from'])->chesspiece = 
+                new Rook($toPiece->isWhite(), true);
+            $this->getSquareByReference($move->castling['to'])->chesspiece = null;
+        }
+        
+        $this->moved = null;
+    }
+    
+    /**
+     * Finalize changes after executing a move. After this function has been
+     * called, Board::revert() is no longer reliably possible.
+     */
+    public function cleanup() {
+        $toPiece = &$this->getSquareByReference($this->moved->to)->chesspiece;
+        if ($toPiece instanceof Rook || $toPiece instanceof King) {
+            $toPiece->canCastle = false;
+        }
+        $this->clearEnPassant(!$this->moved->from->chesspiece->isWhite());
     }
     
     /**

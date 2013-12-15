@@ -9,6 +9,26 @@ foreach ($this->var['chatMsgs'] as $this->var['msg']) {
 ?>
 
 <pre><?php
+    // $ranges = $this->game->board->getAttackPaths(new Square('F4'), true);
+    // foreach ($ranges as $range) {
+    //     if ($range instanceof Range) echo $range . "\n";
+    //     else print_r($range);
+    // }
+    // var_dump(Range::intersect($ranges));
+    // echo new Range(
+    //         new Square('a',5),
+    //         new Square('d',2),
+    //         $this->game->board,
+    //         true
+    //     ) . "\n";
+    // echo new Range(
+    //         new Square('a',5),
+    //         new Square('d',2),
+    //         $this->game->board,
+    //         false
+    //     ). "\n";
+    // var_dump($this->game->board->inCheck(true));
+    // var_dump($this->game->board->inCheck(false));
     // echo $this->game->board;
     // var_dump($this->game->getStatus());
     // var_dump($this->game->isOver());

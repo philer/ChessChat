@@ -53,10 +53,10 @@ class Bishop extends ChessPiece {
         }
     }
     
-    public static function getAttackRange(Square $position, Board $board) {
+    public static function getAttackRange(Board $board, Square $position) {
         $ranges = array();
         foreach (array(Range::TOP_LEFT, Range::TOP_RIGHT, Range::BOTTOM_RIGHT, Range::BOTTOM_LEFT) as $direction) {
-            $ranges[] = new Range($position, $direction, $board);
+            $ranges[] = new Range($board, $position, $direction);
         }
         return $ranges;
     }

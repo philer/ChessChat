@@ -55,6 +55,17 @@ class Util {
     }
     
     /**
+     * Slightly shorter alias function for language items
+     * @see  Language::getLanguageItem()
+     * @param  string $langVar
+     * @param  array  $params
+     * @return string
+     */
+    public static function lang($langVar, array $params = null) {
+        return Core::getLanguage()->getLanguageItem($langVar, $params);
+    }
+    
+    /**
      * Sets a cookie. Cookienames are prepended with
      * a global prefix.
      * @see     global.conf.php COOKIE_PREFIX

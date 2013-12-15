@@ -49,7 +49,7 @@ class Knight extends ChessPiece {
         }
     }
     
-    public static function getAttackRange(Square $position, Board $board) {
+    public static function getAttackRange(Board $board, Square $position) {
         $emptySquares = array(
             new Square($position->file() -1, $position->rank() +2),
             new Square($position->file() +1, $position->rank() +2),

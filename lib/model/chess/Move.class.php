@@ -157,6 +157,13 @@ class Move extends DatabaseModel {
             $this->setInvalid('chess.invalidmove.owncolor');
         } else {
             $this->from->chesspiece->validateMove($this, $this->game->board);
+    
+            // simulation
+            $this->game->board->move($this);
+            if ($this->game->board->inCheck($this->game->whitesTurn())) {
+                $this->setInvalid('chess.invalidmove.check');
+            }
+            $this->game->board->revert();
         }
     }
     
@@ -186,7 +193,7 @@ class Move extends DatabaseModel {
      * @return Range
      */
     public function getPath() {
-        return new Range($this->from, $this->to, $this->game->board);
+        return new Range($this->game->board, $this->from, $this->to);
     }
     
     /**
@@ -222,7 +229,7 @@ class Move extends DatabaseModel {
      */
     public function formatString() {
         if ($this->isValid()) {
-            $string = Core::getLanguage()->getLanguageItem(
+            $string = Util::lang(
                 'chess.moved',
                 $moveData = array(
                     'user'  => Core::getUser(),
@@ -232,20 +239,25 @@ class Move extends DatabaseModel {
                 )
             );
             if (!$this->capture->isEmpty()) {
-                $string .= Core::getLanguage()->getLanguageItem(
+                $string .= Util::lang(
                     'chess.andcaptured',
                     array('capture' => (string) $this->capture->chesspiece)
                 );
             }
             if($this->promotion) {
-                $string .= Core::getLanguage()->getLanguageItem(
+                $string .= Util::lang(
                     'chess.andpromoted',
                     array('promotion' => (string) $this->promotion)
                 );
             }
+            if ($this->game->isCheckmate()) {
+                $string .= Util::lang('game.status.checkmate');
+            } elseif ($this->game->isCheck()) {
+                $string .= Util::lang('game.status.check');
+            }
             return $string;
         } else {
-            return Core::getLanguage()->getLanguageItem($this->invalidReason);
+            return Util::lang($this->invalidReason);
         }
     }
     

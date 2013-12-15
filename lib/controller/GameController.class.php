@@ -160,9 +160,10 @@ class GameController extends AbstractRequestController implements AjaxController
         $move = new Move($moveString, $game);
         
         if ($move->isValid()) {
-            $move->save();
             
             $game->move($move);
+            
+            $move->save();
             $game->update();
             
             AjaxUtil::queueReply('status', $game->getFormattedStatus());
@@ -186,7 +187,9 @@ class GameController extends AbstractRequestController implements AjaxController
         if (!empty($moves) && $moves[0]->playerId != Core::getUser()->getId()) {
             $gameData = Core::getDB()->sendQuery(
                  "SELECT status,
+                         W.userId   as whitePlayerId,
                          W.userName as whitePlayerName,
+                         B.userId   as blackPlayerId,
                          B.userName as blackPlayerName
                  FROM cc_game G
                     JOIN cc_user W ON G.whitePlayerId = W.userId

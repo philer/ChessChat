@@ -97,7 +97,7 @@ foreach ($stacktrace as $i) {
     if (!(isset($i['function']) && $i['function'] === 'errorHandler')) {
         
         if (isset($i['file']))
-        echo "<li><span class=\"file\">{$i['file']}</span>"
+        echo "\n<li><span class=\"file\">{$i['file']}</span>"
            . ":<span class=\"line\">{$i['line']}</span> ";
         
         if (isset($i['class']))

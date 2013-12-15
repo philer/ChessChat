@@ -77,6 +77,15 @@ class Square {
     }
     
     /**
+     * Dereferencing ChessPiece to prevent changes when Move is executed.
+     */
+    public function __clone() {
+        if ($this->chesspiece) {
+            $this->chesspiece = clone $this->chesspiece;
+        }
+    }
+    
+    /**
      * Equals method that only cares about coordinates (not ChessPieces).
      * @param  Square $square
      * @return boolean

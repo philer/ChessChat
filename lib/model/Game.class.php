@@ -289,23 +289,28 @@ class Game extends DatabaseModel {
      * @return     string
      */
     public function getFormattedStatus() {
+        $string = '';
         if (!$this->isOver()) {
             if ($this->ownTurn()) {
-                return Core::getLanguage()->getLanguageItem('game.status.yourturn');
+                $string = Util::lang('game.status.yourturn');
+            } else {
+                $string = Util::lang(
+                    'game.status.nextturn',
+                    array('u' => $this->getCurrentPlayer())
+                );
             }
-            return Core::getLanguage()->getLanguageItem(
-                'game.status.nextturn',
-                array('u' => $this->getCurrentPlayer())
-            );
+            if ($this->isCheck()) {
+                $string .= Util::lang('game.status.check');
+            }
         } elseif ($this->isDraw()) {
-            return Core::getLanguage()->getLanguageItem('game.status.draw');
+            $string = Util::lang('game.status.draw');
         } else {
-            return Core::getLanguage()->getLanguageItem(
+            $string = Util::lang(
                 'game.status.won',
                 array('u' => $this->getCurrentPlayer())
             );
         }
-        return $this->status;
+        return $string;
     }
     
     public function getStatusIcon() {
@@ -324,7 +329,7 @@ class Game extends DatabaseModel {
         if ($value) {
             $this->status |= $flag;
         } else {
-            $this->status &= !$flag;
+            $this->status &= ~ $flag;
         }
     }
     
@@ -435,20 +440,44 @@ class Game extends DatabaseModel {
     }
     
     /**
-     * Checks and executes a given Move.
+     * Checks and executes a given Move, then updates status.
      * @param  Move $move
      */
     public function move(Move $move) {
         $this->board->move($move);
+        $this->board->cleanup();
         
+        // update status for next player
         $this->setNextTurn();
+        $nextColor = $this->whitesTurn();
         
-        $color = $this->whitesTurn();
-        if ($this->board->inCheck($color)) {
-            $this->setCheck();
-            if ($this->board->inCheckmate($color)) {
-                $this->setOver();
+        $kingSquare = $this->board->getKingSquare($nextColor);
+        if ($this->board->underAttack($kingSquare)) {
+            $this->setCheck(true);
+            
+            // checkmate?
+            $checkmate = false;
+            if (!$this->board->kingCanMove($nextColor)) {
+                $attackPaths = $this->board->getAttackPaths($kingSquare);
+                if (count($attackPaths) > 1) {
+                    // multiple chesspieces attack and king can't escape
+                    $checkmate = true;
+                } else {
+                    // only one attacker
+                    $checkmate = true;
+                    foreach ($attackPaths[0] as $square) {
+                        if ($square->underAttack(!$nextColor)) {
+                            // another piece may interfere
+                            $checkmate = false;
+                            break;
+                        }
+                    }
+                }
             }
+            if ($checkmate) $this->setOver();
+        } else {
+            // clear old status
+            $this->setCheck(false);
         }
     }
     
