@@ -251,25 +251,25 @@ class Util {
      * @return     string
      */
     public static function formatTime($timestamp) {
-        if (NOW-$timestamp <= 60) {
-            return 'now';
+        if (60 >= $seconds = NOW - $timestamp) {
+            return self::lang('time.now');
         }
-        if (60 >= $minutes = (integer) ((NOW-$timestamp) / 60)) {
+        if (60 >= $minutes = (integer) ($seconds / 60)) {
             if ($minutes == 1) {
-                return Core::getLanguage()->getLanguageItem('time.oneminuteago');
+                return self::lang('time.oneminuteago');
             }
-            return Core::getLanguage()->getLanguageItem('time.xminutesago', array('x' => $minutes));
+            return self::lang('time.xminutesago', array('x' => $minutes));
         }
-        if (24 >= $hours = (integer) ((NOW-$timestamp) / (60*24))) {
+        if (24 >= $hours = (integer) ($minutes / 60)) {
             if ($hours == 1) {
-                return Core::getLanguage()->getLanguageItem('tíme.onehourago');
+                return self::lang('tíme.onehourago');
             }
-            return Core::getLanguage()->getLanguageItem('time.xhoursago', array('x' => $hours));
+            return self::lang('time.xhoursago', array('x' => $hours));
         }
-        if (date('Ymd', NOW-3600*24) === date('Ymd', $timestamp)) {
-            return Core::getLanguage()->getLanguageItem('time.yesterday');
+        if (date('Ymd', NOW - 3600*24) === date('Ymd', $timestamp)) {
+            return self::lang('time.yesterday');
         }
-        return date(Core::getLanguage()->getLanguageItem('time.dateformat'),
+        return date(self::lang('time.dateformat'),
                 $timestamp);
     }
     
