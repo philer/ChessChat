@@ -69,34 +69,6 @@ class King extends ChessPiece {
     }
     
     /**
-     * Checks if King is in check.
-     * @param  Board  $board
-     * @return boolean
-     */
-    public function inCheck(Board $board) {
-        return $board->underAttack($this);
-    }
-    
-    public function inCheckmate(Board $board) {
-        $checkmate = false;
-        if (!$this->canMove($board)) {
-            $checkmate = true;
-            $paths = $board->getAttackPaths($this);
-            if (count($paths) == 1) {
-                echo $paths[0];
-                foreach ($paths[0] as $square) {
-                    if ($board->blockable($square, $this->white)) {
-                        echo $square;
-                        $checkmate = false;
-                        break;
-                    }
-                }
-            }
-        }
-        return $checkmate;
-    }
-    
-    /**
      * Checks if player's King is able to move without stepping into check.
      * Does not check if the King is actually in check himself.
      * Check does not include castling.
@@ -108,7 +80,7 @@ class King extends ChessPiece {
             if ($escape->isEmpty() || $escape->isWhite() != $this->white) {
                 // simulate
                 $board->move(new Move($this, $escape));
-                if (!$board->getKing($this->white)->inCheck($board)) {
+                if (!$board->inCheck($this->white)) {
                     $board->revert();
                     return true;
                 }
@@ -157,16 +129,5 @@ class King extends ChessPiece {
         // see if opponents King is close enough
         $oppKing = $board->getKing(!$white);
         return abs($oppKing->file() - $target->file()) <= 1 && abs($oppKing->rank() - $target->rank()) <= 1;
-    }
-    
-    public static function getAttackPaths(Board $board, Square $target, $white) {
-        $squares = array();
-        foreach (King::getAttackRange($board, $target) as $square) {
-            if (   $square instanceof King
-                && $square->isWhite() != $white) {
-                $squares[] = $square;
-            }
-        }
-        return $squares;
     }
 }

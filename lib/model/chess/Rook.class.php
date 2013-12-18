@@ -83,6 +83,14 @@ class Rook extends ChessPiece {
         return false;
     }
     
+    /**
+     * Rooks move over an straight line of Squares when they attack
+     * This function returns these Squares, excluding start and end
+     * @param  Board    $board
+     * @param  Square   $target
+     * @param  boolean  $white
+     * @return array<Range>
+     */
     public static function getAttackPaths(Board $board, Square $target, $white) {
         $paths = array();
         foreach (Rook::getAttackRange($board, $target) as $range) {

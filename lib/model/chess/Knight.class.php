@@ -49,6 +49,13 @@ class Knight extends ChessPiece {
         }
     }
     
+    /**
+     * Returns an array containing all (existing) Squares that a King could move to
+     * or from at given $position
+     * @param  Board  $board
+     * @param  Square $position
+     * @return array<Square>
+     */
     public static function getAttackRange(Board $board, Square $position) {
         $emptySquares = array(
             new Square($position->file() -1, $position->rank() +2),
@@ -69,6 +76,13 @@ class Knight extends ChessPiece {
         return $squares;
     }
     
+    /**
+     * Whether the given $target Square is attacked by a Knight
+     * @param  Board    $board
+     * @param  Square   $target
+     * @param  boolean  $white
+     * @return boolean
+     */
     public static function underAttack(Board $board, Square $target, $white) {
         foreach (Knight::getAttackRange($board, $target) as $square) {
             if (   $square instanceof Knight
@@ -77,16 +91,5 @@ class Knight extends ChessPiece {
             }
         }
         return false;
-    }
-    
-    public static function getAttackPaths(Board $board, Square $target, $white) {
-        $squares = array();
-        foreach (Knight::getAttackRange($board, $target) as $square) {
-            if (   $square instanceof Knight
-                && $square->isWhite() != $white) {
-                $squares[] = $square;
-            }
-        }
-        return $squares;
     }
 }

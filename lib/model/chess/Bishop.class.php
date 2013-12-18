@@ -53,6 +53,12 @@ class Bishop extends ChessPiece {
         }
     }
     
+    /**
+     * Get all Squares that a Bishop at $position may move to or from
+     * @param  Board  $board
+     * @param  Square $position
+     * @return array<Ranges>
+     */
     public static function getAttackRange(Board $board, Square $position) {
         $ranges = array();
         foreach (array(Range::TOP_LEFT, Range::TOP_RIGHT, Range::BOTTOM_RIGHT, Range::BOTTOM_LEFT) as $direction) {
@@ -61,6 +67,13 @@ class Bishop extends ChessPiece {
         return $ranges;
     }
     
+    /**
+     * Whether or not a Bishop attacks $target Square
+     * @param  Board    $board
+     * @param  Square   $target
+     * @param  boolean  $white
+     * @return boolean
+     */
     public static function underAttack(Board $board, Square $target, $white) {
         foreach (Bishop::getAttackRange($board, $target) as $range) {
             foreach ($range as $square) {
@@ -78,6 +91,14 @@ class Bishop extends ChessPiece {
         return false;
     }
     
+    /**
+     * Bishops move over an diagonal line of Squares when they attack
+     * This function returns these Squares, excluding start and end
+     * @param  Board    $board
+     * @param  Square   $target
+     * @param  boolean  $white
+     * @return array<Range>
+     */
     public static function getAttackPaths(Board $board, Square $target, $white) {
         $paths = array();
         foreach (Bishop::getAttackRange($board, $target) as $range) {

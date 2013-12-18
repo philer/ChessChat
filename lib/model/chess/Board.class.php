@@ -270,21 +270,6 @@ class Board {
     }
     
     /**
-     * Determines whether a given Square can be blocked by any of
-     * our own chesspieces. This can never be done by a King
-     * or by a Pawn via capturing.
-     * @param  Square  $square
-     * @param  boolean $white
-     * @return boolean
-     */
-    public function blockable(Square $target, $white) {
-        return Pawn::blockable($this, $target, $white)
-            || Knight::underAttack($this, $target, $white)
-            || Bishop::underAttack($this, $target, $white)
-            || Rook::underAttack($this, $target, $white);
-    }
-    
-    /**
      * Checks if King is in check
      * @param  boolean $white
      * @return boolean
@@ -351,7 +336,6 @@ class Board {
             }
         }
         if (count($attackers) == 1) {
-        
             if (   Pawn::underAttack($this, $attackers[0], !$white)
                 || Knight::underAttack($this, $attackers[0], !$white)
                 || Bishop::underAttack($this, $attackers[0], !$white)
@@ -359,44 +343,13 @@ class Board {
                 return false;
             } else {
                 // can our King capture?
-                $oppKing = !$white ? $this->whiteKing : $this->blackKing;
                 return abs($king->file() - $attackers[0]->file()) > 1
                     || abs($king->rank() - $attackers[0]->rank()) > 1
-                    || (   abs($oppKing->file() - $attackers[0]->file()) <= 1
-                        && abs($oppKing->rank() - $attackers[0]->rank()) <= 1
-                       );
+                    || $this->underAttack($attackers[0], !$white);
             }
         } else {
             return count($attackers == 0); // just in case we aren't even in check
         }
-    }
-    
-    /**
-     * Get all Paths on which an opponent's ChessPiece may reach the given Square.
-     * Returns a mixed Array containing Ranges and another array with single Squares.
-     * $white may be omitted if $target contains a ChessPiece.
-     * @param  Square  $target
-     * @param  boolean $white
-     * @return array
-     */
-    public function getAttackPaths(Square $target, $white = null) {
-        if ($white === null) {
-            $white = $target->isWhite();
-        }
-        
-        $paths = array_merge(
-            Bishop::getAttackPaths($this, $target, $white),
-            Rook::getAttackPaths($this, $target, $white)
-        );
-        $singleSquares = array_merge(
-            Knight::getAttackPaths($this, $target, $white),
-            Pawn::getAttackPaths($this, $target, $white),
-            King::getAttackPaths($this, $target, $white)
-        );
-        if (!empty($singleSquares)) {
-            $paths[] = $singleSquares;
-        }
-        return $paths;
     }
     
     /**

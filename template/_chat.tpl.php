@@ -9,10 +9,10 @@ foreach ($this->var['chatMsgs'] as $this->var['msg']) {
 ?>
 
 <pre><?php
-    var_dump($this->game->board->inCheck(true));
-    var_dump($this->game->board->inCheckmate(true));
-    var_dump($this->game->board->inCheck(false));
-    var_dump($this->game->board->inCheckmate(false));
+    // var_dump($this->game->board->inCheck(true));
+    // var_dump($this->game->board->inCheckmate(true));
+    // var_dump($this->game->board->inCheck(false));
+    // var_dump($this->game->board->inCheckmate(false));
     // print_r($this->game->board->blockable(new Square('e5'), false));
     // var_dump(Pawn::blockable( $this->game->board, new Square('F4'), true));
     // var_dump(Pawn::blockable( $this->game->board, new Square('F3'), true));

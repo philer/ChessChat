@@ -194,6 +194,13 @@ class Pawn extends ChessPiece {
         return false;
     }
     
+    /**
+     * Pawn may put himself in harms way without capturing
+     * @param  Board    $board
+     * @param  Square   $target
+     * @param  boolean  $white
+     * @return boolean
+     */
     public static function blockable(Board $board, Square $target, $white) {
         if ($white) {
             $block = $board->getSquare($target->file(), $target->rank() - 1);
@@ -220,16 +227,5 @@ class Pawn extends ChessPiece {
             }
         }
         return false;
-    }
-    
-    public static function getAttackPaths(Board $board, Square $target, $white) {
-        $squares = array();
-        foreach (Pawn::getAttackRange($board, $target, $white) as $square) {
-            if (   $square instanceof Pawn
-                && $square->isWhite() != $white) {
-                $squares[] = $square;
-            }
-        }
-        return $squares;
     }
 }

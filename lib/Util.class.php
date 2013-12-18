@@ -262,7 +262,7 @@ class Util {
         }
         if (24 >= $hours = (integer) ($minutes / 60)) {
             if ($hours == 1) {
-                return self::lang('tíme.onehourago');
+                return self::lang('time.onehourago');
             }
             return self::lang('time.xhoursago', array('x' => $hours));
         }

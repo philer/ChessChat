@@ -180,9 +180,9 @@ class Move extends DatabaseModel {
     
             // simulation
             $this->game->board->move($this);
-            if ($this->game->board
-                    ->getKing($this->game->whitesTurn())
-                    ->inCheck($this->game->board)) {
+            if ($this->game->board->inCheck($this->game->whitesTurn())) {
+                    // ->getKing($this->game->whitesTurn())
+                    // ->inCheck($this->game->board)) {
                 $this->setInvalid('chess.invalidmove.check');
             }
             $this->game->board->revert();
