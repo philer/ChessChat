@@ -130,7 +130,7 @@ class Game extends DatabaseModel {
         $this->blackPlayer = new User($blackPlayerData);
         if (isset($gameData['boardString'])) {
             // $this->board = self::boardFromString($gameData['boardString']);
-            $this->board = new Board($gameData['boardString']);
+            $this->board = new Board($this, $gameData['boardString']);
         }
         // delete unneeded data
         unset($gameData['whitePlayerId'],
@@ -361,7 +361,7 @@ class Game extends DatabaseModel {
      * @return boolean
      */
     public function ownTurn() {
-        return $this->whitesTurn() === $this->isWhitePlayer();
+        return !$this->isOver() && $this->whitesTurn() === $this->isWhitePlayer();
     }
     
     /**
@@ -448,36 +448,19 @@ class Game extends DatabaseModel {
         $this->board->cleanup();
         
         // update status for next player
-        $this->setNextTurn();
-        $nextColor = $this->whitesTurn();
+        $nextColor = !$this->whitesTurn();
         
-        $kingSquare = $this->board->getKingSquare($nextColor);
-        if ($this->board->underAttack($kingSquare)) {
+        if ($this->board->inCheck($nextColor)) {
             $this->setCheck(true);
-            
-            // checkmate?
-            $checkmate = false;
-            if (!$this->board->kingCanMove($nextColor)) {
-                $attackPaths = $this->board->getAttackPaths($kingSquare);
-                if (count($attackPaths) > 1) {
-                    // multiple chesspieces attack and king can't escape
-                    $checkmate = true;
-                } else {
-                    // only one attacker
-                    $checkmate = true;
-                    foreach ($attackPaths[0] as $square) {
-                        if ($square->underAttack(!$nextColor)) {
-                            // another piece may interfere
-                            $checkmate = false;
-                            break;
-                        }
-                    }
-                }
+            if ($this->board->inCheckmate($nextColor)) {
+                $this->setOver();
+            } else {
+                $this->setNextTurn();
             }
-            if ($checkmate) $this->setOver();
         } else {
-            // clear old status
+            // update status
             $this->setCheck(false);
+            $this->setNextTurn();
         }
     }
     

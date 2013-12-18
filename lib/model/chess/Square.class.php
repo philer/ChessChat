@@ -2,6 +2,7 @@
 
 /**
  * Represents one field on a chess board and provides methods for easy access.
+ * Note, that Squares do _not_ have a color.
  * @author  Philipp Miller
  */
 class Square {
@@ -22,12 +23,6 @@ class Square {
     protected $rank = 0;
     
     /**
-     * On a Square may stand a ChessPiece
-     * @var ChessPiece
-     */
-    public $chesspiece = null;
-    
-    /**
      * Valid coordinates must follow this pattern
      */
     const PATTERN = '([a-hA-H][1-8]|[1-8][a-hA-H])';
@@ -43,55 +38,56 @@ class Square {
      * @param integer        $rank
      * @param ChessPiece     $chesspiece
      */
-    public function __construct($file, $rank = null, Chesspiece $chesspiece = null) {
-        $this->chesspiece = $chesspiece;
+    public function __construct($p1, $p2 = null) {
+        if ($p1 instanceof Square) {
+            $this->file = $p1->file();
+            $this->rank = $p1->rank();
         
-        if (is_int($file)) {
+        } elseif (is_int($p1)) {
             // two int
-            $this->file = $file;
-            $this->rank = (int) $rank;
+            $this->file = $p1;
+            $this->rank = (int) $p2;
         
-        } elseif (is_string($file)) {
-            if (strlen($file) == 1) {
+        } elseif (is_string($p1)) {
+            if (strlen($p1) == 1) {
                 // one char one int
-                $this->file = ord(strtolower($file)) - ord('a');
-                $this->rank = (int) $rank;
+                $this->file = ord(strtolower($p1)) - ord('a');
+                $this->rank = (int) $p2;
             
             } else {
-                if (strlen($file) == 3) {
-                    $this->chesspiece = ChessPiece::getInstance($file[0]);
-                    $file = substr($file, 1);
-                }
                 // string like 'a4' or '4A'
-                if (is_numeric($file[0])) {
-                    $this->rank = intval($file[0]);
-                    $this->file = ord(strtolower($file[1])) - ord('a');
+                if (is_numeric($p1[0])) {
+                    $this->rank = intval($p1[0]);
+                    $this->file = ord(strtolower($p1[1])) - ord('a');
                 } else {
-                    $this->rank = intval($file[1]);
-                    $this->file = ord(strtolower($file[0])) - ord('a');
+                    $this->rank = hexdec($p1[1]); // might be in prison
+                    $this->file = ord(strtolower($p1[0])) - ord('a');
                 }
             }
+        
         } else {
-            throw new Exception('Expecting parameter 1 to be either int or string');
-        }
-    }
-    
-    /**
-     * Dereferencing ChessPiece to prevent changes when Move is executed.
-     */
-    public function __clone() {
-        if ($this->chesspiece) {
-            $this->chesspiece = clone $this->chesspiece;
+            throw new FatalException('Expecting parameter 1 to be either int or string');
         }
     }
     
     /**
      * Equals method that only cares about coordinates (not ChessPieces).
+     * Returns false if $square is null.
      * @param  Square $square
      * @return boolean
      */
-    public function equals(Square $square) {
-        return $this->file == $square->file() && $this->rank == $square->rank();
+    public function equals($square) {
+        return $square instanceof Square
+            && $this->file == $square->file()
+            && $this->rank == $square->rank();
+    }
+    
+    /**
+     * @see  Square::coordinates()
+     * @return string
+     */
+    public function __toString() {
+        return $this->coordinates();
     }
     
     /**
@@ -99,7 +95,7 @@ class Square {
      * like 'A1'
      * @return string
      */
-    public function __toString() {
+    public function coordinates() {
         return $this->fileCapital() . $this->rank();
     }
     
@@ -109,7 +105,7 @@ class Square {
      * @return String
      */
     public function fileChar() {
-        return chr($this->file + ord('a'));
+        return chr( $this->file + ord('a') );
     }
     
     /**
@@ -118,7 +114,7 @@ class Square {
      * @return String
      */
     public function fileCapital() {
-        return chr($this->file + ord('A'));
+        return chr( $this->file + ord('A') );
     }
     
     /**
@@ -155,6 +151,16 @@ class Square {
      * @return boolean
      */
     public function isEmpty() {
-        return $this->chesspiece == null;
+        return !($this instanceof ChessPiece);
+    }
+    
+    /**
+     * Replaces this Square's coordinates with given
+     * Square's coordinates
+     * @param  Square $square
+     */
+    public function move(Square $square) {
+        $this->file = $square->file();
+        $this->rank = $square->rank();
     }
 }

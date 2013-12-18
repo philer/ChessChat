@@ -148,7 +148,7 @@ class Range implements Iterator {
                     $this->rankDirection = 0;
                     break;
                 default:
-                    throw new Exception('no direction specified');
+                    throw new FatalException('no direction specified');
             }
             switch ($end) {
                 case self::RIGHT:

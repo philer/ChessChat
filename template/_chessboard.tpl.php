@@ -2,10 +2,10 @@
 
 // default board
 //$board = Game::boardFromString(Game::DEFAULT_BOARD_STRING);
-$board = $this->var['game']->board;
+$board = $this->game->board;
 
-$whitePlayer = $this->var['game']->isWhitePlayer()
-            || !$this->var['game']->isPlayer();
+$whitePlayer = $this->game->isWhitePlayer()
+            || !$this->game->isPlayer();
 
 // turn board upside down for black
 if ($whitePlayer) {
@@ -21,14 +21,14 @@ if ($whitePlayer) {
     <ol id="whitePrison" class="prison white <?php echo $whitePlayer ? 'own' : 'opp'; ?>-prison"><?php
 foreach ($board->getWhitePrison() as $chesspiece) {
     echo '<li class="chesspiece">'
-       . $chesspiece
+       . $chesspiece->utf8()
        . '</li>';
 }
     ?></ol>
     <ol id="blackPrison" class="prison black <?php echo $whitePlayer ? 'opp' : 'own'; ?>-prison"><?php
 foreach ($board->getBlackPrison() as $chesspiece) {
     echo '<li class="chesspiece">'
-       . $chesspiece
+       . $chesspiece->utf8()
        . '</li>';
 }
     ?></ol>
@@ -63,15 +63,16 @@ foreach ($ranks as $r) {
        . "\t<th>{$r}</th>";
     foreach ($files as $f) {
         $light = !$light;
+        $square = $board->getSquare($f, $r);
         echo '<td'
            . ' class="square ' . ($light ? 'light' : 'dark') . '"'
            . ' id="square-' . $f . $r . '"><div>';
-        if ($cp = $board->{$f.$r}->chesspiece) {
+        if (!$square->isEmpty()) {
             echo '<span'
-               . ' data-chesspiece="' . $cp->letter() . '"'
-               . ' class="chesspiece ' . ($cp->isWhite() ? 'white' : 'black') . '"'
+               . ' data-chesspiece="' . $square->letter() . '"'
+               . ' class="chesspiece ' . ($square->isWhite() ? 'white' : 'black') . '"'
                . ' id="chesspiece-' . $f . $r . '">'
-               . $cp->utf8()
+               . $square->utf8()
                . '</span>';
         }    
         echo '</div></td>';

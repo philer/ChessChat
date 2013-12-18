@@ -68,4 +68,25 @@ class Knight extends ChessPiece {
         }
         return $squares;
     }
+    
+    public static function underAttack(Board $board, Square $target, $white) {
+        foreach (Knight::getAttackRange($board, $target) as $square) {
+            if (   $square instanceof Knight
+                && $square->isWhite() != $white) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static function getAttackPaths(Board $board, Square $target, $white) {
+        $squares = array();
+        foreach (Knight::getAttackRange($board, $target) as $square) {
+            if (   $square instanceof Knight
+                && $square->isWhite() != $white) {
+                $squares[] = $square;
+            }
+        }
+        return $squares;
+    }
 }

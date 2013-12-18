@@ -39,11 +39,6 @@ class Rook extends ChessPiece {
      * @var string
      */
     const LETTER_BLACK = 'r';
-
-    public function __construct($white, $canCastle = false) {
-        parent::__construct($white);
-        $this->canCastle = $canCastle;
-    }
     
     /**
      * Check if $move is a valid move for a Rook
@@ -69,5 +64,40 @@ class Rook extends ChessPiece {
             $ranges[] = new Range($board, $position, $direction);
         }
         return $ranges;
+    }
+    
+    public static function underAttack(Board $board, Square $target, $white) {
+        foreach (Rook::getAttackRange($board, $target) as $range) {
+            foreach ($range as $square) {
+                if (!$square->isEmpty()) {
+                    if (   $square->isWhite() != $white
+                        && (   $square instanceof Rook
+                            || $square instanceof Queen)) {
+                        return true;
+                    } else {
+                        break 1;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static function getAttackPaths(Board $board, Square $target, $white) {
+        $paths = array();
+        foreach (Rook::getAttackRange($board, $target) as $range) {
+            foreach ($range as $square) {
+                if (!$square->isEmpty()) {
+                    if (   $square->isWhite() != $white
+                        && (   $square instanceof Rook
+                            || $square instanceof Queen)) {
+                        $paths[] = new Range($board, $square, $target);
+                    } else {
+                        break 1;
+                    }
+                }
+            }
+        }
+        return $paths;
     }
 }

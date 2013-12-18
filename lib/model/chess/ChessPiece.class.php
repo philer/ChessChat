@@ -4,11 +4,12 @@
  * Represents a single chess piece
  * @author Philipp Miller
  */
-abstract class ChessPiece {
+abstract class ChessPiece extends Square {
     
     /**
-     * Color as boolean:
+     * Color of this ChessPiece as boolean:
      * white = true, black = false
+     * Does not indicate the Square's color!
      * @var     boolean
      */
     protected $white = true;
@@ -19,22 +20,42 @@ abstract class ChessPiece {
     const PATTERN = '([bpnrkqBPNRKQ]{1})';
     
     /**
-     * Creates a ChessPiece. Color is required.
-     * @param     boolean     $white
-     * @param     string         $square
+     * Creates a Square from given parameters.
+     * Expects either
+     * 1 String defining a square, such as 'A1' or
+     * 1 character and 1 integer defining a square, such as 'a' and 1 or
+     * 2 integers defining a square, such as 0 and 1
+     * An optional ChessPiece may be provided to represent it standing on the Square
+     * @param String/integer $file
+     * @param integer        $rank
+     * @param ChessPiece     $chesspiece
      */
-    public function __construct($white) {
+    public function __construct($white, $p2 = null, $p3 = null) {
         $this->white = $white;
+        if (!is_null($p2)) {
+            parent::__construct($p2, $p3);
+        }
     }
     
-    public static function getInstance($letter) {
+    /**
+     * Returns a new ChessPiece. Type is specified by the first character in $string
+     * Coordinates are optional
+     * @param  string  $string
+     * @param  mixed   $square  Square or valid coordinates as string
+     * @return ChessPiece
+     */
+    public static function getInstance($string, $square = null) {
+        $letter = $string[0];
+        if (is_null($square) && strlen($string) == 3) {
+            $square = substr($string, 1);
+        }
         switch(strtolower($letter)) {
-            case Pawn::LETTER_BLACK :   return new Pawn(  ctype_upper($letter));
-            case Bishop::LETTER_BLACK : return new Bishop(ctype_upper($letter));
-            case Knight::LETTER_BLACK : return new Knight(ctype_upper($letter));
-            case Rook::LETTER_BLACK :   return new Rook(  ctype_upper($letter));
-            case Queen::LETTER_BLACK :  return new Queen( ctype_upper($letter));
-            case King::LETTER_BLACK :   return new King(  ctype_upper($letter));
+            case Pawn::LETTER_BLACK :   return new Pawn(  ctype_upper($letter), $square);
+            case Bishop::LETTER_BLACK : return new Bishop(ctype_upper($letter), $square);
+            case Knight::LETTER_BLACK : return new Knight(ctype_upper($letter), $square);
+            case Rook::LETTER_BLACK :   return new Rook(  ctype_upper($letter), $square);
+            case Queen::LETTER_BLACK :  return new Queen( ctype_upper($letter), $square);
+            case King::LETTER_BLACK :   return new King(  ctype_upper($letter), $square);
         }
     }
     
@@ -46,11 +67,11 @@ abstract class ChessPiece {
     abstract public function validateMove(Move $move, Board $board);
     
     /**
-     * Convenience method for easy string representation.
-     * @return  string  utf8 chess symbol
+     * First letter indicates type, followed by coordinates
+     * @return string
      */
     public function __toString() {
-        return $this->utf8();
+        return $this->letter() . $this->coordinates();
     }
     
     /**

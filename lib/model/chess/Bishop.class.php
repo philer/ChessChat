@@ -60,4 +60,39 @@ class Bishop extends ChessPiece {
         }
         return $ranges;
     }
+    
+    public static function underAttack(Board $board, Square $target, $white) {
+        foreach (Bishop::getAttackRange($board, $target) as $range) {
+            foreach ($range as $square) {
+                if (!$square->isEmpty()) {
+                    if (   $square->isWhite() != $white
+                        && (   $square instanceof Bishop
+                            || $square instanceof Queen)) {
+                        return true;
+                    } else {
+                        break 1;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static function getAttackPaths(Board $board, Square $target, $white) {
+        $paths = array();
+        foreach (Bishop::getAttackRange($board, $target) as $range) {
+            foreach ($range as $square) {
+                if (!$square->isEmpty()) {
+                    if (   $square->isWhite() != $white
+                        && (   $square instanceof Bishop
+                            || $square instanceof Queen)) {
+                        $paths[] = new Range($board, $square, $target);
+                    } else {
+                        break 1;
+                    }
+                }
+            }
+        }
+        return $paths;
+    }
 }

@@ -41,11 +41,6 @@ class Pawn extends ChessPiece {
      */
     const LETTER_BLACK = 'p';
     
-    public function __construct($white, $canEnPassant = false) {
-        parent::__construct($white);
-        $this->canEnPassant = $canEnPassant;
-    }
-    
     /**
      * Check if $move is a valid move for a Pawn
      * and sets $move->valid and $move->invalidMessage accordingly.
@@ -64,11 +59,10 @@ class Pawn extends ChessPiece {
         
         if ($this->white) {
             if  ($roff < 1 || $roff > 2) {
-            
                 $move->setInvalid('chess.invalidmove.pawn');
                 return;
-            
-            } elseif ($roff == 2) {
+            }
+            if ($roff == 2) {
             
                 if ($move->from->rank() != 2) {
                     $move->setInvalid('chess.invalidmove.pawn');
@@ -131,8 +125,8 @@ class Pawn extends ChessPiece {
                     // en passant
                     $target = $board->getSquare($move->to->file(), $move->from->rank());
                     if (   $target->isEmpty()
-                        || !$target->chesspiece->canEnPassant
-                        || $target->chesspiece->isWhite() == $this->isWhite()
+                        || !$target->canEnPassant
+                        || $target->isWhite() == $this->isWhite()
                         ) {
                         $move->setInvalid('chess.invalidmove.pawn.nocapture');
                         return;
@@ -140,7 +134,7 @@ class Pawn extends ChessPiece {
                     $move->capture = $target;
                     return;
                 
-                } elseif ($move->to->chesspiece->isWhite() == $this->isWhite()) {
+                } elseif ($move->to->isWhite() == $this->isWhite()) {
                     $move->setInvalid('chess.invalidmove.owncolor');
                     return;
                 }
@@ -163,8 +157,7 @@ class Pawn extends ChessPiece {
      * @param  boolean $white     may be omitted if $position holds a chesspiece
      * @return array<Square>
      */
-    public static function getAttackRange(Board $board, Square $position, $white = null) {
-        if ($white === null) $white = $position->chesspiece->white;
+    public static function getAttackRange(Board $board, Square $position, $white) {
         // this also works the other way round, to check if a piece may
         // be attacked by a pawn of the opposite color. See Board::inCheck()
         $roff = $white ? 1 : -1;
@@ -176,6 +169,65 @@ class Pawn extends ChessPiece {
         foreach ($emptySquares as $square) {
             if ($square->exists()) {
                 $squares[] = $board->getSquare($square);
+            }
+        }
+        return $squares;
+    }
+    
+    public static function underAttack(Board $board, Square $target, $white) {
+        foreach (Pawn::getAttackRange($board, $target, $white) as $square) {
+            if (   $square instanceof Pawn
+                && $square->isWhite() != $white) {
+                return true;
+            }
+        }
+        // en passant
+        if ($target instanceof Pawn && $target->canEnPassant) {
+            $ghost = new Square($target->file(), $target->rank() + ($target->white ? -1 : 1) );
+            foreach (Pawn::getAttackRange($board, $ghost, $white) as $square) {
+                if (   $square instanceof Pawn
+                    && $square->isWhite() != $white) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static function blockable(Board $board, Square $target, $white) {
+        if ($white) {
+            $block = $board->getSquare($target->file(), $target->rank() - 1);
+            if ($block instanceof Pawn && $block->isWhite()) {
+                return true;
+            }
+            if ($target->rank() == 4 && $block->isEmpty()) {
+                $block = $board->getSquare($target->file(), $target->rank() - 2);
+                if ($block instanceof Pawn && $block->isWhite()) {
+                    return true;
+                }
+            }
+        
+        } else {
+            $block = $board->getSquare($target->file(), $target->rank() + 1);
+            if ($block instanceof Pawn && !$block->isWhite()) {
+                return true;
+            }
+            if ($target->rank() == 5 && $block->isEmpty()) {
+                $block = $board->getSquare($target->file(), $target->rank() + 2);
+                if ($block instanceof Pawn && !$block->isWhite()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static function getAttackPaths(Board $board, Square $target, $white) {
+        $squares = array();
+        foreach (Pawn::getAttackRange($board, $target, $white) as $square) {
+            if (   $square instanceof Pawn
+                && $square->isWhite() != $white) {
+                $squares[] = $square;
             }
         }
         return $squares;

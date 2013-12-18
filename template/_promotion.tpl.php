@@ -17,8 +17,8 @@ $pieces = array(
 <?php foreach ($pieces as $cp) { ?>
         <li><a
             data-chesspiece="<?php echo $cp->letter(); ?>"
-            class="promotion-option chesspiece icon button"><?php
-            echo $cp;
+            class="promotion-option chesspiece icon button jsAnchor"><?php
+            echo $cp->utf8();
             ?></a></li>
 <?php } ?>
     </ul>

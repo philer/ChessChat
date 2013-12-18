@@ -44,9 +44,8 @@ class Move extends DatabaseModel {
     public $promotion = null;
     
     /**
-     * Boolean if castling takes place. Null otherwise
-     * true indicates Queenside, false indicates Kingside castling.
-     * @var boolean/null
+     * Array containing castling Rook move (from and to)
+     * @var array<Square>
      */
     public $castling = array();
     
@@ -78,57 +77,78 @@ class Move extends DatabaseModel {
      * Creates a Move object from the given string.
      * Expects parameter 1 to be either an array containing data to be set
      * or a valid (unformatted) move string such as 'a4-3A'.
-     * @param  string/array  $moveData
-     * @param  Game          $game      game in which this move was made
      */
-    public function __construct($moveData, Game $game = null) {
-        $this->game = $game;
+    public function __construct($p1, $p2 = null) {
         
-        if (is_array($moveData)) {
-            // got data from database (should be valid)
-            $this->from = new Square($moveData['fromSquare'], null, ChessPiece::getInstance($moveData['chessPiece']));
-            $this->to   = new Square($moveData['toSquare']);
-            // capturing
-            if (is_null($moveData['capture'])) {
+        if ($p1 instanceof Square && $p2 instanceof Square) {
+            // simulated move
+            
+            $this->from = $p1;
+            $this->to   = $p2;
+            if (!$this->to->isEmpty()) {
                 $this->capture = $this->to;
-            } else {
-                $this->capture = new Square($moveData['capture']);
-                if ($this->to->equals($this->capture)) {
-                    // get references right
-                    $this->to = $this->capture;
-                }
+            }
+            
+        } elseif (is_string($p1) && self::patternMatch($p1) && $p2 instanceof Game) {
+            // user move
+            
+            $this->game = $p2;
+            
+            $p1 = preg_replace('@' . self::SEPERATOR_PATTERN . '@', '', $p1);
+            
+            $this->from = $this->game->board->{ $p1[0] . $p1[1] };
+            $this->to   = $this->game->board->{ $p1[2] . $p1[3] };
+            
+            if (!$this->to->isEmpty()) {
+                $this->capture = $this->to;
+            }
+            
+            if (strlen($p1) == 5) {
+                $callback = $this->game->whitesTurn() ? 'strtoupper' : 'strtolower';
+                $this->promotion = ChessPiece::getInstance($callback($p1[4]), $this->to);
+            }
+            
+            $this->validate();
+            
+        } elseif (is_array($p1)) {
+            // database move
+            
+            $this->from = ChessPiece::getInstance($p1['chessPiece'], $p1['fromSquare']);
+            
+            $this->to = new Square($p1['toSquare']);
+            
+            if ($p1['capture']) {
+                $this->capture = ChessPiece::getInstance($p1['capture']);
+            }
+            if ($this->to->equals($this->capture)) {
+                $this->to = $this->capture;
             }
             
             // promotion
-            if ($moveData['promotion']) {
-                $this->promotion = ChessPiece::getInstance($moveData['promotion']);
+            if ($p1['promotion']) {
+                $this->promotion = ChessPiece::getInstance($p1['promotion'], $this->to);
             }
             
             // castling
             $foff = $this->getFileOffset();
-            if ($this->from->chesspiece instanceof King && abs($foff) == 2 ) {
-                $this->castling['from'] = new Square($foff > 0 ? 'h' : 'a', $this->from->rank());
-                $this->castling['to']   = new Square($foff > 0 ? 'f' : 'd', $this->from->rank());
+            if ($this->from instanceof King && abs($foff) == 2 ) {
+                $this->castling['from'] = new Square(
+                    $foff > 0 ? 'h' : 'a',
+                    $this->from->rank()
+                );
+                $this->castling['to']   = new Rook(
+                    $this->from->isWhite(),
+                    $foff > 0 ? 'f' : 'd',
+                    $this->from->rank()
+                );
             }
             
             // other data
-            unset($moveData['fromSqare'], $moveData['toSquare'], $moveData['capture'], $moveData['promotion']);
-            parent::__construct($moveData);
+            unset($p1['fromSqare'], $p1['toSquare'], $p1['capture'], $p1['promotion']);
+            parent::__construct($p1);
             
-        } elseif (self::patternMatch($moveData) && $game !== null) {
-            // creating new Move (requires validation)
-            
-            $moveData = preg_replace('@' . self::SEPERATOR_PATTERN . '@', '', $moveData);
-            
-            $this->from = $this->game->board->{ $moveData[0] . $moveData[1] };
-            $this->to   = $this->game->board->{ $moveData[2] . $moveData[3] };
-            $this->capture = $this->to; // default case
-            
-            if (strlen($moveData) == 5) {
-                $this->promotion = ChessPiece::getInstance($moveData[4]);
-            }
-            
-            $this->validate();
+        } else {
+            throw new FatalException('invalid Arguments');
         }
     }
     
@@ -153,14 +173,16 @@ class Move extends DatabaseModel {
             $this->setInvalid('chess.invalidmove.notyourturn');
         } elseif ($this->from->isEmpty()) {
             $this->setInvalid('chess.invalidmove.nopiece');
-        } elseif (!$this->to->isEmpty() && $this->from->chesspiece->isWhite() == $this->to->chesspiece->isWhite()) {
+        } elseif (!$this->to->isEmpty() && $this->from->isWhite() == $this->to->isWhite()) {
             $this->setInvalid('chess.invalidmove.owncolor');
         } else {
-            $this->from->chesspiece->validateMove($this, $this->game->board);
+            $this->from->validateMove($this, $this->game->board);
     
             // simulation
             $this->game->board->move($this);
-            if ($this->game->board->inCheck($this->game->whitesTurn())) {
+            if ($this->game->board
+                    ->getKing($this->game->whitesTurn())
+                    ->inCheck($this->game->board)) {
                 $this->setInvalid('chess.invalidmove.check');
             }
             $this->game->board->revert();
@@ -232,22 +254,22 @@ class Move extends DatabaseModel {
             $string = Util::lang(
                 'chess.moved',
                 $moveData = array(
-                    'user'  => Core::getUser(),
-                    'piece' => (string) $this->from->chesspiece,
-                    'from'  => (string) $this->from,
-                    'to'    => (string) $this->to
+                    'user'  => Core::getUser()->getName(),
+                    'piece' => $this->from->utf8(),
+                    'from'  => $this->from->coordinates(),
+                    'to'    => $this->to->coordinates()
                 )
             );
-            if (!$this->capture->isEmpty()) {
+            if ($this->capture) {
                 $string .= Util::lang(
                     'chess.andcaptured',
-                    array('capture' => (string) $this->capture->chesspiece)
+                    array('capture' => $this->capture->utf8())
                 );
             }
             if($this->promotion) {
                 $string .= Util::lang(
                     'chess.andpromoted',
-                    array('promotion' => (string) $this->promotion)
+                    array('promotion' => $this->promotion->utf8())
                 );
             }
             if ($this->game->isCheckmate()) {
@@ -269,20 +291,20 @@ class Move extends DatabaseModel {
     public function ajaxData() {
         $ajaxData = array(
             'id'      => $this->moveId,
-            'from'    => (string) $this->from,
-            'to'      => (string) $this->to,
+            'from'    => $this->from->coordinates(),
+            'to'      => $this->to->coordinates(),
             'valid'   => $this->isValid()
         );
-        if (!$this->capture->isEmpty()) {
-            $ajaxData['capture'] = (string) $this->capture;
+        if ($this->capture) {
+            $ajaxData['capture'] = $this->capture->coordinates();
         }
         if ($this->promotion) {
             $ajaxData['promotion'] = $this->promotion->ajaxData();
         }
-        if (!empty($this->castling)) {
+        if ($this->castling) {
             $ajaxData['castling'] = array(
-                'from' => (string) $this->castling['from'],
-                'to'   => (string) $this->castling['to']
+                'from' => $this->castling['from']->coordinates(),
+                'to'   => $this->castling['to']->coordinates()
             );
         }
         // if (!$this->isValid()) {
@@ -299,12 +321,12 @@ class Move extends DatabaseModel {
         $fields = 'gameId, playerId, chessPiece, fromSquare, toSquare';
         $values = $this->game->getId()
                 . ", " . Core::getUser()->getId()
-                . ", '" . $this->from->chesspiece->letter() . "'"
-                . ", '" . $this->from . "'"
-                . ", '" . $this->to . "'";
-        if (!$this->capture->isEmpty()) {
+                . ", '" . $this->from->letter() . "'"
+                . ", '" . $this->from->coordinates() . "'"
+                . ", '" . $this->to->coordinates() . "'";
+        if ($this->capture) {
             $fields .= ', capture';
-            $values .= ", '" . $this->capture->chesspiece->letter() . (string) $this->capture . "'";
+            $values .= ", '" . $this->capture->letter() . $this->capture->coordinates() . "'";
         }
         if ($this->promotion) {
             $fields .= ', promotion';
