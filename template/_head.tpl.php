@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo Core::getLanguage()->getLanguageCode(); ?>">
     <head>
         <meta charset="utf-8" />
         <title><?php echo $this->controller->getPageTitle() . " - " . SITENAME; ?></title>
