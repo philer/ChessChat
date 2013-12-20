@@ -64,11 +64,11 @@ class Pawn extends ChessPiece {
             }
             if ($roff == 2) {
             
-                if ($move->from->rank() != 2) {
+                if ($this->rank() != 2) {
                     $move->setInvalid('chess.invalidmove.pawn');
                     return;
                 }
-                if (!$board->getSquare($move->from->file(), 3)->isEmpty()) {
+                if (!$board->getSquare($this->file(), 3)->isEmpty()) {
                     $move->setInvalid('chess.invalidmove.blocked');
                     return;
                 }
@@ -92,11 +92,11 @@ class Pawn extends ChessPiece {
             
             } elseif ($roff == -2) {
             
-                if ($move->from->rank() != 7) {
+                if ($this->rank() != 7) {
                     $move->setInvalid('chess.invalidmove.pawn');
                     return;
                 }
-                if (!$board->getSquare($move->from->file(), 6)->isEmpty()) {
+                if (!$board->getSquare($this->file(), 6)->isEmpty()) {
                     $move->setInvalid('chess.invalidmove.blocked');
                     return;
                 }
@@ -123,7 +123,7 @@ class Pawn extends ChessPiece {
             if (abs($roff) == 1) {
                 if ($move->to->isEmpty()) {
                     // en passant
-                    $target = $board->getSquare($move->to->file(), $move->from->rank());
+                    $target = $board->getSquare($move->to->file(), $this->rank());
                     if (   $target->isEmpty()
                         || !$target->canEnPassant
                         || $target->isWhite() == $this->isWhite()
@@ -149,6 +149,70 @@ class Pawn extends ChessPiece {
         }
     }
     
+    public function canMove(Board $board) {
+        foreach (self::getAttackRange($board, $this, 4) as $to) {
+            if ($to->isEmpty() || $to->isWhite() == $this->white) {
+                continue;
+            } else {
+                // simulate
+                $board->move(new Move($this, $to));
+                if (!$board->inCheck($this->white)) {
+                    $board->revert();
+                    return true;
+                }
+                $board->revert();
+            }
+        }
+        if ($this->white) {
+            $to = $board->getSquare($this->file, $this->rank + 1);
+            if ($to->isEmpty()) {
+                // simulate
+                $board->move(new Move($this, $to));
+                if (!$board->inCheck($this->white)) {
+                    $board->revert();
+                    return true;
+                }
+                $board->revert();
+            }
+            if ($this->rank == 2) {
+                $to = $board->getSquare($this->file, $this->rank + 2);
+                if ($to->isEmpty()) {
+                    // simulate
+                    $board->move(new Move($this, $to));
+                    if (!$board->inCheck($this->white)) {
+                        $board->revert();
+                        return true;
+                    }
+                    $board->revert();
+                }
+            }
+        } else {
+            $to = $board->getSquare($this->file, $this->rank - 1);
+            if ($to->isEmpty()) {
+                // simulate
+                $board->move(new Move($this, $to));
+                if (!$board->inCheck($this->white)) {
+                    $board->revert();
+                    return true;
+                }
+                $board->revert();
+            }
+            if ($this->rank == 7) {
+                $to = $board->getSquare($this->file, $this->rank - 2);
+                if ($to->isEmpty()) {
+                    // simulate
+                    $board->move(new Move($this, $to));
+                    if (!$board->inCheck($this->white)) {
+                        $board->revert();
+                        return true;
+                    }
+                    $board->revert();
+                }
+            }
+        }
+        return false;
+    }
+    
     /**
      * Determine all Squares that a Pawn on $position may attack or from
      * which a Pawn may attack $position.
@@ -162,8 +226,8 @@ class Pawn extends ChessPiece {
         // be attacked by a pawn of the opposite color. See Board::inCheck()
         $roff = $white ? 1 : -1;
         $emptySquares = array(
-            new Square($position->file() -1, $position->rank() + $roff),
-            new Square($position->file() +1, $position->rank() + $roff)
+            new Square($position->file() - 1, $position->rank() + $roff),
+            new Square($position->file() + 1, $position->rank() + $roff)
         );
         $squares = array();
         foreach ($emptySquares as $square) {

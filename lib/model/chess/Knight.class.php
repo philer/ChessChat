@@ -50,6 +50,28 @@ class Knight extends ChessPiece {
     }
     
     /**
+     * Checks if player's King is able to move without stepping into check.
+     * Does not check if the King is actually in check himself.
+     * Check does not include castling.
+     * @param  boolean  $white  which color to check
+     * @return boolean
+     */
+    public function canMove(Board $board) {
+        foreach (self::getAttackRange($board, $this) as $to) {
+            if ($to->isEmpty() || $to->isWhite() != $this->white) {
+                // simulate
+                $board->move(new Move($this, $to));
+                if (!$board->inCheck($this->white)) {
+                    $board->revert();
+                    return true;
+                }
+                $board->revert();
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Returns an array containing all (existing) Squares that a King could move to
      * or from at given $position
      * @param  Board  $board

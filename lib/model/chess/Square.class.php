@@ -163,4 +163,29 @@ class Square {
         $this->file = $square->file();
         $this->rank = $square->rank();
     }
+    
+    /**
+     * Returns up to 8 Squares touching this Square
+     * horizontally, vertically or diagonally,
+     * if they exist.
+     * @param  Board          $board
+     * @return array<Square>
+     */
+    public function getNeighbors(Board $board) {
+        $squares = array();
+        for ( $f=-1 ; $f<=1 ; $f++ ) {
+            for ( $r=-1 ; $r<=1 ; $r++ ) {
+                if (!($f==0 && $r==0)) {
+                    $square = new Square(
+                        $this->file + $f,
+                        $this->rank + $r
+                    );
+                    if ($square->exists()) {
+                        $squares[] = $board->getSquare($square);
+                    }
+                }
+            }
+        }
+        return $squares;
+    }
 }

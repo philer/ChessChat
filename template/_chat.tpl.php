@@ -9,18 +9,36 @@ foreach ($this->var['chatMsgs'] as $this->var['msg']) {
 ?>
 
 <pre><?php
+    // var_dump($this->game->board->canMove(true));
+    // var_dump($this->game->board->canMove(false));
+    // $cps = array(
+    //     $this->game->board->{'h8'},
+    //     $this->game->board->{'d8'},
+    //     $this->game->board->{'c8'},
+    //     $this->game->board->{'b8'},
+    //     $this->game->board->{'a8'},
+    // );
+    // foreach ($cps as $cp) {
+    //     echo $cp . ' ';
+    //     var_dump($cp->canMove($this->game->board));
+    // }
+    
     // var_dump($this->game->board->inCheck(true));
     // var_dump($this->game->board->inCheckmate(true));
     // var_dump($this->game->board->inCheck(false));
     // var_dump($this->game->board->inCheckmate(false));
+    
     // print_r($this->game->board->blockable(new Square('e5'), false));
     // var_dump(Pawn::blockable( $this->game->board, new Square('F4'), true));
     // var_dump(Pawn::blockable( $this->game->board, new Square('F3'), true));
     // var_dump(Pawn::blockable( $this->game->board, new Square('F4'), false));
     // var_dump(Pawn::blockable( $this->game->board, new Square('F5'), false));
+    
     // var_dump($this->game->board->getKing(true)->canMove($this->game->board));
     // var_dump($this->game->board->getKing(false)->canMove($this->game->board));
+    
     // $ranges = $this->game->board->getAttackPaths(new Square('F4'), true);
+    
     // foreach ($ranges as $range) {
     //     if ($range instanceof Range) echo $range . "\n";
     //     else print_r($range);

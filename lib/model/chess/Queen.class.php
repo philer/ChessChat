@@ -56,4 +56,38 @@ class Queen extends ChessPiece {
             $move->setInvalid('chess.invalidmove.blocked');
         }
     }
+    
+    /**
+     * Whether or not this Bishop can Move on given Board
+     * @param  Board  $board
+     * @return boolean
+     */
+    public function canMove(Board $board) {
+        foreach (self::getAttackRange($board, $this) as $range) {
+            foreach ($range as $to) {
+                if ($to->isEmpty() || $to->isWhite() != $this->white) {
+                    // simulate
+                    $board->move(new Move($this, $to));
+                    if (!$board->inCheck($this->white)) {
+                        $board->revert();
+                        return true;
+                    }
+                    $board->revert();
+                    if (!$to->isEmpty()) {
+                        continue 2;
+                    }
+                } else {
+                    continue 2;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static function getAttackRange(Board $board, Square $position) {
+        return array_merge(
+            Bishop::getAttackRange($board, $position),
+            Rook::getAttackRange($board, $position)
+        );
+    }
 }

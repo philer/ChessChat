@@ -76,10 +76,10 @@ class King extends ChessPiece {
      * @return boolean
      */
     public function canMove(Board $board) {
-        foreach (King::getAttackRange($board, $this) as $escape) {
-            if ($escape->isEmpty() || $escape->isWhite() != $this->white) {
+        foreach (King::getAttackRange($board, $this) as $to) {
+            if ($to->isEmpty() || $to->isWhite() != $this->white) {
                 // simulate
-                $board->move(new Move($this, $escape));
+                $board->move(new Move($this, $to));
                 if (!$board->inCheck($this->white)) {
                     $board->revert();
                     return true;
@@ -99,22 +99,7 @@ class King extends ChessPiece {
      * @return  array<Square>
      */
     public static function getAttackRange(Board $board, Square $position) {
-        $squares = array();
-        for ( $f=-1 ; $f<=1 ; $f++ ) {
-            for ( $r=-1 ; $r<=1 ; $r++ ) {
-                if (!($f==0 && $r==0)) {
-                    $square = new Square(
-                        $position->file() + $f,
-                        $position->rank() + $r
-                    );
-                    if ($square->exists()) {
-                        $squares[] = $board->getSquare($square);
-                    }
-                    
-                }
-            }
-        }
-        return $squares;
+        return $this->getNeighbors();
     }
     
     /**

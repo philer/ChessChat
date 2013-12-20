@@ -339,17 +339,38 @@ class Board {
             if (   Pawn::underAttack($this, $attackers[0], !$white)
                 || Knight::underAttack($this, $attackers[0], !$white)
                 || Bishop::underAttack($this, $attackers[0], !$white)
-                || Rook::underAttack($this, $attackers[0], !$white) ) {
+                || Rook::underAttack($this, $attackers[0], !$white)
+                // king capture
+                || (   abs($king->file() - $attackers[0]->file()) <= 1
+                    && abs($king->rank() - $attackers[0]->rank()) <= 1
+                    && !$this->underAttack($attackers[0], $white) ) ) {
                 return false;
-            } else {
-                // can our King capture?
-                return abs($king->file() - $attackers[0]->file()) > 1
-                    || abs($king->rank() - $attackers[0]->rank()) > 1
-                    || $this->underAttack($attackers[0], !$white);
             }
-        } else {
-            return count($attackers == 0); // just in case we aren't even in check
+            if (!empty($attackPaths)) {
+                foreach ($attackPaths[0] as $block) {
+                    if (   Pawn::blockable($this, $block, !$white)
+                        || Knight::underAttack($this, $attackers[0], !$white)
+                        || Bishop::underAttack($this, $attackers[0], !$white)
+                        || Rook::underAttack($this, $attackers[0], !$white) ) {
+                        return false;
+                    }
+                }
+            }
         }
+        return count($attackers == 0); // just in case we aren't even in check
+    }
+    
+    public function canMove($white) {
+        foreach ($this->board as $file) {
+            foreach ($file as $square) {
+                if (!$square->isEmpty() && $square->isWhite() == $white) {
+                    if ($square->canMove($this)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
     
     /**

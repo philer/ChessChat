@@ -457,11 +457,16 @@ class Game extends DatabaseModel {
             } else {
                 $this->setNextTurn();
             }
+            
         } else {
-            // update status
             $this->setCheck(false);
-            $this->setNextTurn();
+            if ($this->board->canMove($nextColor)) {
+                $this->setNextTurn();
+            } else {
+                $this->setOver();
+            }
         }
+        
     }
     
     /**

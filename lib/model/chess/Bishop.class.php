@@ -54,6 +54,33 @@ class Bishop extends ChessPiece {
     }
     
     /**
+     * Whether or not this Bishop can Move on given Board
+     * @param  Board  $board
+     * @return boolean
+     */
+    public function canMove(Board $board) {
+        foreach (self::getAttackRange($board, $this) as $range) {
+            foreach ($range as $to) {
+                if ($to->isEmpty() || $to->isWhite() != $this->white) {
+                    // simulate
+                    $board->move(new Move($this, $to));
+                    if (!$board->inCheck($this->white)) {
+                        $board->revert();
+                        return true;
+                    }
+                    $board->revert();
+                    if (!$to->isEmpty()) {
+                        continue 2;
+                    }
+                } else {
+                    continue 2;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Get all Squares that a Bishop at $position may move to or from
      * @param  Board  $board
      * @param  Square $position
@@ -75,7 +102,7 @@ class Bishop extends ChessPiece {
      * @return boolean
      */
     public static function underAttack(Board $board, Square $target, $white) {
-        foreach (Bishop::getAttackRange($board, $target) as $range) {
+        foreach (self::getAttackRange($board, $target) as $range) {
             foreach ($range as $square) {
                 if (!$square->isEmpty()) {
                     if (   $square->isWhite() != $white
@@ -101,7 +128,7 @@ class Bishop extends ChessPiece {
      */
     public static function getAttackPaths(Board $board, Square $target, $white) {
         $paths = array();
-        foreach (Bishop::getAttackRange($board, $target) as $range) {
+        foreach (self::getAttackRange($board, $target) as $range) {
             foreach ($range as $square) {
                 if (!$square->isEmpty()) {
                     if (   $square->isWhite() != $white

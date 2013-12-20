@@ -58,6 +58,40 @@ class Rook extends ChessPiece {
         }
     }
     
+    /**
+     * Whether or not this Bishop can Move on given Board
+     * @param  Board  $board
+     * @return boolean
+     */
+    public function canMove(Board $board) {
+        foreach (self::getAttackRange($board, $this) as $range) {
+            foreach ($range as $to) {
+                if ($to->isEmpty() || $to->isWhite() != $this->white) {
+                    // simulate
+                    $board->move(new Move($this, $to));
+                    if (!$board->inCheck($this->white)) {
+                        $board->revert();
+                        return true;
+                    }
+                    $board->revert();
+                    if (!$to->isEmpty()) {
+                        continue 2;
+                    }
+                } else {
+                    continue 2;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Whether or not a Rook attacks $target Square
+     * @param  Board    $board
+     * @param  Square   $target
+     * @param  boolean  $white
+     * @return boolean
+     */
     public static function getAttackRange(Board $board, Square $position) {
         $ranges = array();
         foreach (array(Range::TOP, Range::RIGHT, Range::BOTTOM, Range::LEFT) as $direction) {
@@ -66,8 +100,16 @@ class Rook extends ChessPiece {
         return $ranges;
     }
     
+    /**
+     * Rooks move over a straight line of Squares when they attack
+     * This function returns these Squares, excluding start and end
+     * @param  Board    $board
+     * @param  Square   $target
+     * @param  boolean  $white
+     * @return array<Range>
+     */
     public static function underAttack(Board $board, Square $target, $white) {
-        foreach (Rook::getAttackRange($board, $target) as $range) {
+        foreach (self::getAttackRange($board, $target) as $range) {
             foreach ($range as $square) {
                 if (!$square->isEmpty()) {
                     if (   $square->isWhite() != $white
@@ -93,7 +135,7 @@ class Rook extends ChessPiece {
      */
     public static function getAttackPaths(Board $board, Square $target, $white) {
         $paths = array();
-        foreach (Rook::getAttackRange($board, $target) as $range) {
+        foreach (self::getAttackRange($board, $target) as $range) {
             foreach ($range as $square) {
                 if (!$square->isEmpty()) {
                     if (   $square->isWhite() != $white

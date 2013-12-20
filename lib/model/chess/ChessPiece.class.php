@@ -66,6 +66,8 @@ abstract class ChessPiece extends Square {
      */
     abstract public function validateMove(Move $move, Board $board);
     
+    abstract public function canMove(Board $board);
+    
     /**
      * First letter indicates type, followed by coordinates
      * @return string
