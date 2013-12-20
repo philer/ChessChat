@@ -104,6 +104,7 @@ $this->langVars = array(
 'chess.invalidmove.king'        => "A king can't move like that.",
 'chess.invalidmove.knight'      => "A knight can't move like that.",
 'chess.invalidmove.pawn'        => "A pawn can't move like that.",
+'chess.invalidmove.pawn.nocapture' => "There is nothing to capture.",
 'chess.invalidmove.queen'       => "A queen can't move like that.",
 'chess.invalidmove.rook'        => "A rook can't move like that.",
 'chess.invalidmove.check'       => 'Your King is in check.',

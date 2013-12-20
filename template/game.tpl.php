@@ -23,7 +23,7 @@
 $this->show('_chessboard');
 if ($game->isPlayer()) {
 ?>    <footer>
-        <nav id="gameMenu">
+        <!--<nav id="gameMenu">
             <ul>
                 <li><a id="resign" class="jsAnchor"><?php
                     echo $this->lang('game.menu.resign')
@@ -31,7 +31,7 @@ if ($game->isPlayer()) {
                     echo $this->lang('game.menu.offerdraw')
                 ?></a></li>
             </ul>
-        </nav>
+        </nav>-->
     </footer>
 <?php } ?>
 </section><!-- #game -->

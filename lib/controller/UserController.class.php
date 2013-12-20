@@ -83,7 +83,7 @@ class UserController extends AbstractRequestController {
                 )->fetch_assoc();
 
                 if (empty($userData)) {
-                    $invalid['userName'] = 'form.invalid.userName.nonexistant';
+                    $invalid['userName'] = 'form.invalid.username.nonexistant';
                 } elseif (!Util::checkPassword($_POST['password'],$userData['password'])) {
                     $invalid['password'] = 'form.invalid.password';
                 } else {
