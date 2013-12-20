@@ -2,7 +2,7 @@
 
 /**
  * Define route aliases here.
- * Ignore this file if you don't need alternative routes.
+ * Keep defaults if you don't need any alternative routes.
  * @var array
  */
 $routes = array(

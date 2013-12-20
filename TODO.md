@@ -1,14 +1,9 @@
-Larissa
-=======
-fix validateMove() for bishop, rook and queen (wrong result when moving further then 1 square)
+=== major ===
+* determine stalemate
 
-Phil
-====
+=== minor ===
+* add game status icons
+* add pagination
+* only enable js moves when it's player's turn
+* disable getUpdate ajax calls for finished games
 
-
-Longterm
---------
-* determine check
-* determine game over
-* castling
-* promoting

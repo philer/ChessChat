@@ -3,14 +3,19 @@ ChessChat
 
 A simple online chess system. It let's you play chess online!
 
-**EARLY STAGE OF DEVELOPMENT**
-
-This software is not even close to ready and can not yet be used!
+**STILL IN DEVELOPMENT**
 
 Installation steps
 ------------------
-* copy files (git clone)
-* copy files from config/default/ to config/ and choose your settings
-* generate stylesheets using lessc (if you didn't already get them)
-* if you want SEO-URLs and have mod_rewrite, rename default.htaccess to .htaccess and adjust the root path in the second line.
+* Copy files (git clone)
+
+* If you don't have precompiled css files, generate the stylesheets using lessc:
+Compile all less files in style/less/
+that don't have an underscore at the beginning of their name.
+Save their output as *.css files of same name in the style/ directory.
+
+* Copy all configuration files from config/default/ to config/ and adjust your settings.
+
+* If you want SEO-URLs and have mod_rewrite enabled in your server's configuration,
+rename default.htaccess to .htaccess and adjust the root path in the second line.
 

@@ -4,38 +4,50 @@
  * random users and games for chesschat.
  * Don't try to access this script directly via browser or commandline!
  * @see  setup.php
- * 
  * @author  Philipp Miller
- * 
  */
 
 // options
 $userN = 250;
 $gameN = 250;
-$langs = array('en', 'de', '--');
+$cmsgN = 2500;
+$langs = array('en', 'de', '--', 'fr');
+
+$langN = count($langs);
 
 // generate users
 $userQuery = 'INSERT INTO cc_user (userName, email, password, language) VALUES';
-for ($u=0 ; $u < $userN ; $u++) {
-	$name = Util::getRandomString(10);
-	$userQuery .= "\n ('" . $name . "', "
-	            . "'" . $name . "@"
-	                  . Util::getRandomString(5) . "."
-	                  . Util::getRandomString(2)
-	            . "', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', "
-	            . "'" . $langs[mt_rand(0, count($langs)-1)] ."'),";
+for ($u=1 ; $u <= $userN ; $u++) {
+    $name = Util::getRandomString(3, 12,'.-_ ');
+    $userQuery .= "\n('" . $name . "', "
+                . "'" . urlencode($name) . "@" . Util::getRandomString(4,8) . "." . Util::getRandomString(2,3)
+                . "', '$2y$08$100010001000100010001.LNsjk4vI3U65IdmjIEugZ2MnFxHt1De', " // 'password'
+                . "'" . $langs[mt_rand(0, $langN-1)] ."'), ";
 }
 $userQuery = rtrim($userQuery, ', ');
 $queries[] = $userQuery;
 
 // generate games
+$gamesData = array();
 $gameQuery = 'INSERT INTO cc_game (gameHash, whitePlayerId, blackPlayerId, board, status) VALUES';
-for ($g=0 ; $g<$gameN ; $g++) {
-	$gameQuery .= "\n ('" . Util::getRandomString(6) . "', "
-	            . "'" . mt_rand(1, $userN) . "', "
-	            . "'" . mt_rand(1, $userN) . "', "
-	            . "'RA1Nb1Bc1Qd1KE1Bf1Ng1RH1Pa2Pb2Pc2Pd2Pe2Pf2Pg2Ph2pa7pb7pc7pd7pe7pf7pg7ph7rA8nb8bc8qd8kE8bf8ng8rH8', "
-	            . "'" . mt_rand(0,15) . "'),";
+for ($g=1 ; $g <= $gameN ; $g++) {
+    $gamesData[$g] = array(mt_rand(1,$userN), mt_rand(1,$userN));
+    $gameQuery .= "\n('" . Util::getRandomString(6) . "', "
+                . $gamesData[$g][0] . ", "
+                . $gamesData[$g][1] . ", "
+                . "'" . Board::DEFAULT_STRING . "', "
+                . "'" . mt_rand(0, 15) . "'), ";
 }
 $gameQuery = rtrim($gameQuery, ', ');
 $queries[] = $gameQuery;
+
+// generate chat messages
+$cmsgQuery = 'INSERT INTO cc_chatMessage (gameId, authorId, messageText) VALUES';
+for ($cm=1 ; $cm <= $cmsgN ; $cm++) {
+    $gameId = mt_rand(1,$gameN);
+    $cmsgQuery .= "\n(" . $gameId . ", "
+                . $gamesData[$gameId][mt_rand(0,1)] . ", "
+                . "'testmsg " . Util::getRandomString(0,255,' ') . "'), ";
+}
+$cmsgQuery = rtrim($cmsgQuery, ', ');
+$queries[] = $cmsgQuery;

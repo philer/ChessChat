@@ -6,12 +6,17 @@
  * @author Philipp Miller
  */
 class LegalNoticeController extends AbstractRequestController {
-	
-	public function handleRequest(array $route) {
-		$this->pageTitle = Core::getLanguage()->getLanguageItem('site.legalnotice');
-		include(ROOT_DIR . 'config/legal.conf.php');
-		Core::getTemplateEngine()->addVar('legal',$legalInfo);
-		Core::getTemplateEngine()->showPage('legalNotice', $this);
-	}
-	
+    
+    /**
+     * Collects data from legalnotice config file
+     * @see  conf/legal.conf.php
+     * @param  array  $route
+     */
+    public function handleRequest(array $route) {
+        $this->pageTitle = Core::getLanguage()->getLanguageItem('site.legalnotice');
+        include(ROOT_DIR . 'config/legal.conf.php');
+        Core::getTemplateEngine()->addVar('legal',$legalInfo);
+        Core::getTemplateEngine()->showPage('legalNotice', $this);
+    }
+    
 }

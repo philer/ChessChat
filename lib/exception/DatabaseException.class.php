@@ -5,9 +5,13 @@
  * @author Philipp Miller
  */
 class DatabaseException extends FatalException {
-	
-	public function __construct($message) {
-		$this->title = "Database Exception";
-		parent::__construct($message);
-	}
+    
+    /**
+     * Fatal Exceptions should be thrown by Database classes
+     * @param  string  $message  error message
+     */
+    public function __construct($message) {
+        $this->title = 'Database Exception';
+        parent::__construct($message);
+    }
 }
