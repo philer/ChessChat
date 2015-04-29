@@ -5,6 +5,15 @@ A simple online chess system. It let's you play chess online!
 
 **STILL IN DEVELOPMENT**
 
+TODO
+----
+This was a university project which has been concluded. I may continue working on it at some point but there are no actual plans. If you want to fork/contribute drop me a note and I may be able to help out.
+Here are a few things that need work:
+* User profiles, notifications etc. So far the only thing that really exists is the chess-related stuff.
+* Database connection uses mysqli without prepared statements (yeah, I know…). Use PDO instead.
+* JS is pretty ugly. It's not much so it probably deserves a complete rewrite.
+
+
 Installation steps
 ------------------
 * Copy files (git clone)
